@@ -1,0 +1,12 @@
+---
+format: gfm
+title: Measles models
+---
+
+## Highschool model
+
+```{r}
+#| echo: true
+system2("make", "highschool.o", wait = TRUE)
+system2("./highschool.o", stdout = TRUE) |> cat(sep="\n")
+```

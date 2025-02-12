@@ -87,8 +87,18 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     epiworld_double contact_tracing_success_rate
 ) {
 
-    model.add_state("Susceptible");
-    model.add_state("Exposed");
+    model.add_state(
+        "Susceptible",
+        epiworld::sampler::make_update_susceptible<>(
+            {
+                states::QUARANTINED_INFECTIOUS,
+                states::QUARANTINED_EXPOSED,
+                states::EXPOSED
+            }
+        )
+    );
+
+    model.add_state("Exposed", default_update_exposed<>);
     model.add_state("Infectious");
     model.add_state("Symptomatic");
     model.add_state("Quarantined Exposed");
@@ -138,6 +148,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
 
     // Initializing the population
     model.agents_empty_graph(n);
+
 
     return;
 
@@ -200,6 +211,7 @@ int main() {
         5,    // Contact tracing depth
         0.9   // Contact tracing success rate
     );
+    model.run(60, 331);
     model.print();
     return 0;
 }
