@@ -19,8 +19,8 @@ The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 48.00ms
-    Last run speed      : 1.25 million agents x day / second
+    Last run elapsed t  : 56.00ms
+    Last run speed      : 1.05 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -69,7 +69,9 @@ The following is the output from the highschool model:
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
     Contact matrix (first 10 entires) (adjacency matrix)
-    Each entry is the day of the contact between i and j, with negative values indicating no contact between the individuals.
+    Each entry is the day of the contact between i and j, 
+    with negative values indicating no contact 
+    between the individuals.
       -1   -1   -1   44   -1   39   -1   60   -1   48 
       -1   -1   -1   -1   14   49   -1   -1   23   25 
       -1   -1   -1   -1   12   -1   21   36   13   -1 
