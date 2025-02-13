@@ -117,8 +117,10 @@ inline void ModelMeaslesHighSchool::print_contact_tracing(int n_entries) {
     if (n_entries < 0)
         n_entries = this->size();
     
-    printf_epiworld("Contact matrix (first %i entires)\n", n_entries);
-    printf_epiworld("Each entry is the day of the contact\n");
+    printf_epiworld("Contact matrix (first %i entires) (adjacency matrix)\n", n_entries);
+    printf_epiworld("Each entry is the day of the contact between i and j, ");
+    printf_epiworld("with negative values indicating no contact ");
+    printf_epiworld("between the individuals.\n");
     for (int i = 0; i < n_entries; ++i)
     {
         for (int j = 0; j < n_entries; ++j)
