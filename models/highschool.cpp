@@ -55,8 +55,7 @@ public:
         epiworld_double max_days_in_rash,
         // Policy parameters
         epiworld_double prop_vaccinated,
-        epiworld_fast_uint quarantine_days_vax,
-        epiworld_fast_uint quarantine_days_unvax,
+        epiworld_fast_uint quarantine_days,
         epiworld_fast_uint contact_tracing_days_back,
         epiworld_double contact_tracing_success_rate
     );
@@ -75,8 +74,7 @@ public:
         epiworld_double max_days_in_rash,
         // Policy parameters
         epiworld_double prop_vaccinated,
-        epiworld_fast_uint quarantine_days_vax,
-        epiworld_fast_uint quarantine_days_unvax,
+        epiworld_fast_uint quarantine_days,
         epiworld_fast_uint contact_tracing_days_back,
         epiworld_double contact_tracing_success_rate
     );
@@ -96,22 +94,9 @@ public:
      * The matrix is row-major order and symmetric.
      */
     std::vector< int > contact_matrix; //< n x n matrix
-    int & contact_matrix_ij(int i, int j) {
-        return contact_matrix[j + i * this->size()];
-    }
+    int & contact_matrix_ij(int i, int j);
 
-    void print_contact_tracing(int n_entries = -1) {
-        if (n_entries < 0)
-            n_entries = this->size();
-        for (int i = 0; i < n_entries; ++i)
-        {
-            for (int j = 0; j < n_entries; ++j)
-            {
-                std::cout << contact_matrix_ij(i, j) << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
+    void print_contact_tracing(int n_entries = -1);
 
     void reset();
     void update_available();
@@ -124,6 +109,26 @@ public:
 
 };
 
+inline int & ModelMeaslesHighSchool::contact_matrix_ij(int i, int j) {
+    return contact_matrix[j + i * this->size()];
+}
+
+inline void ModelMeaslesHighSchool::print_contact_tracing(int n_entries) {
+    if (n_entries < 0)
+        n_entries = this->size();
+    
+    printf_epiworld("Contact matrix (first %i entires)\n", n_entries);
+    printf_epiworld("Each entry is the day of the contact\n");
+    for (int i = 0; i < n_entries; ++i)
+    {
+        for (int j = 0; j < n_entries; ++j)
+        {
+            printf_epiworld("% 4i ", contact_matrix_ij(i, j));
+        }
+        std::cout << std::endl;
+    }
+}
+
 inline void ModelMeaslesHighSchool::contact_tracing() {
 
     // Capturing the days that matter and the probability of success
@@ -135,6 +140,11 @@ inline void ModelMeaslesHighSchool::contact_tracing() {
     {
         // Iterating through the
         for (size_t i = 0u; i < size(); ++i) {
+
+            // No contact
+            if (contact_matrix_ij(id, i) == -1)
+                continue;
+
             int days_since = today() - contact_matrix_ij(id, i);
 
             // Does it fit within the contact tracing window?
@@ -143,6 +153,10 @@ inline void ModelMeaslesHighSchool::contact_tracing() {
                 // Do we succeed in the contact tracing?
                 if (runif() < success_rate)
                 {
+                    // If the agent has a vaccine, then no need for quarantine
+                    if (get_agent(i).get_n_tools() != 0u)
+                        continue;
+
                     // Is it already in quarantine or isolated?
                     if (get_agent(i).get_state() >= states::RASH)
                         continue;
@@ -209,14 +223,6 @@ inline void ModelMeaslesHighSchool::update_available() {
 
 }
 
-
-
-EPI_NEW_GLOBALFUN(quarantine, int) {
-
-    // Checking the rash cases
-
-}
-
 EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
     int ndraw = m->rbinom();
@@ -261,6 +267,13 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
         // The neighbor is infected because it is on the list!
         if (neighbor.get_virus() == nullptr)
+            continue;
+
+        // Only infectious individuals can transmit
+        if (
+            neighbor.get_state() != ModelMeaslesHighSchool::states::PRODROMAL &&
+            neighbor.get_state() != ModelMeaslesHighSchool::states::RASH
+        )
             continue;
 
         auto & v = neighbor.get_virus();
@@ -333,6 +346,54 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
     
 };
 
+EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
+
+    // Extract the rate
+    if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
+        p->change_state(
+            m,
+            ModelMeaslesHighSchool::states::QUARANTINED_INFECTIOUS
+        );
+
+    return;
+
+}
+
+EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
+
+    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    int days_since =
+        m->today() - model->day_quarantined_or_isolated[p->get_id()];
+    
+    if (days_since >= m->par("Quarantine days"))
+        p->change_state(m, ModelMeaslesHighSchool::states::SUSECPTIBLE);
+
+}
+
+EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
+
+    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    
+    // If they develop rash, then they are isolated and contact
+    // tracing is triggered.
+    if (m->runif() < (1.0/m->par("Prodromal period")))
+    {
+        model->ids_triggered_contact_tracing.push_back(p->get_id());
+        p->change_state(m, ModelMeaslesHighSchool::states::ISOLATED);
+        return;
+    }
+
+    // Otherwise, these are moved to the prodromal period, if
+    // the quanrantine period is over.
+    int days_since =
+        m->today() - model->day_quarantined_or_isolated[p->get_id()];
+    
+    if (days_since >= m->par("Quarantine days"))
+        p->change_state(m, ModelMeaslesHighSchool::states::PRODROMAL);
+
+    return;
+
+}
 
 inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     ModelMeaslesHighSchool & model,
@@ -349,8 +410,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     epiworld_double max_days_in_rash,
     // Policy parameters
     epiworld_double prop_vaccinated,
-    epiworld_fast_uint quarantine_days_vax,
-    epiworld_fast_uint quarantine_days_unvax,
+    epiworld_fast_uint quarantine_days,
     epiworld_fast_uint contact_tracing_days_back,
     epiworld_double contact_tracing_success_rate
 ) {
@@ -360,9 +420,9 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     model.add_state("Prodromal", update_prodromal);
     model.add_state("Rash", update_rash);
     model.add_state("Isolated", default_update_exposed<>);
-    model.add_state("Quarantined Exposed");
-    model.add_state("Quarantined Unexposed");
-    model.add_state("Quarantined Infectious");
+    model.add_state("Quarantined Exposed", update_quarantined_exposed);
+    model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
+    model.add_state("Quarantined Infectious", update_quanrantined_infectious);
     model.add_state("Recovered");
 
     // Adding the model parameters
@@ -378,12 +438,12 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     model.add_param(prodromal_period, "Prodromal period");
     model.add_param(rash_period, "Rash period");
     model.add_param(max_days_in_rash, "Max days in rash");
-    model.add_param(quarantine_days_vax, "Quarantine days vax");
-    model.add_param(quarantine_days_unvax, "Quarantine days unvax");
+    model.add_param(quarantine_days, "Quarantine days");
     model.add_param(contact_tracing_days_back, "How many days back to trace");
     model.add_param(
         contact_tracing_success_rate, "Contact tracing success rate"
     );
+    model.add_param(prop_vaccinated, "Vaccination rate");
 
     // Designing the disease
     Virus<> measles("Measles");
@@ -409,7 +469,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
 
     // Initializing the population
     model.agents_empty_graph(n);
-    model.contact_matrix.resize(n * n, 0);
+    model.contact_matrix.resize(n * n, -1);
     model.day_quarantined_or_isolated.resize(n, 0);
 
     // Global actions
@@ -435,8 +495,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     epiworld_double max_days_in_rash,
     // Policy parameters
     epiworld_double prop_vaccinated,
-    epiworld_fast_uint quarantine_days_vax,
-    epiworld_fast_uint quarantine_days_unvax,
+    epiworld_fast_uint quarantine_days,
     epiworld_fast_uint contact_tracing_days_back,
     epiworld_double contact_tracing_success_rate
 ) {
@@ -454,8 +513,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
         rash_period,
         max_days_in_rash,
         prop_vaccinated,
-        quarantine_days_vax,
-        quarantine_days_unvax,
+        quarantine_days,
         contact_tracing_days_back,
         contact_tracing_success_rate
     );
@@ -470,9 +528,9 @@ int main() {
     ModelMeaslesHighSchool model(
         1000, // Population size
         1,    // initial number of exposed
-        5,   // Contact rate  
+        10,   // Contact rate  
         0.95, // Transmission rate
-        0.9,  // Vaccine reduction in susceptibility
+        0.98, // Vaccine reduction in susceptibility
         0.5,  // Vaccine reduction in recovery rate
         5,    // Incubation period
         4,    // Prodromal period
@@ -480,10 +538,10 @@ int main() {
         2,    // Max days in rash
         .9,   // Vaccination rate
         14,   // Quarantine days for vaccinated
-        14,   // Quarantine days for unvaccinated
-        5,    // Contact tracing depth
+        14,    // Days back to trace
         0.9   // Contact tracing success rate
     );
+
     model.run(60, 331);
     model.print();
     model.print_contact_tracing(10);
