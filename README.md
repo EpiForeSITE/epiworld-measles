@@ -1,4 +1,5 @@
 # epiworld-measles
+[![ForeSITE Group](https://github.com/EpiForeSITE/software/blob/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE)
 
 This project aims to generate an ABM using epiworldR to do scenario modeling of measles.
 
