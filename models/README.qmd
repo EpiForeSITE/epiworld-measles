@@ -46,3 +46,17 @@ From it, we see:
 - Quarantined Exposed either moves to quarantined infectious or to isolated. It can moved to exposed, but since the quarantine period is 14 days, we don't see any case.
 - Quarantined Infectious moves to prodromal (if exits quarantine) or to isolated (if rash detected), in which case contact tracing is triggered.
 
+
+```{r}
+#| label: reading-history
+library(data.table)
+histories <- lapply(list.files(
+    "highschool-out", pattern="total_hist", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, data.table::fread(fn))
+   }) |> rbindlist()
+
+
+# Figuring out the outbreak size
+histories[state != "Susceptible" & date == max(date)]
+```
