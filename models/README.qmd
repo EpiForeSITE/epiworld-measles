@@ -18,7 +18,7 @@ The following is the output from the highschool model:
 
 ```{r}
 #| echo: false
-system2("make", "run", wait = TRUE, stdout=TRUE) |>
+system2("./highschool.o", "highschool-params.yaml", wait = TRUE, stdout=TRUE) |>
     cat(sep = "\n")
 ```
 
@@ -57,7 +57,6 @@ histories <- lapply(list.files(
       cbind(fn = fn, data.table::fread(fn))
    }) |> rbindlist()
 
-
 # Figuring out the outbreak size
 exposed <- c("Exposed", "Predromal", "Rash", "Isolated", "Quarantined Exposed", "Quarantined Susceptible", "Recovered")
 counts <- histories[(state %in% exposed) & (date == max(date))]
@@ -67,3 +66,64 @@ library(ggplot2)
 ggplot(counts, aes(x = Total)) +
     geom_histogram()
 ```
+
+Preparing the data for output
+
+
+```{r}
+#| label: preparing-output
+# Reshape the data to wide
+histories_wide <- dcast(
+    histories, fn + date ~ state, value.var = "counts")
+
+# Generating simulation ids
+histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+histories_wide[, fn := NULL]
+
+fwrite(histories_wide, "highschool-histories.csv")
+
+# Reading the 'transition.csv' files
+transitions <- lapply(
+    list.files("highschool-out", pattern="transition", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, fread(fn))
+    }) |> rbindlist()
+
+# Detected cases
+detected <- transitions[
+    from != "Isolated" & to == "Isolated",
+    .(fn, from, date, counts)
+    ]
+detected <- detected[counts > 0]
+detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+detected[, fn := NULL]
+
+fwrite(detected, "highschool-detected.csv")
+```
+
+Some statistics about the contact tracing. Each detected case is moved to the isolated state and triggers contact tracing. The following plot shows the cumulative number of detected cases over time:
+
+```{r}
+#| label: contact-tracing
+detected_cum <- detected[, .(Total = sum(counts)), by = .(date, sim_num )] 
+detected_cum[, cumulative := cumsum(Total), by = sim_num]
+detected_cum[, min := quantile(cumulative, 0.025), by = date]
+detected_cum[, mean := mean(cumulative), by = date]
+detected_cum[, max := quantile(cumulative, 0.975), by = date]
+detected_cum |> 
+    ggplot(aes(x = date, y = cumulative)) +
+    geom_line(aes(x=date, y = mean)) +
+    geom_ribbon(
+        aes(ymin = min, ymax = max), fill = "grey", alpha = 0.5
+        ) +
+    # Legend about the ribbon and the mean
+    geom_line(aes(x=date, y = min), linetype = "dashed") +
+    geom_line(aes(x=date, y = max), linetype = "dashed") +
+    labs(
+        title = "Cumulative detected cases",
+        x = "Date",
+        y = "Cumulative detected cases",
+        caption = "The shaded area represents the 95% confidence interval"
+    )
+```
+

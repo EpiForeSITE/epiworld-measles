@@ -1,4 +1,4 @@
-Population size: 500
+Population size: 1000
 1/Rash period: 0.2500
 Contact rate: 10.0000
 Contact tracing success rate: 0.9000
@@ -15,5 +15,5 @@ Vax reduced suscept.: 0.9800
 initial number of exposed: 1.0000
 Seed: 2231
 N days: 60
-Replicates: 500
+Replicates: 1000
 Threads: 8
