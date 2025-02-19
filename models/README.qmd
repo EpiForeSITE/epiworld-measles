@@ -18,7 +18,8 @@ The following is the output from the highschool model:
 
 ```{r}
 #| echo: false
-system2("make", "run", wait = TRUE)
+system2("make", "run", wait = TRUE, stdout=TRUE) |>
+    cat(sep = "\n")
 ```
 
 This model simulates the spread of measles in a highschool. The highschool has 1000 students, and the simulation runs for 60 days with one index case. 
@@ -58,5 +59,11 @@ histories <- lapply(list.files(
 
 
 # Figuring out the outbreak size
-histories[state != "Susceptible" & date == max(date)]
+exposed <- c("Exposed", "Predromal", "Rash", "Isolated", "Quarantined Exposed", "Quarantined Susceptible", "Recovered")
+counts <- histories[(state %in% exposed) & (date == max(date))]
+counts <- counts[, .(Total = sum(counts)), by = "fn"]
+
+library(ggplot2)
+ggplot(counts, aes(x = Total)) +
+    geom_histogram()
 ```

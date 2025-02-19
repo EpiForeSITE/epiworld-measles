@@ -101,6 +101,8 @@ public:
     void reset();
     void update_available();
 
+    Model<> * clone_ptr();
+
     // ModelMeaslesHighSchool & run(
     //     epiworld_fast_uint ndays,
     //     int seed = -1
@@ -110,6 +112,8 @@ public:
 };
 
 inline int & ModelMeaslesHighSchool::contact_matrix_ij(int i, int j) {
+    if (i > j)
+        std::swap(i, j);
     return contact_matrix[j + i * this->size()];
 }
 
@@ -239,10 +243,22 @@ inline void ModelMeaslesHighSchool::update_available() {
             this->available.push_back(&agent);
     }
 
+    // Assumes fixed contact rate throughout the simulation
     this->set_rand_binom(
         static_cast<int>(this->available.size()),
         this->par("Contact rate")/static_cast<double>(this->size())
     );
+
+}
+
+inline Model<> * ModelMeaslesHighSchool::clone_ptr()
+{
+        
+    ModelMeaslesHighSchool * ptr = new ModelMeaslesHighSchool(
+        *dynamic_cast<const ModelMeaslesHighSchool*>(this)
+        );
+
+    return dynamic_cast< Model<> *>(ptr);
 
 }
 
@@ -286,7 +302,6 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
         // Adding an entry for contact tracing
         model->contact_matrix_ij(p->get_id(), neighbor.get_id()) = m->today();
-        model->contact_matrix_ij(neighbor.get_id(), p->get_id()) = m->today();
 
         // The neighbor is infected because it is on the list!
         if (neighbor.get_virus() == nullptr)
