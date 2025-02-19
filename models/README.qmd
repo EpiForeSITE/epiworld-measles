@@ -5,12 +5,20 @@ title: Measles models
 
 ## Highschool model
 
+### Parameters
+
+```{r}
+yaml::read_yaml("highschool-params.yaml") |>
+    str()
+```
+
+### Run
+
 The following is the output from the highschool model:
 
 ```{r}
 #| echo: false
-system2("make", "highschool.o", wait = TRUE)
-system2("./highschool.o", stdout = TRUE) |> cat(sep="\n")
+system2("make", "run", wait = TRUE)
 ```
 
 This model simulates the spread of measles in a highschool. The highschool has 1000 students, and the simulation runs for 60 days with one index case. 
@@ -37,3 +45,4 @@ From it, we see:
 - Isolated moves to Recovered (full immunity).
 - Quarantined Exposed either moves to quarantined infectious or to isolated. It can moved to exposed, but since the quarantine period is 14 days, we don't see any case.
 - Quarantined Infectious moves to prodromal (if exits quarantine) or to isolated (if rash detected), in which case contact tracing is triggered.
+

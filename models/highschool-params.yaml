@@ -1,0 +1,18 @@
+Population size: 500
+1/Rash period: 0.2500
+Contact rate: 10.0000
+Contact tracing success rate: 0.9000
+How many days back to trace: 14.0000
+Incubation period: 5.0000
+Max days in rash: 2.0000
+Prodromal period: 4.0000
+Quarantine days: 14.0000
+Rash period: 4.0000
+Transmission rate: 0.9500
+Vaccination rate: 0.9000
+Vax improved recovery: 0.5000
+Vax reduced suscept.: 0.9800
+initial number of exposed: 1.0000
+Seed: 2231
+N days: 60
+Replicates: 100
