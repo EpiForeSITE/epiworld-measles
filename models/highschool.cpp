@@ -52,6 +52,13 @@ int main(int argc, char *argv[]) {
 
     model.print();
     model.print_contact_tracing(10);
+
+    draw_mermaid_diagram<>(
+        model.get_db(),
+        model,
+        "highschool-diagram.mmd"
+    );
+
     return 0;
 
 }

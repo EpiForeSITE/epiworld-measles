@@ -103,12 +103,6 @@ public:
 
     Model<> * clone_ptr();
 
-    // ModelMeaslesHighSchool & run(
-    //     epiworld_fast_uint ndays,
-    //     int seed = -1
-    // );
-
-
 };
 
 inline int & ModelMeaslesHighSchool::contact_matrix_ij(int i, int j) {
@@ -466,12 +460,6 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     // Adding the model parameters
     model.add_param(contact_rate, "Contact rate");
     model.add_param(transmission_rate, "Transmission rate");
-    model.add_param(
-        vax_reduction_suscept, "Vaccine reduction in susceptibility"
-    );
-    model.add_param(
-        vax_reduction_recovery_rate, "Vaccine reduction in recovery rate"
-    );
     model.add_param(incubation_period, "Incubation period");
     model.add_param(prodromal_period, "Prodromal period");
     model.add_param(1.0 / rash_period, "1/Rash period");
@@ -554,6 +542,66 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
         contact_tracing_days_back,
         contact_tracing_success_rate
     );
+
+    return;
+
+}
+
+
+template<typename TSeq = EPI_DEFAULT_TSEQ>
+void draw_mermaid_diagram(
+    const epiworld::DataBase<TSeq> & db,
+    const epiworld::Model<> & model,
+    const std::string & filename = "",
+    bool self = false
+) {
+
+    // Extracting the transition matrix
+    auto tprob = db.transition_probability(false);
+    auto states = model.get_states();
+
+    std::vector< std::string > states_ids;
+    for (size_t i = 0u; i < states.size(); ++i)
+        states_ids.push_back("s" + std::to_string(i));
+
+    std::string graph = "flowchart LR\n";
+
+    // Declaring the states
+    for (size_t i = 0u; i < states.size(); ++i)
+    {
+        graph += "\t" + states_ids[i] + "[" + states[i] + "]\n";
+    }
+
+    // Adding the transitions
+    size_t n_states = states.size();
+    for (size_t i = 0u; i < states.size(); ++i)
+    {
+        for (size_t j = 0u; j < states.size(); ++j)
+        {
+            if (!self && i == j)
+                continue;
+
+            if (tprob[i + j * n_states] > 0.0)
+            {
+                graph += "\t" + states_ids[i] + " -->|" + 
+                    std::to_string(tprob[i + j * n_states]) + "| " + states_ids[j] + "\n";
+            }
+        }
+    }
+
+    if (filename != "")
+    {
+        std::ofstream file(filename);
+
+        if (!file.is_open())
+            throw std::runtime_error("Could not open the file for writing.");
+
+        file << graph;
+        file.close();
+        
+    } else {
+        std::cout << graph << std::endl;
+    }
 
     return;
 
