@@ -2,3 +2,9 @@
 .vscode
 *.dSYM
 vgcore.*
+*.zip
+*.mmd
+*.csv
+.DS_Store
+.singularity
+*.sif
