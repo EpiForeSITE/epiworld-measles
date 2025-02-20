@@ -34,7 +34,7 @@ The following is a raw list of the parameters included in the model:
 ```{r}
 #| label: print-params
 #| echo: false
-params <- yaml::read_yaml("highschool-params.yaml")
+params <- yaml::read_yaml("params.yaml")
 params |>
     str()
 ```
@@ -46,7 +46,7 @@ This model simulates the spread of measles in a highschool. The highschool has `
 ```{r}
 #| echo: false
 #| label: run-model
-system2("./contact_tracing.o", "highschool-params.yaml", wait = TRUE, stdout=TRUE) |>
+system2("./contact_tracing.o", "params.yaml", wait = TRUE, stdout=TRUE) |>
     cat(sep = "\n")
 ```
 
@@ -101,7 +101,7 @@ histories_wide <- dcast(
 histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 histories_wide[, fn := NULL]
 
-fwrite(histories_wide, "highschool-histories.csv")
+fwrite(histories_wide, "contact_tracing-histories.csv")
 
 # Reading the 'transition.csv' files
 transitions <- lapply(
@@ -119,7 +119,7 @@ detected <- detected[counts > 0]
 detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 detected[, fn := NULL]
 
-fwrite(detected, "highschool-detected.csv")
+fwrite(detected, "contact_tracing-detected.csv")
 ```
 
 Some statistics about the contact tracing. Each detected case is moved to the isolated state and triggers contact tracing. The following plot shows the cumulative number of detected cases over time:

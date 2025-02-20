@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn = "highschool-params.yaml";
+    std::string fn = "params.yaml";
     if (argc > 2) {
         std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
         return 1;

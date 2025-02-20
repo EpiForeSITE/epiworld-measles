@@ -36,12 +36,12 @@ includes the following features:
 The following is a raw list of the parameters included in the model:
 
     Warning in readLines(file, warn = readLines.warn): incomplete final line found
-    on 'highschool-params.yaml'
+    on 'params.yaml'
 
     List of 18
      $ Population size          : int 1000
      $ 1/Rash period            : num 0.25
-     $ Contact rate             : num 10
+     $ Contact rate             : num 30
      $ Quarantine willingness   : num 0.5
      $ Incubation period        : num 5
      $ Max days in rash         : num 2
@@ -64,7 +64,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has 1000 students, and the simulation runs for 60 days with
 one index case. The following is the output from the highschool model:
 
-    Using file: highschool-params.yaml
+    Using file: params.yaml
     Starting multiple runs (1000) using 8 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -83,7 +83,7 @@ one index case. The following is the output from the highschool model:
     Last run elapsed t  : 0.00s
     Total elapsed t     : 4.00s (1000 runs)
     Last run speed      : 2.13 million agents x day / second
-    Average run speed   : 13.00 million agents x day / second
+    Average run speed   : 13.75 million agents x day / second
     Rewiring            : off
 
     Global events:
