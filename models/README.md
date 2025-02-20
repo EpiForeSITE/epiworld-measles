@@ -6,22 +6,30 @@
 The highschool model is a discrete-time Agent-Based Model \[ABM\] that
 includes the following features:
 
-**Disease progression:** - Susceptible individuals can aquire the virus
-from agents in the prodromal or rash state (as long as they are not
-isolated or quarantined). - Exposed individuals develop the disease to
-transition to the prodromal state. - Prodromal individuals develop the
-disease to transition to the rash state. - Rash individuals are
-isolated.
+**Disease progression:**
 
-**Contact tracing:** - Individuals developing rash trigger contact
-tracing. - Contact tracing is not perfect, and some cases may be
-missed. - Contacts within the last x days are moved to quarantine. -
-Individuals in quarantine who develop the disease trigger contact
-tracing as well.
+- Susceptible individuals can aquire the virus from agents in the
+  prodromal or rash state (as long as they are not isolated or
+  quarantined).
+- Exposed individuals develop the disease to transition to the prodromal
+  state.
+- Prodromal individuals develop the disease to transition to the rash
+  state.
+- Rash individuals are isolated.
 
-**Vaccination:** - Agents can be vaccinated at the beginning of the
-simulation. - Vaccinated agents are less susceptible to the disease. -
-Recovered agents are treated as immune.
+**Contact tracing:**
+
+- Individuals developing rash trigger contact tracing.
+- Contact tracing is not perfect, and some cases may be missed.
+- Contacts within the last x days are moved to quarantine.
+- Individuals in quarantine who develop the disease trigger contact
+  tracing as well.
+
+**Vaccination:**
+
+- Agents can be vaccinated at the beginning of the simulation.
+- Vaccinated agents are less susceptible to the disease.
+- Recovered agents are treated as immune.
 
 ### Parameters
 
@@ -74,9 +82,9 @@ one index case. The following is the output from the highschool model:
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
-    Total elapsed t     : 6.00s (1000 runs)
-    Last run speed      : 1.70 million agents x day / second
-    Average run speed   : 9.89 million agents x day / second
+    Total elapsed t     : 5.00s (1000 runs)
+    Last run speed      : 1.73 million agents x day / second
+    Average run speed   : 10.19 million agents x day / second
     Rewiring            : off
 
     Global events:
