@@ -1,0 +1,151 @@
+---
+format: gfm
+title: School quarantine model
+---
+
+## Highschool model
+
+The highschool model is a discrete-time Agent-Based Model [ABM] that includes the following features:
+
+**Disease progression:**
+
+- Susceptible individuals can aquire the virus from agents in the prodromal or rash state (as long as they are not isolated or quarantined).
+- Exposed individuals develop the disease to transition to the prodromal state.
+- Prodromal individuals develop the disease to transition to the rash state.
+- Rash individuals are isolated.
+
+**Quarantine process:**
+
+- Individuals developing rash trigger quarantining process.
+- Vaccinated individuals are skipped.
+- Unvaccinated individuals may reject moving to quarantine.
+- Individuals in quarantine who develop the disease trigger contact tracing as well.
+
+**Vaccination:**
+
+- Agents can be vaccinated at the beginning of the simulation.
+- Vaccinated agents are less susceptible to the disease.
+- Recovered agents are treated as immune.
+
+### Parameters
+
+The following is a raw list of the parameters included in the model:
+
+```{r}
+#| label: print-params
+#| echo: false
+params <- yaml::read_yaml("highschool-params.yaml")
+params |>
+    str()
+```
+
+### Run
+
+This model simulates the spread of measles in a highschool. The highschool has `r params$'Population size'` students, and the simulation runs for `r params$'N days'` days with one index case. The following is the output from the highschool model:
+
+```{r}
+#| echo: false
+#| label: run-model
+system2("./school_quarantine.o", "highschool-params.yaml", wait = TRUE, stdout=TRUE) |>
+    cat(sep = "\n")
+```
+
+
+## Flowchart
+
+This diagram shows the possible transitions between the states in the model:
+
+```{r}
+#| label: print-diagram
+#| output: asis
+#| echo: false
+cat("```mermaid\n")
+readLines("highschool-diagram.mmd") |>
+    cat(sep = "\n")
+cat("\n```")
+```
+
+## Reading the output
+
+```{r}
+#| label: reading-history
+#| echo: false
+library(data.table)
+histories <- lapply(list.files(
+    "highschool-out", pattern="total_hist", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, data.table::fread(fn))
+   }) |> rbindlist()
+
+# Figuring out the outbreak size
+exposed <- c("Exposed", "Predromal", "Rash", "Isolated", "Quarantined Exposed", "Quarantined Susceptible", "Recovered")
+counts <- histories[(state %in% exposed) & (date == max(date))]
+counts <- counts[, .(Total = sum(counts)), by = "fn"]
+
+library(ggplot2)
+ggplot(counts, aes(x = Total)) +
+    geom_histogram()
+```
+
+Preparing the data for output
+
+
+```{r}
+#| label: preparing-output
+#| echo: false
+# Reshape the data to wide
+histories_wide <- dcast(
+    histories, fn + date ~ state, value.var = "counts")
+
+# Generating simulation ids
+histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+histories_wide[, fn := NULL]
+
+fwrite(histories_wide, "highschool-histories.csv")
+
+# Reading the 'transition.csv' files
+transitions <- lapply(
+    list.files("highschool-out", pattern="transition", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, fread(fn))
+    }) |> rbindlist()
+
+# Detected cases
+detected <- transitions[
+    from != "Isolated" & to == "Isolated",
+    .(fn, from, date, counts)
+    ]
+detected <- detected[counts > 0]
+detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+detected[, fn := NULL]
+
+fwrite(detected, "highschool-detected.csv")
+```
+
+Some statistics about the contact tracing. Each detected case is moved to the isolated state and triggers contact tracing. The following plot shows the cumulative number of detected cases over time:
+
+```{r}
+#| label: contact-tracing
+#| echo: false
+detected_cum <- detected[, .(Total = sum(counts)), by = .(date, sim_num )] 
+detected_cum[, cumulative := cumsum(Total), by = sim_num]
+detected_cum[, min := quantile(cumulative, 0.025), by = date]
+detected_cum[, mean := mean(cumulative), by = date]
+detected_cum[, max := quantile(cumulative, 0.975), by = date]
+detected_cum |> 
+    ggplot(aes(x = date, y = cumulative)) +
+    geom_line(aes(x=date, y = mean)) +
+    geom_ribbon(
+        aes(ymin = min, ymax = max), fill = "grey", alpha = 0.5
+        ) +
+    # Legend about the ribbon and the mean
+    geom_line(aes(x=date, y = min), linetype = "dashed") +
+    geom_line(aes(x=date, y = max), linetype = "dashed") +
+    labs(
+        title = "Cumulative detected cases",
+        x = "Date",
+        y = "Cumulative detected cases",
+        caption = "The shaded area represents the 95% confidence interval"
+    )
+```
+

@@ -1,7 +1,7 @@
-# Measles models
+# Contact tracing model for measles
 
 
-## Highschool model
+## Contact tracing in Highschools
 
 The highschool model is a discrete-time Agent-Based Model \[ABM\] that
 includes the following features:
@@ -83,8 +83,8 @@ one index case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 5.00s (1000 runs)
-    Last run speed      : 1.73 million agents x day / second
-    Average run speed   : 10.19 million agents x day / second
+    Last run speed      : 1.72 million agents x day / second
+    Average run speed   : 11.17 million agents x day / second
     Rewiring            : off
 
     Global events:

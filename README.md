@@ -21,3 +21,8 @@ As outputs (with/without the interventions)
 
 - Immunization dashboard by Utah's DHHS: https://avrpublic.dhhs.utah.gov/imms_dashboard/
 - Measles disease plan by Utah's DHHS: https://epi.utah.gov/wp-content/uploads/Measles-disease-plan.pdf
+
+# Included models
+
+- Contact tracing model ([contact_tracing](contact_tracing)): Contact tracing is performed and not all unvaccinated individuals are moved to quarantine.
+- School quarantine model ([school_quarantine](school_quarantine)): There is no contact tracing and all unvaccinated individuals are moved to quarantine.

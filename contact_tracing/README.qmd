@@ -1,9 +1,9 @@
 ---
 format: gfm
-title: Measles models
+title: Contact tracing model for measles
 ---
 
-## Highschool model
+## Contact tracing in Highschools
 
 The highschool model is a discrete-time Agent-Based Model [ABM] that includes the following features:
 
@@ -46,7 +46,7 @@ This model simulates the spread of measles in a highschool. The highschool has `
 ```{r}
 #| echo: false
 #| label: run-model
-system2("./highschool.o", "highschool-params.yaml", wait = TRUE, stdout=TRUE) |>
+system2("./contact_tracing.o", "highschool-params.yaml", wait = TRUE, stdout=TRUE) |>
     cat(sep = "\n")
 ```
 

@@ -1,7 +1,7 @@
 #define epiworld_double double
 
 #include <iostream>
-#include "epiworld.hpp"
+#include "../epiworld.hpp"
 
 /**
  * Notes:
@@ -19,7 +19,7 @@
 
 using namespace epiworld;
 
-class ModelMeaslesHighSchool: public Model<> {
+class ModelSchoolQuarantine: public Model<> {
 
 private:
 
@@ -38,10 +38,10 @@ public:
     };
 
     // Default constructor
-    ModelMeaslesHighSchool() {};
+    ModelSchoolQuarantine() {};
 
-    ModelMeaslesHighSchool(
-        ModelMeaslesHighSchool & model,
+    ModelSchoolQuarantine(
+        ModelSchoolQuarantine & model,
         epiworld_fast_uint n,
         epiworld_fast_uint n_exposed,
         // Disease parameters
@@ -56,11 +56,10 @@ public:
         // Policy parameters
         epiworld_double prop_vaccinated,
         epiworld_fast_uint quarantine_days,
-        epiworld_fast_uint contact_tracing_days_back,
         epiworld_double contact_tracing_success_rate
     );
 
-    ModelMeaslesHighSchool(
+    ModelSchoolQuarantine(
         epiworld_fast_uint n,
         epiworld_fast_uint n_exposed,
         // Disease parameters
@@ -75,7 +74,6 @@ public:
         // Policy parameters
         epiworld_double prop_vaccinated,
         epiworld_fast_uint quarantine_days,
-        epiworld_fast_uint contact_tracing_days_back,
         epiworld_double contact_tracing_success_rate
     );
 
@@ -84,19 +82,7 @@ public:
     std::vector< int > ids_triggered_contact_tracing;
     std::vector< int > day_quarantined_or_isolated;
     
-    void contact_tracing();
-    
-    /**
-     * Each (i,j) entry represents is -1 if there's no contact
-     * between the pair, otherwise it is the day of the contact.
-     * Contact tracers will ask for contact in the last x-days.
-     * 
-     * The matrix is row-major order and symmetric.
-     */
-    std::vector< int > contact_matrix; //< n x n matrix
-    int & contact_matrix_ij(int i, int j);
-
-    void print_contact_tracing(int n_entries = -1);
+    void quarantine_agents();
 
     void reset();
     void update_available();
@@ -105,84 +91,47 @@ public:
 
 };
 
-inline int & ModelMeaslesHighSchool::contact_matrix_ij(int i, int j) {
-    if (i > j)
-        std::swap(i, j);
-    return contact_matrix[j + i * this->size()];
-}
-
-inline void ModelMeaslesHighSchool::print_contact_tracing(int n_entries) {
-    if (n_entries < 0)
-        n_entries = this->size();
-    
-    printf_epiworld("Contact matrix (first %i entires) (adjacency matrix)\n", n_entries);
-    printf_epiworld("Each entry is the day of the contact between i and j, \n");
-    printf_epiworld("with negative values indicating no contact \n");
-    printf_epiworld("between the individuals.\n");
-    for (int i = 0; i < n_entries; ++i)
-    {
-        for (int j = 0; j < n_entries; ++j)
-        {
-            printf_epiworld("% 4i ", contact_matrix_ij(i, j));
-        }
-        std::cout << std::endl;
-    }
-}
-
-inline void ModelMeaslesHighSchool::contact_tracing() {
+inline void ModelSchoolQuarantine::quarantine_agents() {
 
     // Capturing the days that matter and the probability of success
-    int days_back = this->par("How many days back to trace");
-    epiworld_double success_rate = this->par("Contact tracing success rate");
+    epiworld_double willingness = this->par("Quarantine willingness");
 
     // Iterating through the new cases
-    for (const auto & id: ids_triggered_contact_tracing)
-    {
-        // Iterating through the
-        for (size_t i = 0u; i < size(); ++i) {
+    if (ids_triggered_contact_tracing.size() == 0u)
+        return;
 
-            // No contact
-            if (contact_matrix_ij(id, i) == -1)
-                continue;
+    // Iterating through the
+    for (size_t i = 0u; i < size(); ++i) {
 
-            int days_since = today() - contact_matrix_ij(id, i);
+        // If the agent has a vaccine, then no need for quarantine
+        if (get_agent(i).get_n_tools() != 0u)
+            continue;
 
-            // Does it fit within the contact tracing window?
-            if (days_since <= days_back) {
+        // Is it already in quarantine or isolated?
+        if (get_agent(i).get_state() >= states::RASH)
+            continue;
 
-                // Do we succeed in the contact tracing?
-                if (runif() < success_rate)
-                {
-                    // If the agent has a vaccine, then no need for quarantine
-                    if (get_agent(i).get_n_tools() != 0u)
-                        continue;
+        // Are we successful in quarantining the agent?
+        if (runif() > willingness)
+            continue;
 
-                    // Is it already in quarantine or isolated?
-                    if (get_agent(i).get_state() >= states::RASH)
-                        continue;
+        if (get_agent(i).get_state() == states::SUSECPTIBLE)
+            get_agent(i).change_state(
+                this, states::QUARANTINED_SUSCEPTIBLE
+            );
+        else if (get_agent(i).get_state() == states::EXPOSED)
+            get_agent(i).change_state(
+                this,
+                states::QUARANTINED_EXPOSED
+            );
+        else if (get_agent(i).get_state() == states::PRODROMAL)
+            get_agent(i).change_state(
+                this,
+                states::QUARANTINED_INFECTIOUS
+            );
 
-                    if (get_agent(i).get_state() == states::SUSECPTIBLE)
-                        get_agent(i).change_state(
-                            this, states::QUARANTINED_SUSCEPTIBLE
-                        );
-                    else if (get_agent(i).get_state() == states::EXPOSED)
-                        get_agent(i).change_state(
-                            this,
-                            states::QUARANTINED_EXPOSED
-                        );
-                    else if (get_agent(i).get_state() == states::PRODROMAL)
-                        get_agent(i).change_state(
-                            this,
-                            states::QUARANTINED_INFECTIOUS
-                        );
-
-                    // And we add the day of quarantine
-                    day_quarantined_or_isolated[i] = today();
-                }
-
-            }
-
-        }
+        // And we add the day of quarantine
+        day_quarantined_or_isolated[i] = today();
 
     }
 
@@ -194,13 +143,13 @@ inline void ModelMeaslesHighSchool::contact_tracing() {
 }
 
 EPI_NEW_GLOBALFUN(update_model, int) {
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     model->update_available();
-    model->contact_tracing();
+    model->quarantine_agents();
     return;
 }
 
-inline void ModelMeaslesHighSchool::reset() {
+inline void ModelSchoolQuarantine::reset() {
     
     // Initializing the population
     Model<>::agents_empty_graph(
@@ -208,14 +157,6 @@ inline void ModelMeaslesHighSchool::reset() {
     );
     
     Model<>::reset();
-
-    // Cleaning contact matrix and list of who is quanrantined or isolated
-    contact_matrix.resize(size() * size(), -1);
-    std::fill(
-        contact_matrix.begin(),
-        contact_matrix.end(),
-        -1
-    );
 
     day_quarantined_or_isolated.resize(size(), 0);
     std::fill(
@@ -227,13 +168,13 @@ inline void ModelMeaslesHighSchool::reset() {
     return;
 }
 
-inline void ModelMeaslesHighSchool::update_available() {
+inline void ModelSchoolQuarantine::update_available() {
 
     this->available.clear();
     for (auto & agent: this->get_agents())
     {
         const auto & s = agent.get_state();
-        if (s <= ModelMeaslesHighSchool::states::RASH)
+        if (s <= ModelSchoolQuarantine::states::RASH)
             this->available.push_back(&agent);
     }
 
@@ -245,11 +186,11 @@ inline void ModelMeaslesHighSchool::update_available() {
 
 }
 
-inline Model<> * ModelMeaslesHighSchool::clone_ptr()
+inline Model<> * ModelSchoolQuarantine::clone_ptr()
 {
         
-    ModelMeaslesHighSchool * ptr = new ModelMeaslesHighSchool(
-        *dynamic_cast<const ModelMeaslesHighSchool*>(this)
+    ModelSchoolQuarantine * ptr = new ModelSchoolQuarantine(
+        *dynamic_cast<const ModelSchoolQuarantine*>(this)
         );
 
     return dynamic_cast< Model<> *>(ptr);
@@ -263,7 +204,7 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
     if (ndraw == 0)
         return;
 
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     size_t n_available = model->available.size();
 
     if (n_available == 0)
@@ -294,17 +235,14 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
         if (neighbor.get_id() == p->get_id())
             continue;
 
-        // Adding an entry for contact tracing
-        model->contact_matrix_ij(p->get_id(), neighbor.get_id()) = m->today();
-
         // The neighbor is infected because it is on the list!
         if (neighbor.get_virus() == nullptr)
             continue;
 
         // Only infectious individuals can transmit
         if (
-            neighbor.get_state() != ModelMeaslesHighSchool::states::PRODROMAL &&
-            neighbor.get_state() != ModelMeaslesHighSchool::states::RASH
+            neighbor.get_state() != ModelSchoolQuarantine::states::PRODROMAL &&
+            neighbor.get_state() != ModelSchoolQuarantine::states::RASH
         )
             continue;
 
@@ -347,7 +285,7 @@ EPI_NEW_UPDATEFUN(update_exposed, int) {
 
     // Extract the rate
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
-        p->change_state(m, ModelMeaslesHighSchool::states::PRODROMAL);
+        p->change_state(m, ModelSchoolQuarantine::states::PRODROMAL);
 
     return;
 
@@ -355,11 +293,11 @@ EPI_NEW_UPDATEFUN(update_exposed, int) {
 
 EPI_NEW_UPDATEFUN(update_prodromal, int) {
     
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
         model->day_quarantined_or_isolated[p->get_id()] = m->today();
-        p->change_state(m, ModelMeaslesHighSchool::states::RASH);
+        p->change_state(m, ModelSchoolQuarantine::states::RASH);
     }
 
     return;
@@ -368,12 +306,12 @@ EPI_NEW_UPDATEFUN(update_prodromal, int) {
 
 EPI_NEW_UPDATEFUN(update_rash, int) {
 
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     int days_since_rash = m->today() - model->day_quarantined_or_isolated[p->get_id()];
     if (days_since_rash >= m->par("Max days in rash"))
     {
         model->ids_triggered_contact_tracing.push_back(p->get_id());
-        p->change_state(m, ModelMeaslesHighSchool::states::ISOLATED);
+        p->change_state(m, ModelSchoolQuarantine::states::ISOLATED);
     }
     
 };
@@ -384,7 +322,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
         p->change_state(
             m,
-            ModelMeaslesHighSchool::states::QUARANTINED_INFECTIOUS
+            ModelSchoolQuarantine::states::QUARANTINED_INFECTIOUS
         );
 
     return;
@@ -393,25 +331,25 @@ EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
 
 EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
 
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     int days_since =
         m->today() - model->day_quarantined_or_isolated[p->get_id()];
     
     if (days_since >= m->par("Quarantine days"))
-        p->change_state(m, ModelMeaslesHighSchool::states::SUSECPTIBLE);
+        p->change_state(m, ModelSchoolQuarantine::states::SUSECPTIBLE);
 
 }
 
 EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
 
-    auto * model = dynamic_cast<ModelMeaslesHighSchool *>(m);
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     
     // If they develop rash, then they are isolated and contact
     // tracing is triggered.
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
         model->ids_triggered_contact_tracing.push_back(p->get_id());
-        p->change_state(m, ModelMeaslesHighSchool::states::ISOLATED);
+        p->change_state(m, ModelSchoolQuarantine::states::ISOLATED);
         return;
     }
 
@@ -421,14 +359,14 @@ EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
         m->today() - model->day_quarantined_or_isolated[p->get_id()];
     
     if (days_since >= m->par("Quarantine days"))
-        p->change_state(m, ModelMeaslesHighSchool::states::PRODROMAL);
+        p->change_state(m, ModelSchoolQuarantine::states::PRODROMAL);
 
     return;
 
 }
 
-inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
-    ModelMeaslesHighSchool & model,
+inline ModelSchoolQuarantine::ModelSchoolQuarantine(
+    ModelSchoolQuarantine & model,
     epiworld_fast_uint n,
     epiworld_fast_uint n_exposed,
     // Disease parameters
@@ -443,7 +381,6 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     // Policy parameters
     epiworld_double prop_vaccinated,
     epiworld_fast_uint quarantine_days,
-    epiworld_fast_uint contact_tracing_days_back,
     epiworld_double contact_tracing_success_rate
 ) {
 
@@ -465,9 +402,8 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     model.add_param(1.0 / rash_period, "1/Rash period");
     model.add_param(max_days_in_rash, "Max days in rash");
     model.add_param(quarantine_days, "Quarantine days");
-    model.add_param(contact_tracing_days_back, "How many days back to trace");
     model.add_param(
-        contact_tracing_success_rate, "Contact tracing success rate"
+        contact_tracing_success_rate, "Quarantine willingness"
     );
     model.add_param(prop_vaccinated, "Vaccination rate");
     model.add_param(vax_reduction_suscept, "Vax reduced suscept.");
@@ -506,7 +442,7 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
 
 }
 
-inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
+inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     epiworld_fast_uint n,
     epiworld_fast_uint n_exposed,
     // Disease parameters
@@ -521,11 +457,10 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
     // Policy parameters
     epiworld_double prop_vaccinated,
     epiworld_fast_uint quarantine_days,
-    epiworld_fast_uint contact_tracing_days_back,
     epiworld_double contact_tracing_success_rate
 ) {
 
-    ModelMeaslesHighSchool(
+    ModelSchoolQuarantine(
         *this,
         n,
         n_exposed,
@@ -539,7 +474,6 @@ inline ModelMeaslesHighSchool::ModelMeaslesHighSchool(
         max_days_in_rash,
         prop_vaccinated,
         quarantine_days,
-        contact_tracing_days_back,
         contact_tracing_success_rate
     );
 

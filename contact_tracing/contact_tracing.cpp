@@ -1,4 +1,4 @@
-#include "highschool.hpp"
+#include "contact_tracing.hpp"
 
 // Defining the 
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "Using file: " << fn << std::endl;
 
-    ModelMeaslesHighSchool model(
+    ModelContactTracing model(
         1000, // Population size
         1,    // initial number of exposed
         10,   // Contact rate  
