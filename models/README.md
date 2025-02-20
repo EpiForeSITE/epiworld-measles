@@ -74,9 +74,9 @@ one index case. The following is the output from the highschool model:
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
-    Total elapsed t     : 5.00s (1000 runs)
-    Last run speed      : 1.59 million agents x day / second
-    Average run speed   : 10.20 million agents x day / second
+    Total elapsed t     : 6.00s (1000 runs)
+    Last run speed      : 1.70 million agents x day / second
+    Average run speed   : 9.89 million agents x day / second
     Rewiring            : off
 
     Global events:
