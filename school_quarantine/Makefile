@@ -12,5 +12,5 @@ school_quarantine.o: school_quarantine.cpp school_quarantine.hpp
 README.md: README.qmd school_quarantine.o
 	quarto render README.qmd
 
-README.html: README.qmd school_quarantine.o
+README.html: README.qmd params.yaml
 	quarto render README.qmd --to html 

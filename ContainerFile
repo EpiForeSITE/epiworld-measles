@@ -2,4 +2,8 @@ FROM rocker/tidyverse:4.4.0
 
 RUN install2.r data.table
 
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y \
+    gdb valgrind
+
 CMD ["bash"]

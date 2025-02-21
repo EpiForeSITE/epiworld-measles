@@ -6,16 +6,19 @@ int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
     std::string fn = "params.yaml";
-    if (argc > 2) {
-        std::cerr << "Usage: " << argv[0] << " <filename>" << std::endl;
+    size_t n       = 1000;
+    if (argc != 3 && argc != 1) {
+        std::cerr << "Usage: " << argv[0] << " <filename> <size>" << std::endl;
         return 1;
-    } else if (argc == 2) {
+    } else if (argc == 3) {
         fn = std::string(argv[1]);
+        n  = std::stoul(argv[2]);
     }
     std::cout << "Using file: " << fn << std::endl;
 
+
     ModelSchoolQuarantine model(
-        1000, // Population size
+        n, // Population size
         1,    // initial number of exposed
         10,   // Contact rate  
         0.95, // Transmission rate
@@ -30,8 +33,7 @@ int main(int argc, char *argv[]) {
         0.9   // Quarantine success rate
     );
 
-    model.read_params(fn);
-
+    model.read_params(fn, true);
     // model.run(60, 331);
 
     auto saver = make_save_run<int>(

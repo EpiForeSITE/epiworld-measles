@@ -164,13 +164,27 @@ inline void ModelSchoolQuarantine::reset() {
 
     quarantine_status = QuarantineStatus::INACTIVE;
     
-    Model<>::reset();
+    Model<>::get_virus(0u).set_distribution(
+        distribute_virus_randomly(
+            Model<>::operator()("initial number of exposed"),
+            false
+        )
+    );
 
+    Model<>::get_tool(0u).set_distribution(
+        distribute_tool_randomly(
+            Model<>::operator()("Vaccination rate"),
+            true
+        )
+    );
+    
     day_quarantined_or_isolated.resize(size(), 0);
     std::fill(
         day_quarantined_or_isolated.begin(),
         day_quarantined_or_isolated.end(),
         0);
+
+    Model<>::reset();
 
     update_model(dynamic_cast<Model<>*>(this));
     return;
@@ -315,6 +329,16 @@ EPI_NEW_UPDATEFUN(update_prodromal, int) {
 EPI_NEW_UPDATEFUN(update_rash, int) {
 
     auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
+    
+    if (model->day_quarantined_or_isolated.size() <= p->get_id())
+        throw std::logic_error(
+            "The agent is not in the list of quarantined or isolated agents: " +
+            std::to_string(p->get_id()) +
+            " vs " +
+            std::to_string(model->day_quarantined_or_isolated.size()) +
+            ". The model has " + std::to_string(model->size()) + " agents."
+        );
+
     int days_since_rash = m->today() - model->day_quarantined_or_isolated[p->get_id()];
     if (days_since_rash >= m->par("Max days in rash"))
     {
@@ -423,9 +447,6 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     measles.set_prob_infecting(&model("Transmission rate"));
     measles.set_prob_recovery(&model("1/Rash period"));
     measles.set_incubation(&model("Incubation period"));
-    measles.set_distribution(
-        distribute_virus_randomly(n_exposed, false)
-    );
 
     model.add_virus(measles);
 

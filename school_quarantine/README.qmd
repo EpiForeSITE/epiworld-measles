@@ -1,6 +1,7 @@
 ---
 format: gfm
 title: School quarantine model
+embed-resources: true
 ---
 
 ## Highschool model
@@ -32,12 +33,22 @@ The highschool model is a discrete-time Agent-Based Model [ABM] that includes th
 The following is a raw list of the parameters included in the model:
 
 ```{r}
+#| label: update-params
+temp_params <- yaml::read_yaml("params.yaml")
+# temp_params$`Population size` <- 1500
+# temp_params$`Replicates` <- 500
+temp_params_fn <- tempfile(fileext = ".yaml")
+yaml::write_yaml(temp_params, temp_params_fn)
+```
+
+```{r}
 #| label: print-params
 #| echo: false
-params <- yaml::read_yaml("params.yaml")
+params <- yaml::read_yaml(temp_params_fn)
 params |>
     str()
 ```
+
 
 ### Run
 
@@ -46,7 +57,19 @@ This model simulates the spread of measles in a highschool. The highschool has `
 ```{r}
 #| echo: false
 #| label: run-model
-system2("./school_quarantine.o", "params.yaml", wait = TRUE, stdout=TRUE) |>
+#| warning: false
+#| message: false
+unlink("highschool-out", recursive = TRUE)
+dir.create("highschool-out")
+
+# Size of the population
+n <- temp_params$`Population size`
+n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
+system2(
+    "./school_quarantine.o",
+    c(temp_params_fn, n),
+    wait = TRUE, stdout=TRUE
+    ) |>
     cat(sep = "\n")
 ```
 
@@ -70,6 +93,7 @@ cat("\n```")
 ```{r}
 #| label: reading-history
 #| echo: false
+#| warning: false
 library(data.table)
 histories <- lapply(list.files(
     "highschool-out", pattern="total_hist", full.names = TRUE),
@@ -78,13 +102,29 @@ histories <- lapply(list.files(
    }) |> rbindlist()
 
 # Figuring out the outbreak size
-exposed <- c("Exposed", "Predromal", "Rash", "Isolated", "Quarantined Exposed", "Quarantined Susceptible", "Recovered")
+exposed <- c("Exposed", "Predromal", "Rash", "Isolated", "Quarantined Exposed", "Recovered")
 counts <- histories[(state %in% exposed) & (date == max(date))]
 counts <- counts[, .(Total = sum(counts)), by = "fn"]
+```
 
+
+```{r}
+#| label: print-histogram
+#| echo: false
+#| warning: false
+#| message: false
 library(ggplot2)
+
+quantile50 <- quantile(counts$Total, probs=.5)
 ggplot(counts, aes(x = Total)) +
-    geom_histogram()
+    geom_histogram(fill="lightgray") +
+    geom_vline(xintercept = quantile50, col = "red", lty = 2) +
+    geom_text(
+        aes(label = quantile50),
+        x = quantile50,
+        y = 0,
+        vjust = -1
+        ) 
 ```
 
 Preparing the data for output
@@ -101,7 +141,10 @@ histories_wide <- dcast(
 histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 histories_wide[, fn := NULL]
 
-fwrite(histories_wide, "school_quarantine-histories.csv")
+fwrite(
+    histories_wide,
+    sprintf("school_quarantine-histories-n=%i-vax=%s.csv", n, n_vax)
+    )
 
 # Reading the 'transition.csv' files
 transitions <- lapply(
@@ -119,7 +162,10 @@ detected <- detected[counts > 0]
 detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 detected[, fn := NULL]
 
-fwrite(detected, "school_quarantine-detected.csv")
+fwrite(
+    detected,
+    sprintf("school_quarantine-detected-n=%i.csv-vax=%s", n, n_vax)
+)
 ```
 
 Some statistics about the contact tracing. Each detected case is moved to the isolated state and triggers contact tracing. The following plot shows the cumulative number of detected cases over time:

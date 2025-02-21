@@ -18,7 +18,7 @@
 
 /* Versioning */
 #define EPIWORLD_VERSION_MAJOR 0
-#define EPIWORLD_VERSION_MINOR 6
+#define EPIWORLD_VERSION_MINOR 7
 #define EPIWORLD_VERSION_PATCH 1
 
 static const int epiworld_version_major = EPIWORLD_VERSION_MAJOR;
@@ -3272,7 +3272,8 @@ public:
      * @return std::vector< epiworld_double > 
      */
     std::vector< epiworld_double > transition_probability(
-        bool print = true
+        bool print = true,
+        bool normalize = true
     ) const;
 
     bool operator==(const DataBase<TSeq> & other) const;
@@ -4493,7 +4494,8 @@ inline void DataBase<TSeq>::reproductive_number(
 
 template<typename TSeq>
 inline std::vector< epiworld_double > DataBase<TSeq>::transition_probability(
-    bool print
+    bool print,
+    bool normalize
 ) const {
 
     auto states_labels = model->get_states();
@@ -4507,7 +4509,8 @@ inline std::vector< epiworld_double > DataBase<TSeq>::transition_probability(
 
         for (size_t s_i = 0; s_i < n_state; ++s_i)
         {
-            epiworld_double daily_total = hist_total_counts[(t - 1) * n_state + s_i];
+            epiworld_double daily_total =
+                hist_total_counts[(t - 1) * n_state + s_i];
 
             if (daily_total == 0)
                 continue;
@@ -4542,10 +4545,13 @@ inline std::vector< epiworld_double > DataBase<TSeq>::transition_probability(
 
     }
 
-    for (size_t s_i = 0; s_i < n_state; ++s_i)
+    if (normalize)
     {
-        for (size_t s_j = 0; s_j < n_state; ++s_j)
-            res[s_i + s_j * n_state] /= days_to_include[s_i];
+        for (size_t s_i = 0; s_i < n_state; ++s_i)
+        {
+            for (size_t s_j = 0; s_j < n_state; ++s_j)
+                res[s_i + s_j * n_state] /= days_to_include[s_i];
+        }
     }
 
     if (print)
@@ -4557,6 +4563,21 @@ inline std::vector< epiworld_double > DataBase<TSeq>::transition_probability(
                 nchar = l.length();
 
         std::string fmt = " - %-" + std::to_string(nchar) + "s";
+
+        std::string fmt_entry = " % 4.2f";
+        if (!normalize)
+        {
+            nchar = 0u;
+            for (auto & l: res)
+            {
+                std::string tmp = std::to_string(l);
+                if (tmp.length() > nchar)
+                    nchar = tmp.length();
+            }
+
+            fmt_entry = " % " + std::to_string(nchar) + ".0f";
+        } 
+
         
         printf_epiworld("\nTransition Probabilities:\n");
         for (size_t s_i = 0u; s_i < n_state; ++s_i)
@@ -4568,7 +4589,9 @@ inline std::vector< epiworld_double > DataBase<TSeq>::transition_probability(
                 {
                     printf_epiworld("     -");
                 } else {
-                    printf_epiworld(" % 4.2f", res[s_i + s_j * n_state]);
+                    printf_epiworld(
+                        fmt_entry.c_str(), res[s_i + s_j * n_state]
+                    );
                 }
             }
             printf_epiworld("\n");
@@ -6488,6 +6511,12 @@ protected:
         std::exponential_distribution<>();
     std::binomial_distribution<> rbinomd         =
         std::binomial_distribution<>();
+    std::negative_binomial_distribution<> rnbinomd =
+        std::negative_binomial_distribution<>();
+    std::geometric_distribution<> rgeomd          =
+        std::geometric_distribution<>();
+    std::poisson_distribution<> rpoissd           =
+        std::poisson_distribution<>();
 
     std::function<void(std::vector<Agent<TSeq>>*,Model<TSeq>*,epiworld_double)> rewire_fun;
     epiworld_double rewire_prop = 0.0;
@@ -6629,6 +6658,9 @@ public:
     void set_rand_gamma(epiworld_double alpha, epiworld_double beta);
     void set_rand_lognormal(epiworld_double mean, epiworld_double shape);
     void set_rand_binom(int n, epiworld_double p);
+    void set_rand_nbinom(int n, epiworld_double p);
+    void set_rand_geom(epiworld_double p);
+    void set_rand_poiss(epiworld_double lambda);
     epiworld_double runif();
     epiworld_double runif(epiworld_double a, epiworld_double b);
     epiworld_double rnorm();
@@ -6641,6 +6673,12 @@ public:
     epiworld_double rlognormal(epiworld_double mean, epiworld_double shape);
     int rbinom();
     int rbinom(int n, epiworld_double p);
+    int rnbinom();
+    int rnbinom(int n, epiworld_double p);
+    int rgeom();
+    int rgeom(epiworld_double p);
+    int rpoiss();
+    int rpoiss(epiworld_double lambda);
     ///@}
 
     /**
@@ -6926,8 +6964,10 @@ public:
      * 
      */
     ///@{
-    epiworld_double add_param(epiworld_double initial_val, std::string pname);
-    void read_params(std::string fn);
+    epiworld_double add_param(
+        epiworld_double initial_val, std::string pname, bool overwrite = false
+    );
+    void read_params(std::string fn, bool overwrite = false);
     epiworld_double get_param(epiworld_fast_uint k);
     epiworld_double get_param(std::string pname);
     // void set_param(size_t k, epiworld_double val);
@@ -7787,6 +7827,24 @@ inline void Model<TSeq>::set_rand_binom(int n, epiworld_double p)
 }
 
 template<typename TSeq>
+inline void Model<TSeq>::set_rand_nbinom(int n, epiworld_double p)
+{ 
+    rnbinomd  = std::negative_binomial_distribution<>(n, p);
+}
+
+template<typename TSeq>
+inline void Model<TSeq>::set_rand_geom(epiworld_double p)
+{ 
+    rgeomd  = std::geometric_distribution<>(p);
+}
+
+template<typename TSeq>
+inline void Model<TSeq>::set_rand_poiss(epiworld_double lambda)
+{ 
+    rpoissd  = std::poisson_distribution<>(lambda);
+}
+
+template<typename TSeq>
 inline epiworld_double & Model<TSeq>::operator()(std::string pname) {
 
     if (parameters.find(pname) == parameters.end())
@@ -7972,6 +8030,48 @@ inline int Model<TSeq>::rbinom(int n, epiworld_double p) {
     rbinomd.param(std::binomial_distribution<>::param_type(n, p));
     epiworld_double ans = rbinomd(*engine);
     rbinomd.param(old_param);
+    return ans;
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rnbinom() {
+    return rnbinomd(*engine);
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rnbinom(int n, epiworld_double p) {
+    auto old_param = rnbinomd.param();
+    rnbinomd.param(std::negative_binomial_distribution<>::param_type(n, p));
+    int ans = rnbinomd(*engine);
+    rnbinomd.param(old_param);
+    return ans;
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rgeom() {
+    return rgeomd(*engine);
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rgeom(epiworld_double p) {
+    auto old_param = rgeomd.param();
+    rgeomd.param(std::geometric_distribution<>::param_type(p));
+    int ans = rgeomd(*engine);
+    rgeomd.param(old_param);
+    return ans;
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rpoiss() {
+    return rpoissd(*engine);
+}
+
+template<typename TSeq>
+inline int Model<TSeq>::rpoiss(epiworld_double lambda) {
+    auto old_param = rpoissd.param();
+    rpoissd.param(std::poisson_distribution<>::param_type(lambda));
+    int ans = rpoissd(*engine);
+    rpoissd.param(old_param);
     return ans;
 }
 
@@ -9385,10 +9485,15 @@ inline void Model<TSeq>::print_state_codes() const
 template<typename TSeq>
 inline epiworld_double Model<TSeq>::add_param(
     epiworld_double initial_value,
-    std::string pname
+    std::string pname,
+    bool overwrite
     ) {
 
     if (parameters.find(pname) == parameters.end())
+        parameters[pname] = initial_value;
+    else if (!overwrite)
+        throw std::logic_error("The parameter " + pname + " already exists.");
+    else
         parameters[pname] = initial_value;
     
     return initial_value;
@@ -9396,7 +9501,7 @@ inline epiworld_double Model<TSeq>::add_param(
 }
 
 template<typename TSeq>
-inline void Model<TSeq>::read_params(std::string fn)
+inline void Model<TSeq>::read_params(std::string fn, bool overwrite)
 {
 
     std::ifstream paramsfile(fn);
@@ -9434,7 +9539,8 @@ inline void Model<TSeq>::read_params(std::string fn)
             std::regex_replace(
                 match[1u].str(),
                 std::regex("^\\s+|\\s+$"),
-                "")
+                ""),
+            overwrite
         );
 
     }
@@ -10469,15 +10575,18 @@ inline VirusToAgentFun<TSeq> distribute_virus_randomly(
                 idx.push_back(agent.get_id());
 
         // Picking how many
-        size_t n = model->size();
+        int n = model->size();
         int n_available = static_cast<int>(idx.size());
         int n_to_sample;
         if (prevalence_as_proportion)
         {
-            n_to_sample = static_cast<int>(std::floor(prevalence * n));
+            n_to_sample = static_cast<int>(std::floor(
+                prevalence * static_cast< epiworld_double >(n)
+            ));
 
-            if (n_to_sample == static_cast<int>(n))
-                n_to_sample--;
+            // Correcting for possible overflow
+            if (n_to_sample == (n + 1))
+                --n_to_sample;
         }
         else
         {
@@ -11718,8 +11827,10 @@ inline ToolToAgentFun<TSeq> distribute_tool_randomly(
             {
                 n_to_distribute = static_cast<int>(std::floor(prevalence * n));
 
-                if (n_to_distribute == n)
-                    n_to_distribute--;
+                // Correcting for possible rounding errors
+                if (n_to_distribute == (n + 1))
+                    --n_to_distribute;
+
             }
             else
             {
@@ -12519,7 +12630,9 @@ inline EntityToAgentFun<TSeq> distribute_entity_randomly(
         if (as_proportion)
         {
             n_to_sample = static_cast<int>(std::floor(prevalence * n));
-            if (n_to_sample > static_cast<int>(n))
+
+            // Correcting for possible overflow
+            if (n_to_sample == (static_cast<int>(n) + 1))
                 --n_to_sample;
 
         } else
