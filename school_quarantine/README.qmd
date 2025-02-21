@@ -59,7 +59,7 @@ This diagram shows the possible transitions between the states in the model:
 #| label: print-diagram
 #| output: asis
 #| echo: false
-cat("```mermaid\n")
+cat("```{mermaid}\n")
 readLines("highschool-diagram.mmd") |>
     cat(sep = "\n")
 cat("\n```")

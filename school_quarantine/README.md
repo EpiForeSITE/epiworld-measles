@@ -82,8 +82,8 @@ one index case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 4.00s (1000 runs)
-    Last run speed      : 2.13 million agents x day / second
-    Average run speed   : 13.75 million agents x day / second
+    Last run speed      : 1.96 million agents x day / second
+    Average run speed   : 13.98 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -165,6 +165,7 @@ flowchart LR
     s5 -->|0.250000| s7
     s6 -->|0.106061| s0
     s7 -->|0.166667| s4
+
 ```
 
 ## Reading the output

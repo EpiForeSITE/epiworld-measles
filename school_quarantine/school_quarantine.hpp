@@ -25,18 +25,16 @@ private:
 
 public:
 
-    enum states {
-        SUSECPTIBLE,             //< Initial state
-        EXPOSED,                 //< Exposed (latent) to the disease
-        PRODROMAL,               //< Infectious (prodromal) state
-        RASH,                    //< Infectious with rash
-        ISOLATED,                //< Isolated
-        QUARANTINED_EXPOSED,     //< In case of potential exposure
-        QUARANTINED_SUSCEPTIBLE, //< In case of potential exposure
-        QUARANTINED_INFECTIOUS,  //< In case of potential exposure
-        RECOVERED                //< Recovered with permanent immunity
-    };
-
+    static const epiworld_fast_uint SUSECPTIBLE             = 0u;
+    static const epiworld_fast_uint EXPOSED                 = 1u;
+    static const epiworld_fast_uint PRODROMAL               = 2u;
+    static const epiworld_fast_uint RASH                    = 3u;
+    static const epiworld_fast_uint ISOLATED                = 4u;
+    static const epiworld_fast_uint QUARANTINED_EXPOSED     = 5u;
+    static const epiworld_fast_uint QUARANTINED_SUSCEPTIBLE = 6u;
+    static const epiworld_fast_uint QUARANTINED_INFECTIOUS  = 7u;
+    static const epiworld_fast_uint RECOVERED               = 8u;
+    
     // Default constructor
     ModelSchoolQuarantine() {};
 
@@ -78,8 +76,16 @@ public:
     );
 
     
-    std::vector<epiworld::Agent<> *> available;
-    std::vector< int > ids_triggered_contact_tracing;
+    std::vector<epiworld::Agent<> *> available;   
+
+    enum class QuarantineStatus {
+        INACTIVE,
+        TRIGGERED,
+        ACTIVE
+    };
+
+    QuarantineStatus quarantine_status;
+
     std::vector< int > day_quarantined_or_isolated;
     
     void quarantine_agents();
@@ -97,7 +103,7 @@ inline void ModelSchoolQuarantine::quarantine_agents() {
     epiworld_double willingness = this->par("Quarantine willingness");
 
     // Iterating through the new cases
-    if (ids_triggered_contact_tracing.size() == 0u)
+    if (quarantine_status != QuarantineStatus::TRIGGERED)
         return;
 
     // Iterating through the
@@ -108,26 +114,26 @@ inline void ModelSchoolQuarantine::quarantine_agents() {
             continue;
 
         // Is it already in quarantine or isolated?
-        if (get_agent(i).get_state() >= states::RASH)
+        if (get_agent(i).get_state() >= RASH)
             continue;
 
         // Are we successful in quarantining the agent?
         if (runif() > willingness)
             continue;
 
-        if (get_agent(i).get_state() == states::SUSECPTIBLE)
+        if (get_agent(i).get_state() == SUSECPTIBLE)
             get_agent(i).change_state(
-                this, states::QUARANTINED_SUSCEPTIBLE
+                this, QUARANTINED_SUSCEPTIBLE
             );
-        else if (get_agent(i).get_state() == states::EXPOSED)
+        else if (get_agent(i).get_state() == EXPOSED)
             get_agent(i).change_state(
                 this,
-                states::QUARANTINED_EXPOSED
+                QUARANTINED_EXPOSED
             );
-        else if (get_agent(i).get_state() == states::PRODROMAL)
+        else if (get_agent(i).get_state() == PRODROMAL)
             get_agent(i).change_state(
                 this,
-                states::QUARANTINED_INFECTIOUS
+                QUARANTINED_INFECTIOUS
             );
 
         // And we add the day of quarantine
@@ -136,7 +142,7 @@ inline void ModelSchoolQuarantine::quarantine_agents() {
     }
 
     // Clearing the list of ids
-    ids_triggered_contact_tracing.clear();
+    quarantine_status = QuarantineStatus::ACTIVE;
 
     return;
 
@@ -155,6 +161,8 @@ inline void ModelSchoolQuarantine::reset() {
     Model<>::agents_empty_graph(
         static_cast<size_t>(Model<>::operator()("Population size"))
     );
+
+    quarantine_status = QuarantineStatus::INACTIVE;
     
     Model<>::reset();
 
@@ -174,7 +182,7 @@ inline void ModelSchoolQuarantine::update_available() {
     for (auto & agent: this->get_agents())
     {
         const auto & s = agent.get_state();
-        if (s <= ModelSchoolQuarantine::states::RASH)
+        if (s <= RASH)
             this->available.push_back(&agent);
     }
 
@@ -241,8 +249,8 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
         // Only infectious individuals can transmit
         if (
-            neighbor.get_state() != ModelSchoolQuarantine::states::PRODROMAL &&
-            neighbor.get_state() != ModelSchoolQuarantine::states::RASH
+            neighbor.get_state() != model->PRODROMAL &&
+            neighbor.get_state() != model->RASH
         )
             continue;
 
@@ -285,7 +293,7 @@ EPI_NEW_UPDATEFUN(update_exposed, int) {
 
     // Extract the rate
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
-        p->change_state(m, ModelSchoolQuarantine::states::PRODROMAL);
+        p->change_state(m, ModelSchoolQuarantine::PRODROMAL);
 
     return;
 
@@ -297,7 +305,7 @@ EPI_NEW_UPDATEFUN(update_prodromal, int) {
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
         model->day_quarantined_or_isolated[p->get_id()] = m->today();
-        p->change_state(m, ModelSchoolQuarantine::states::RASH);
+        p->change_state(m, ModelSchoolQuarantine::RASH);
     }
 
     return;
@@ -310,8 +318,8 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
     int days_since_rash = m->today() - model->day_quarantined_or_isolated[p->get_id()];
     if (days_since_rash >= m->par("Max days in rash"))
     {
-        model->ids_triggered_contact_tracing.push_back(p->get_id());
-        p->change_state(m, ModelSchoolQuarantine::states::ISOLATED);
+        model->quarantine_status = ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
+        p->change_state(m, ModelSchoolQuarantine::ISOLATED);
     }
     
 };
@@ -322,7 +330,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
         p->change_state(
             m,
-            ModelSchoolQuarantine::states::QUARANTINED_INFECTIOUS
+            ModelSchoolQuarantine::QUARANTINED_INFECTIOUS
         );
 
     return;
@@ -336,7 +344,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
         m->today() - model->day_quarantined_or_isolated[p->get_id()];
     
     if (days_since >= m->par("Quarantine days"))
-        p->change_state(m, ModelSchoolQuarantine::states::SUSECPTIBLE);
+        p->change_state(m, ModelSchoolQuarantine::SUSECPTIBLE);
 
 }
 
@@ -348,8 +356,8 @@ EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
     // tracing is triggered.
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
-        model->ids_triggered_contact_tracing.push_back(p->get_id());
-        p->change_state(m, ModelSchoolQuarantine::states::ISOLATED);
+        model->quarantine_status = ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
+        p->change_state(m, ModelSchoolQuarantine::ISOLATED);
         return;
     }
 
@@ -359,7 +367,7 @@ EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
         m->today() - model->day_quarantined_or_isolated[p->get_id()];
     
     if (days_since >= m->par("Quarantine days"))
-        p->change_state(m, ModelSchoolQuarantine::states::PRODROMAL);
+        p->change_state(m, ModelSchoolQuarantine::PRODROMAL);
 
     return;
 
@@ -411,7 +419,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
 
     // Designing the disease
     Virus<> measles("Measles");
-    measles.set_state(states::EXPOSED, states::RECOVERED);
+    measles.set_state(EXPOSED, RECOVERED);
     measles.set_prob_infecting(&model("Transmission rate"));
     measles.set_prob_recovery(&model("1/Rash period"));
     measles.set_incubation(&model("Incubation period"));
