@@ -511,6 +511,18 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
 }
 
 
+/**
+ * @brief Draws a mermaid diagram of the model.
+ * @param db The database of the model.
+ * @param model The model to draw.
+ * @param filename The name of the file to write the diagram.
+ * @param self Whether to allow self-transitions.
+ * @tparam TSeq The sequence type of the database.
+ * @return void
+ * @throws std::runtime_error if the file cannot be opened.
+ * @note The function will print the diagram to the standard output if
+ * the filename is an empty string.
+ */
 template<typename TSeq = EPI_DEFAULT_TSEQ>
 void draw_mermaid_diagram(
     const epiworld::DataBase<TSeq> & db,

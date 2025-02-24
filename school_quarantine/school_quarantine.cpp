@@ -5,14 +5,16 @@
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn = "params.yaml";
-    size_t n       = 1000;
-    if (argc != 3 && argc != 1) {
-        std::cerr << "Usage: " << argv[0] << " <filename> <size>" << std::endl;
+    std::string fn      = "params.yaml";
+    size_t n            = 1000;
+    std::string out_dir = "highschool-out";
+    if (argc != 4 && argc != 1) {
+        std::cerr << "Usage: " << argv[0] << " <filename> <outdir> <size>" << std::endl;
         return 1;
-    } else if (argc == 3) {
-        fn = std::string(argv[1]);
-        n  = std::stoul(argv[2]);
+    } else if (argc == 4) {
+        fn      = std::string(argv[1]);
+        out_dir = std::string(argv[2]);
+        n       = std::stoul(argv[3]);
     }
     std::cout << "Using file: " << fn << std::endl;
 
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
     // model.run(60, 331);
 
     auto saver = make_save_run<int>(
-        "highschool-out/%03lu",
+        out_dir + std::string("/%03lu"),
         true, false, false, false, false, true, true, false, false
     );
 
@@ -56,7 +58,7 @@ int main(int argc, char *argv[]) {
     draw_mermaid_diagram<>(
         model.get_db(),
         model,
-        "highschool-diagram.mmd"
+        out_dir + std::string("/diagram.mmd")
     );
 
     return 0;

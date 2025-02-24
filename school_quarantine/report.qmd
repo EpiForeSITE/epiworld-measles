@@ -1,12 +1,14 @@
 ---
 format: gfm
 title: School quarantine model
-embed-resources: true
+params:
+    params_fn: ""
+    out_dir: ""  
 ---
 
-## Highschool model
+## School quarantine model for `r params$out_dir`
 
-The highschool model is a discrete-time Agent-Based Model [ABM] that includes the following features:
+This model is a discrete-time Agent-Based Model [ABM] that includes the following features:
 
 **Disease progression:**
 
@@ -34,7 +36,15 @@ The following is a raw list of the parameters included in the model:
 
 ```{r}
 #| label: update-params
-temp_params <- yaml::read_yaml("params.yaml")
+#| echo: false
+if (all(sapply(params, length) == 0)) {
+    stop(
+        "No parameters found. ",
+        "please specify the parameters, including the params_fn and out_dir"
+        )
+}
+
+temp_params <- yaml::read_yaml(params$params_fn)
 # temp_params$`Population size` <- 1500
 # temp_params$`Replicates` <- 500
 temp_params_fn <- tempfile(fileext = ".yaml")
@@ -44,8 +54,8 @@ yaml::write_yaml(temp_params, temp_params_fn)
 ```{r}
 #| label: print-params
 #| echo: false
-params <- yaml::read_yaml(temp_params_fn)
-params |>
+model_params <- yaml::read_yaml(temp_params_fn)
+model_params |>
     str()
 ```
 
@@ -59,15 +69,15 @@ This model simulates the spread of measles in a highschool. The highschool has `
 #| label: run-model
 #| warning: false
 #| message: false
-unlink("highschool-out", recursive = TRUE)
-dir.create("highschool-out")
+unlink(params$out_dir, recursive = TRUE)
+dir.create(params$out_dir)
 
 # Size of the population
 n <- temp_params$`Population size`
 n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 system2(
     "./school_quarantine.o",
-    c(temp_params_fn, n),
+    c(temp_params_fn, params$out_dir, n),
     wait = TRUE, stdout=TRUE
     ) |>
     cat(sep = "\n")
@@ -83,7 +93,7 @@ This diagram shows the possible transitions between the states in the model:
 #| output: asis
 #| echo: false
 cat("```{mermaid}\n")
-readLines("highschool-diagram.mmd") |>
+readLines(file.path(params$out_dir, "diagram.mmd")) |>
     cat(sep = "\n")
 cat("\n```")
 ```
@@ -96,7 +106,7 @@ cat("\n```")
 #| warning: false
 library(data.table)
 histories <- lapply(list.files(
-    "highschool-out", pattern="total_hist", full.names = TRUE),
+    params$out_dir, pattern="total_hist", full.names = TRUE),
    \(fn) {
       cbind(fn = fn, data.table::fread(fn))
    }) |> rbindlist()
@@ -143,12 +153,12 @@ histories_wide[, fn := NULL]
 
 fwrite(
     histories_wide,
-    sprintf("school_quarantine-histories-n=%i-vax=%s.csv", n, n_vax)
+    sprintf("%s_histories_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
     )
 
 # Reading the 'transition.csv' files
 transitions <- lapply(
-    list.files("highschool-out", pattern="transition", full.names = TRUE),
+    list.files(params$out_dir, pattern="transition", full.names = TRUE),
    \(fn) {
       cbind(fn = fn, fread(fn))
     }) |> rbindlist()
@@ -164,7 +174,7 @@ detected[, fn := NULL]
 
 fwrite(
     detected,
-    sprintf("school_quarantine-detected-n=%i.csv-vax=%s", n, n_vax)
+    sprintf("%s_detected_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
 )
 ```
 
