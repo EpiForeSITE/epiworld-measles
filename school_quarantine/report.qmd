@@ -4,6 +4,7 @@ title: School quarantine model
 params:
     params_fn: ""
     out_dir: ""  
+bibliography: ["references.bib"]
 ---
 
 ## School quarantine model for `r params$out_dir`
@@ -37,6 +38,9 @@ The following is a raw list of the parameters included in the model:
 ```{r}
 #| label: update-params
 #| echo: false
+#| warning: false
+#| message: false
+library(data.table)
 if (all(sapply(params, length) == 0)) {
     stop(
         "No parameters found. ",
@@ -54,11 +58,78 @@ yaml::write_yaml(temp_params, temp_params_fn)
 ```{r}
 #| label: print-params
 #| echo: false
+#| warning: false
 model_params <- yaml::read_yaml(temp_params_fn)
-model_params |>
-    str()
+
+params_table <- data.table(
+    Parameter = names(model_params),
+    Value = unlist(model_params),
+    Reference = ""
+)
+
+params_table <- params_table[
+    Parameter %in% c(
+        "Contact rate",
+        "Incubation period",
+        "Max days in rash",
+        "Prodromal period",
+        "Quarantine days",
+        "Rash period",
+        "Transmission rate",
+        "Vax improved recovery",
+        "Vax efficacy"
+        )
+]
+
+params_table[
+    Parameter == "Contact rate",
+    Reference := "Negative binomial. Calibrated using Texas data."
+]
+
+params_table[
+    Parameter == "Incubation period",
+    Reference := "Geometric + 1. Ref.: @jones2019measles"
+]
+
+params_table[
+    Parameter == "Max days in rash",
+    Reference := "Fixed value."
+]
+
+params_table[
+    Parameter == "Prodromal period",
+    Reference := "Geometric + 1. Ref.: @jones2019measles"
+]
+
+params_table[
+    Parameter == "Quarantine days",
+    Reference := "Utah Measles Disease Plan [@MeaslesDiseasePlan2019]."
+]
+
+params_table[
+    Parameter == "Rash period",
+    Reference := "Geometric + 1. Ref.: @MeaslesDiseasePlan2019."
+]
+
+params_table[
+    Parameter == "Transmission rate",
+    Reference := "Prob. of transmission fixed. Ref.: @liuRoleVaccinationCoverage2015."
+]
+
+params_table[
+    Parameter == "Vax improved recovery",
+    Reference := "Fixed value."
+]
+
+params_table[
+    Parameter == "Vax efficacy",
+    Reference := "Prob. efficacy fixed. Ref.: @liuRoleVaccinationCoverage2015."
+]
+
+params_table |> knitr::kable()
 ```
 
+Other parameters can be found the corresponding parameters document `r sprintf("[here](%s)", params$params_fn)`.
 
 ### Run
 
@@ -205,3 +276,4 @@ detected_cum |>
     )
 ```
 
+# References

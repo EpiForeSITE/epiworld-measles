@@ -52,7 +52,7 @@ The following is a raw list of the parameters included in the model:
      $ Transmission rate           : num 0.95
      $ Vaccination rate            : num 0.9
      $ Vax improved recovery       : num 0.5
-     $ Vax reduced suscept.        : num 0.98
+     $ Vax efficacy        : num 0.98
      $ initial number of exposed   : num 1
      $ Seed                        : int 2231
      $ N days                      : int 60
@@ -114,7 +114,7 @@ one index case. The following is the output from the highschool model:
      - Transmission rate            : 0.9500
      - Vaccination rate             : 0.9000
      - Vax improved recovery        : 0.5000
-     - Vax reduced suscept.         : 0.9800
+     - Vax efficacy         : 0.9800
      - initial number of exposed    : 1.0000
 
     Distribution of the population at time 60:

@@ -470,7 +470,7 @@ inline ModelContactTracing::ModelContactTracing(
         contact_tracing_success_rate, "Contact tracing success rate"
     );
     model.add_param(prop_vaccinated, "Vaccination rate");
-    model.add_param(vax_reduction_suscept, "Vax reduced suscept.");
+    model.add_param(vax_reduction_suscept, "Vax efficacy");
     model.add_param(vax_reduction_recovery_rate, "Vax improved recovery");
 
     // Designing the disease
@@ -487,7 +487,7 @@ inline ModelContactTracing::ModelContactTracing(
 
     // Designing the vaccine
     Tool<> vaccine("Vaccine");
-    vaccine.set_susceptibility_reduction(&model("Vax reduced suscept."));
+    vaccine.set_susceptibility_reduction(&model("Vax efficacy"));
     vaccine.set_recovery_enhancer(&model("Vax improved recovery"));
     vaccine.set_distribution(
         distribute_tool_randomly(prop_vaccinated, true)

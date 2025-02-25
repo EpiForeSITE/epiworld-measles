@@ -35,28 +35,20 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-    Warning in readLines(file, warn = readLines.warn): incomplete final line found
-    on 'davis_90_params.yaml'
+| Parameter             | Value | Reference                                                |
+|:----------------------|------:|:---------------------------------------------------------|
+| Contact rate          | 30.00 | Negative binomial. Calibrated using Texas data.          |
+| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
+| Max days in rash      |  2.00 | Fixed value.                                             |
+| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
+| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).      |
+| Transmission rate     |  0.99 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
+| Vax improved recovery |  0.50 | Fixed value.                                             |
+| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).           |
 
-    List of 18
-     $ Population size          : int 2000
-     $ 1/Rash period            : num 0.25
-     $ Contact rate             : int 30
-     $ Quarantine willingness   : num 1
-     $ Incubation period        : num 12
-     $ Max days in rash         : num 2
-     $ Prodromal period         : num 3
-     $ Quarantine days          : num 14
-     $ Rash period              : num 4
-     $ Transmission rate        : num 0.99
-     $ Vaccination rate         : num 0.9
-     $ Vax improved recovery    : num 0.5
-     $ Vax reduced suscept.     : num 0.99
-     $ initial number of exposed: num 1
-     $ Seed                     : int 2231
-     $ N days                   : int 60
-     $ Replicates               : int 1000
-     $ Threads                  : int 10
+Other parameters can be found the corresponding parameters document
+[here](davis_90_params.yaml).
 
 ### Run
 
@@ -64,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpY6cJt2/file750195aaf01.yaml
+    Using file: /tmp/RtmpGtfoyG/filea2d445ddcf.yaml
     Starting multiple runs (1000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -81,9 +73,9 @@ case. The following is the output from the highschool model:
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
-    Total elapsed t     : 15.00s (1000 runs)
-    Last run speed      : 0.71 million agents x day / second
-    Average run speed   : 7.78 million agents x day / second
+    Total elapsed t     : 14.00s (1000 runs)
+    Last run speed      : 0.67 million agents x day / second
+    Average run speed   : 8.12 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -103,7 +95,7 @@ case. The following is the output from the highschool model:
      - N days                    : 60.0000
      - Population size           : 2000.0000
      - Prodromal period          : 3.0000
-     - Quarantine days           : 14.0000
+     - Quarantine days           : 21.0000
      - Quarantine willingness    : 1.0000
      - Rash period               : 4.0000
      - Replicates                : 1000.0000
@@ -111,8 +103,8 @@ case. The following is the output from the highschool model:
      - Threads                   : 10.0000
      - Transmission rate         : 0.9900
      - Vaccination rate          : 0.9000
+     - Vax efficacy              : 0.9900
      - Vax improved recovery     : 0.5000
-     - Vax reduced suscept.      : 0.9900
      - initial number of exposed : 1.0000
 
     Distribution of the population at time 60:
@@ -178,3 +170,36 @@ to the isolated state and triggers contact tracing. The following plot
 shows the cumulative number of detected cases over time:
 
 ![](davis_90_files/figure-commonmark/contact-tracing-1.png)
+
+# References
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-jones2019measles" class="csl-entry">
+
+Jones, Trahern W, and Katherine Baranowski. 2019. “Measles and Mumps:
+Old Diseases, New Outbreaks.”
+
+</div>
+
+<div id="ref-liuRoleVaccinationCoverage2015" class="csl-entry">
+
+Liu, Fengchen, Wayne T A Enanoria, Jennifer Zipprich, Seth Blumberg,
+Kathleen Harriman, Sarah F Ackley, William D Wheaton, Justine L
+Allpress, and Travis C Porco. 2015. “The Role of Vaccination Coverage,
+Individual Behaviors, and the Public Health Response in the Control of
+Measles Epidemics: An Agent-Based Simulation for California.” *BMC
+Public Health* 15 (1): 447. <https://doi.org/10.1186/s12889-015-1766-6>.
+
+</div>
+
+<div id="ref-MeaslesDiseasePlan2019" class="csl-entry">
+
+“Measles Disease Plan.” 2019. Utah Department of Health and Human
+Services.
+<https://epi.utah.gov/wp-content/uploads/Measles-disease-plan.pdf>.
+
+</div>
+
+</div>
