@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     auto saver = make_save_run<int>(
         out_dir + std::string("/%03lu"),
-        true, false, false, false, false, true, true, false, false
+        true, false, false, false, false, true, true, true, false
     );
 
     model.run_multiple(

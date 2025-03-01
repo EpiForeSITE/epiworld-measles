@@ -2,6 +2,16 @@ ifndef CXX_FLAGS
 	CXX_FLAGS=-fopenmp
 endif
 
+help:
+	@echo "Usage: make [target]"
+	@echo "Targets:"
+	@echo "  run: Run the simulation with the default parameters"
+	@echo "  compress: Compress the simulation results"
+	@echo "  texas.md: Run the simulation with the Texas parameters"
+	@echo "  davis_90.md: Run the simulation with the Davis 90% parameters"
+	@echo "  davis_95.md: Run the simulation with the Davis 95% parameters"
+	@echo "  davis_85.md: Run the simulation with the Davis 85% parameters"
+
 run: school_quarantine.o highschool-params.yaml
 	rm -f highschool-out/* && \
 	./school_quarantine.o highschool-params.yaml

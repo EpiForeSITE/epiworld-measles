@@ -41,6 +41,7 @@ The following is a raw list of the parameters included in the model:
 #| warning: false
 #| message: false
 library(data.table)
+ncores <- parallel::detectCores() - 1L
 if (all(sapply(params, length) == 0)) {
     stop(
         "No parameters found. ",
@@ -274,6 +275,36 @@ detected_cum |>
         y = "Cumulative detected cases",
         caption = "The shaded area represents the 95% confidence interval"
     )
+```
+
+### Reproductive number of the index case
+
+```{r}
+#| label: reproductive-number
+#| echo: false
+#| warning: false
+#| message: false
+repnums <- list.files(params$out_dir, pattern = "reproduc", full.names = TRUE)
+repnums <- parallel::mclapply(repnums, \(fn) {
+    fread(fn)[, fn := fn]
+}, mc.cores = ncores) |> rbindlist()
+
+repnums[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+repnums[, fn := NULL]
+
+setorder(repnums, sim_num, source_exposure_date)
+repnums <- repnums[source_exposure_date == 0, .(Rt = rt)]
+
+quantile50 <- quantile(repnums$Rt, probs=.5)
+ggplot(repnums, aes(x = Rt)) +
+    geom_histogram(fill="lightgray") +
+    geom_vline(xintercept = quantile50, col = "red", lty = 2) +
+    geom_text(
+        aes(label = quantile50),
+        x = quantile50,
+        y = 0,
+        vjust = -1
+        ) 
 ```
 
 # References
