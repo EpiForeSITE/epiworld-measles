@@ -22,17 +22,8 @@ school_quarantine.o: school_quarantine.cpp school_quarantine.hpp
 texas.md: texas_params.yaml 
 	ID=texas $(MAKE) report.md
 
-davis_90.md: davis_90_params.yaml 
-	ID=davis_90 $(MAKE) report.md
-
 davis_95.md: davis_95_params.yaml 
 	ID=davis_95 $(MAKE) report.md
-
-davis_85.md: davis_85_params.yaml 
-	ID=davis_85 $(MAKE) report.md
-
-davis_80.md: davis_80_params.yaml 
-	ID=davis_80 $(MAKE) report.md
 
 calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
@@ -40,8 +31,14 @@ calibration.md: calibration_params.yaml
 canyon_grove_58.md: canyon_grove_58_params.yaml 
 	ID=canyon_grove_58 $(MAKE) report.md
 
+canyon_grove_58_npi.md: canyon_grove_58_npi_params.yaml 
+	ID=canyon_grove_58_npi $(MAKE) report.md
+
 new_bridge_88.md: new_bridge_88_params.yaml 
 	ID=new_bridge_88 $(MAKE) report.md
+
+new_bridge_88_npi.md: new_bridge_88_npi_params.yaml 
+	ID=new_bridge_88_npi $(MAKE) report.md
 
 
 report.html: report.qmd 

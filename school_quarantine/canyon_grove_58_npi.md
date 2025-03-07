@@ -1,6 +1,6 @@
 # School quarantine model
 
-## School quarantine model for davis_90
+## School quarantine model for canyon_grove_58_npi
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
 the following features:
@@ -34,21 +34,21 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             |   Value | Reference                                                           |
-|:----------------------|--------:|:--------------------------------------------------------------------|
-| Contact rate          |    2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     |   12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Max days in rash      | 2000.00 | Fixed value.                                                        |
-| Prodromal period      |    3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       |   21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |    4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |    0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |    0.50 | Fixed value.                                                        |
-| Vax efficacy          |    0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    |   15.00 | Theoretical R0.                                                     |
+| Parameter             | Value | Reference                                                           |
+|:----------------------|------:|:--------------------------------------------------------------------|
+| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
+| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Max days in rash      |  2.00 | Fixed value.                                                        |
+| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
+| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
+| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery |  0.50 | Fixed value.                                                        |
+| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
+| R0                    | 15.00 | Theoretical R0.                                                     |
 
 Other parameters can be found the corresponding parameters document
-[here](davis_90_params.yaml).
+[here](canyon_grove_58_npi_params.yaml).
 
 ### Run
 
@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3499126/RtmpYgO6UX/file3486e524a8bb08.yaml
+    Using file: /scratch/local/u6039184/3499126/RtmpCtIBp3/file34936e42f1ff76.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -67,15 +67,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 2000
+    Population size     : 650
     Agents' data        : (none)
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
-    Total elapsed t     : 5.00s (2000 runs)
-    Last run speed      : 4.26 million agents x day / second
-    Average run speed   : 42.53 million agents x day / second
+    Total elapsed t     : 1.00s (2000 runs)
+    Last run speed      : 4.78 million agents x day / second
+    Average run speed   : 49.15 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -91,9 +91,9 @@ case. The following is the output from the highschool model:
      - 1/Rash period             : 0.2500
      - Contact rate              : 2.3810
      - Incubation period         : 12.0000
-     - Max days in rash          : 2000.0000
+     - Max days in rash          : 2.0000
      - N days                    : 60.0000
-     - Population size           : 2000.0000
+     - Population size           : 650.0000
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
      - Quarantine willingness    : 1.0000
@@ -103,31 +103,31 @@ case. The following is the output from the highschool model:
      - Seed                      : 2231.0000
      - Threads                   : 10.0000
      - Transmission rate         : 0.9000
-     - Vaccination rate          : 0.9000
+     - Vaccination rate          : 0.5800
      - Vax efficacy              : 0.9900
      - Vax improved recovery     : 0.5000
      - initial number of exposed : 1.0000
 
     Distribution of the population at time 60:
-      - (0) Susceptible             : 1999 -> 1999
-      - (1) Exposed                 :    1 -> 0
-      - (2) Prodromal               :    0 -> 0
-      - (3) Rash                    :    0 -> 0
-      - (4) Isolated                :    0 -> 0
-      - (5) Quarantined Exposed     :    0 -> 0
-      - (6) Quarantined Susceptible :    0 -> 0
-      - (7) Quarantined Infectious  :    0 -> 0
-      - (8) Recovered               :    0 -> 1
+      - (0) Susceptible             : 649 -> 646
+      - (1) Exposed                 :   1 -> 0
+      - (2) Prodromal               :   0 -> 0
+      - (3) Rash                    :   0 -> 0
+      - (4) Isolated                :   0 -> 0
+      - (5) Quarantined Exposed     :   0 -> 0
+      - (6) Quarantined Susceptible :   0 -> 0
+      - (7) Quarantined Infectious  :   0 -> 0
+      - (8) Recovered               :   0 -> 4
 
     Transition Probabilities:
-     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.94  0.06  0.00  0.00  0.00  0.00  0.00  0.00
+     - Susceptible              0.99  0.00  0.00  0.00  0.00  0.00  0.01  0.00  0.00
+     - Exposed                  0.00  0.90  0.05  0.00  0.00  0.05  0.00  0.00  0.00
      - Prodromal                0.00  0.00  0.80  0.20  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.67  0.00  0.00  0.00  0.00  0.33
-     - Isolated                    -     -     -     -     -     -     -     -     -
-     - Quarantined Exposed         -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
-     - Quarantined Infectious      -     -     -     -     -     -     -     -     -
+     - Rash                     0.00  0.00  0.00  0.50  0.50  0.00  0.00  0.00  0.00
+     - Isolated                 0.00  0.00  0.00  0.00  0.33  0.00  0.00  0.00  0.67
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.87  0.00  0.13  0.00
+     - Quarantined Susceptible  0.05  0.00  0.00  0.00  0.00  0.00  0.95  0.00  0.00
+     - Quarantined Infectious   0.00  0.00  0.00  0.00  0.50  0.00  0.00  0.50  0.00
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
@@ -146,9 +146,17 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s1 --&gt;|0.058824| s2
+    s0 --&gt;|0.000052| s1
+    s0 --&gt;|0.000026| s5
+    s0 --&gt;|0.007047| s6
+    s1 --&gt;|0.050000| s2
+    s1 --&gt;|0.050000| s5
     s2 --&gt;|0.200000| s3
-    s3 --&gt;|0.333333| s8
+    s3 --&gt;|0.500000| s4
+    s4 --&gt;|0.666667| s8
+    s5 --&gt;|0.128205| s7
+    s6 --&gt;|0.047619| s0
+    s7 --&gt;|0.500000| s4
 
 ```
 
@@ -158,16 +166,16 @@ Estimating the outbreak size:
 
 |   Size | Probability    | Likely size (if \> Size) |
 |-------:|:---------------|:-------------------------|
-|  2.000 | 0.73           | \[2.00, 55.00\]          |
-|  5.000 | 0.53           | \[5.00, 60.00\]          |
-| 10.000 | 0.39           | \[10.00, 64.00\]         |
-| 20.000 | 0.21           | \[20.00, 71.00\]         |
-|  5.000 | Median (50%\>) | \[ 6 , 61 \]             |
-| 11.616 | Mean (average) | \[ 12 , 64.775 \]        |
+|  2.000 | 0.96           | \[2.00, 29.08\]          |
+|  5.000 | 0.73           | \[5.00, 30.00\]          |
+| 10.000 | 0.38           | \[10.00, 35.00\]         |
+| 20.000 | 0.11           | \[20.00, 42.00\]         |
+|  7.000 | Median (50%\>) | \[ 8 , 33 \]             |
+|  9.592 | Mean (average) | \[ 10 , 35 \]            |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
-![](davis_90_files/figure-commonmark/print-histogram-1.png)
+![](canyon_grove_58_npi_files/figure-commonmark/print-histogram-1.png)
 
 Preparing the data for output
 
@@ -175,17 +183,17 @@ Some statistics about the contact tracing. Each detected case is moved
 to the isolated state and triggers contact tracing. The following plot
 shows the cumulative number of detected cases over time:
 
-![](davis_90_files/figure-commonmark/contact-tracing-1.png)
+![](canyon_grove_58_npi_files/figure-commonmark/contact-tracing-1.png)
 
 ### Reproductive number of the index case
 
-![](davis_90_files/figure-commonmark/reproductive-number-1.png)
+![](canyon_grove_58_npi_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:1.651
+    Mean R0:4.2235
 
-    Median R0:1
+    Median R0:4
 
-    95% CI R0:0,5
+    95% CI R0:0,11
 
 # References
 

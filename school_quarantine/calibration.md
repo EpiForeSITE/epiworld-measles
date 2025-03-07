@@ -34,17 +34,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             |      Value | Reference                                                |
-|:----------------------|-----------:|:---------------------------------------------------------|
-| Contact rate          |   3.142857 | Negative binomial. Calibrated using Texas data.          |
-| Incubation period     |  12.000000 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
-| Max days in rash      | 200.000000 | Fixed value.                                             |
-| Prodromal period      |   3.000000 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
-| Quarantine days       |  21.000000 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
-| Rash period           |   2.000000 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).      |
-| Transmission rate     |   0.700000 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
-| Vax improved recovery |   0.500000 | Fixed value.                                             |
-| Vax efficacy          |   0.990000 | Prob. efficacy fixed. Ref.: Liu et al. (2015).           |
+| Parameter             |  Value | Reference                                                           |
+|:----------------------|-------:|:--------------------------------------------------------------------|
+| Contact rate          |   3.14 | Negative binomial. Calibrated using R0=15 as a reference.           |
+| Incubation period     |  12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Max days in rash      | 200.00 | Fixed value.                                                        |
+| Prodromal period      |   3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Quarantine days       |  21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
+| Rash period           |   2.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
+| Transmission rate     |   0.70 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery |   0.50 | Fixed value.                                                        |
+| Vax efficacy          |   0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
+| R0                    |  11.00 | Theoretical R0.                                                     |
 
 Other parameters can be found the corresponding parameters document
 [here](calibration_params.yaml).
@@ -55,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3491631/Rtmp3jywVh/file2f1d4a33103f5c.yaml
+    Using file: /scratch/local/u6039184/3499126/RtmpxNnald/file34916617e605f7.yaml
     Starting multiple runs (500) using 40 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -71,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 100 (of 100)
     Number of viruses   : 1
-    Last run elapsed t  : 6.00s
-    Total elapsed t     : 83.00s (500 runs)
-    Last run speed      : 3.04 million agents x day / second
-    Average run speed   : 119.79 million agents x day / second
+    Last run elapsed t  : 0.00m
+    Total elapsed t     : 1.00m (500 runs)
+    Last run speed      : 2.52 million agents x day / second
+    Average run speed   : 98.12 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -96,6 +97,7 @@ case. The following is the output from the highschool model:
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
      - Quarantine willingness    : 1.0000
+     - R0                        : 11.0000
      - Rash period               : 2.0000
      - Replicates                : 500.0000
      - Seed                      : 2231.0000
@@ -151,7 +153,20 @@ flowchart LR
 
 ```
 
-## Reading the output
+## Outbreak size
+
+Estimating the outbreak size:
+
+|     Size | Probability    | Likely size (if \> Size)  |
+|---------:|:---------------|:--------------------------|
+|      2.0 | 1.00           | \[179253.50, 199630.00\]  |
+|      5.0 | 1.00           | \[179253.50, 199630.00\]  |
+|     10.0 | 1.00           | \[179253.50, 199630.00\]  |
+|     20.0 | 1.00           | \[179253.50, 199630.00\]  |
+| 199102.0 | Median (50%\>) | \[ 199119.4 , 199653 \]   |
+| 196746.5 | Mean (average) | \[ 197131.2 , 199641.2 \] |
+
+Likely sizes of the outbreak based on 500 simulations.
 
 ![](calibration_files/figure-commonmark/print-histogram-1.png)
 

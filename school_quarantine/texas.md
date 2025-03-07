@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3491631/RtmpETcf1Z/file2f33c1780b4dac.yaml
+    Using file: /scratch/local/u6039184/3499126/Rtmp8aD2hf/file34959c51ab589.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -75,7 +75,7 @@ case. The following is the output from the highschool model:
     Last run elapsed t  : 0.00s
     Total elapsed t     : 2.00s (2000 runs)
     Last run speed      : 4.40 million agents x day / second
-    Average run speed   : 43.55 million agents x day / second
+    Average run speed   : 43.73 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -162,12 +162,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-| Size | Probability | Likely size (if \> Size) |
-|-----:|:------------|:-------------------------|
-|    2 | 0.62        | \[2.00, 8.00\]           |
-|    5 | 0.12        | \[5.00, 11.00\]          |
-|   10 | \< 0.01     | \[10.00, 12.00\]         |
-|   20 | \< 0.01     | \-                       |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|  2.0000 | 0.62           | \[2.00, 8.00\]           |
+|  5.0000 | 0.12           | \[5.00, 11.00\]          |
+| 10.0000 | \< 0.01        | \[10.00, 12.00\]         |
+| 20.0000 | \< 0.01        | \-                       |
+|  2.0000 | Median (50%\>) | \[ 3 , 9 \]              |
+|  2.4625 | Mean (average) | \[ 3 , 9 \]              |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
