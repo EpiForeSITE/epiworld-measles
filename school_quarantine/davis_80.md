@@ -34,18 +34,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             | Value | Reference                                                           |
-|:----------------------|------:|:--------------------------------------------------------------------|
-| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Max days in rash      |  2.00 | Fixed value.                                                        |
-| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |  0.50 | Fixed value.                                                        |
-| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    | 15.00 | Theoretical R0.                                                     |
+| Parameter             |   Value | Reference                                                           |
+|:----------------------|--------:|:--------------------------------------------------------------------|
+| Contact rate          |    2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
+| Incubation period     |   12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Max days in rash      | 2000.00 | Fixed value.                                                        |
+| Prodromal period      |    3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Quarantine days       |   21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
+| Rash period           |    4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
+| Transmission rate     |    0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery |    0.50 | Fixed value.                                                        |
+| Vax efficacy          |    0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
+| R0                    |   15.00 | Theoretical R0.                                                     |
 
 Other parameters can be found the corresponding parameters document
 [here](davis_80_params.yaml).
@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3491631/RtmpYN0NQH/file2f2fb36febc788.yaml
+    Using file: /scratch/local/u6039184/3499126/RtmpFsUWNa/file3485ae13f5006f.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 5.00s (2000 runs)
-    Last run speed      : 4.50 million agents x day / second
-    Average run speed   : 45.11 million agents x day / second
+    Last run speed      : 4.24 million agents x day / second
+    Average run speed   : 41.93 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -91,7 +91,7 @@ case. The following is the output from the highschool model:
      - 1/Rash period             : 0.2500
      - Contact rate              : 2.3810
      - Incubation period         : 12.0000
-     - Max days in rash          : 2.0000
+     - Max days in rash          : 2000.0000
      - N days                    : 60.0000
      - Population size           : 2000.0000
      - Prodromal period          : 3.0000
@@ -109,25 +109,25 @@ case. The following is the output from the highschool model:
      - initial number of exposed : 1.0000
 
     Distribution of the population at time 60:
-      - (0) Susceptible             : 1999 -> 1997
-      - (1) Exposed                 :    1 -> 0
-      - (2) Prodromal               :    0 -> 0
-      - (3) Rash                    :    0 -> 0
+      - (0) Susceptible             : 1999 -> 1725
+      - (1) Exposed                 :    1 -> 93
+      - (2) Prodromal               :    0 -> 17
+      - (3) Rash                    :    0 -> 35
       - (4) Isolated                :    0 -> 0
       - (5) Quarantined Exposed     :    0 -> 0
       - (6) Quarantined Susceptible :    0 -> 0
       - (7) Quarantined Infectious  :    0 -> 0
-      - (8) Recovered               :    0 -> 3
+      - (8) Recovered               :    0 -> 130
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.50  0.30  0.00  0.00  0.00  0.00  0.20  0.00
-     - Prodromal                0.00  0.00  0.67  0.33  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.33  0.33  0.00  0.00  0.00  0.33
-     - Isolated                 0.00  0.00  0.00  0.00  0.79  0.00  0.00  0.00  0.21
+     - Exposed                  0.00  0.89  0.11  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.69  0.31  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.77  0.00  0.00  0.00  0.00  0.23
+     - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible  0.05  0.00  0.00  0.00  0.00  0.00  0.95  0.00  0.00
-     - Quarantined Infectious   0.00  0.00  0.00  0.00  0.50  0.00  0.00  0.50  0.00
+     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
+     - Quarantined Infectious      -     -     -     -     -     -     -     -     -
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
@@ -146,16 +146,10 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s0 --&gt;|0.000017| s1
-    s0 --&gt;|0.003369| s6
-    s1 --&gt;|0.300000| s2
-    s1 --&gt;|0.200000| s7
-    s2 --&gt;|0.333333| s3
-    s3 --&gt;|0.333333| s4
-    s3 --&gt;|0.333333| s8
-    s4 --&gt;|0.214286| s8
-    s6 --&gt;|0.047619| s0
-    s7 --&gt;|0.500000| s4
+    s0 --&gt;|0.002395| s1
+    s1 --&gt;|0.107019| s2
+    s2 --&gt;|0.308235| s3
+    s3 --&gt;|0.233455| s8
 
 ```
 
@@ -163,12 +157,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-| Size | Probability | Likely size (if \> Size) |
-|-----:|:------------|:-------------------------|
-|    2 | 0.81        | \[2.00, 15.00\]          |
-|    5 | 0.35        | \[5.00, 18.00\]          |
-|   10 | 0.09        | \[10.00, 22.00\]         |
-|   20 | \< 0.01     | \[20.00, 26.00\]         |
+|   Size | Probability    | Likely size (if \> Size) |
+|-------:|:---------------|:-------------------------|
+|  2.000 | 0.87           | \[2.00, 301.00\]         |
+|  5.000 | 0.81           | \[7.00, 303.00\]         |
+| 10.000 | 0.78           | \[12.00, 305.25\]        |
+| 20.000 | 0.72           | \[25.00, 308.00\]        |
+| 77.000 | Median (50%\>) | \[ 81 , 319.05 \]        |
+| 98.129 | Mean (average) | \[ 102 , 324 \]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -186,11 +182,11 @@ shows the cumulative number of detected cases over time:
 
 ![](davis_80_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:2.0175
+    Mean R0:2.9955
 
-    Median R0:2
+    Median R0:3
 
-    95% CI R0:0,6
+    95% CI R0:0,9.02499999999986
 
 # References
 

@@ -37,6 +37,13 @@ davis_80.md: davis_80_params.yaml
 calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
 
+canyon_grove_58.md: canyon_grove_58_params.yaml 
+	ID=canyon_grove_58 $(MAKE) report.md
+
+new_bridge_88.md: new_bridge_88_params.yaml 
+	ID=new_bridge_88 $(MAKE) report.md
+
+
 report.html: report.qmd 
 	quarto render report.qmd \
 		-M embed-resources:true \

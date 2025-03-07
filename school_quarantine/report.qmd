@@ -237,6 +237,35 @@ sizes[, `Likely size (if > Size)` := fifelse(
   )]
 
 
+median_cases <- quantile(counts$Total, probs=.5)
+mean_cases <- mean(counts$Total, probs=.5)
+
+sizes <- rbind(
+  sizes,
+  data.table(
+    Size = median_cases,
+    Probability = "Median (50%>)",
+    "Likely size (if > Size)" = paste(
+      "[",
+      quantile(counts$Total[counts$Total > median_cases], probs=.025),
+      ",",
+      quantile(counts$Total[counts$Total > median_cases], probs=.975),
+      "]"
+    )
+  ),
+  data.table(
+    Size = mean_cases,
+    Probability = "Mean (average)",
+    "Likely size (if > Size)" = paste(
+      "[",
+      quantile(counts$Total[counts$Total > mean_cases], probs=.025),
+      ",",
+      quantile(counts$Total[counts$Total > mean_cases], probs=.975),
+      "]"
+    )
+  )
+)
+
 knitr::kable(
     sizes,
     caption = paste(
