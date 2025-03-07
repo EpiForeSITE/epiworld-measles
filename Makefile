@@ -20,7 +20,7 @@ help:
 
 update_epiworld:
 	@echo "Updating epiworld..."
-	rsync -avz ../epiworld/epiworld.hpp models/
+	rsync -avz ../epiworld/epiworld.hpp .
 
 models/README.md: models/README.qmd
 	cd models && \
