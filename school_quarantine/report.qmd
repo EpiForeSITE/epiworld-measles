@@ -295,11 +295,20 @@ repnums[, fn := NULL]
 setorder(repnums, sim_num, source_exposure_date)
 repnums <- repnums[source_exposure_date == 0, .(Rt = rt, sim_num)]
 
+repnums <- repnums[, .(Rt = mean(Rt), n = .N), by = "sim_num"]
+
 # Complementing the list with zeros
 zeros <- setdiff(0:(temp_params$`Replicates` - 1), repnums$sim_num) 
 repnums <- rbindlist(
     list(repnums, data.table(Rt = 0, sim_num = zeros))
     )
+
+# In case we have multiple index cases
+repnums[, Rt := fifelse(
+    n < temp_params$`initial number of exposed`,
+    Rt * n/temp_params$`initial number of exposed`,
+    Rt
+    )]
 
 quantile50 <- quantile(repnums$Rt, probs=.5)
 ggplot(repnums, aes(x = Rt)) +

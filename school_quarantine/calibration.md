@@ -37,13 +37,13 @@ The following is a raw list of the parameters included in the model:
 
 | Parameter             |  Value | Reference                                                |
 |:----------------------|-------:|:---------------------------------------------------------|
-| Contact rate          |   3.83 | Negative binomial. Calibrated using Texas data.          |
+| Contact rate          |   4.25 | Negative binomial. Calibrated using Texas data.          |
 | Incubation period     |  12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
 | Max days in rash      | 200.00 | Fixed value.                                             |
 | Prodromal period      |   3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
 | Quarantine days       |  21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
 | Rash period           |   4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).      |
-| Transmission rate     |   0.99 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
+| Transmission rate     |   0.10 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
 | Vax improved recovery |   0.50 | Fixed value.                                             |
 | Vax efficacy          |   0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).           |
 
@@ -56,8 +56,8 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmpc3sdpG/file15546885d6f.yaml
-    Starting multiple runs (1000) using 10 thread(s)
+    Using file: /tmp/Rtmpg7IjJo/file5fc1a9ddd0d.yaml
+    Starting multiple runs (500) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
@@ -67,15 +67,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 20000
+    Population size     : 40000
     Agents' data        : (none)
     Number of entities  : 0
     Days (duration)     : 50 (of 50)
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
-    Total elapsed t     : 43.00s (1000 runs)
-    Last run speed      : 4.37 million agents x day / second
-    Average run speed   : 22.94 million agents x day / second
+    Total elapsed t     : 73.00s (500 runs)
+    Last run speed      : 2.23 million agents x day / second
+    Average run speed   : 13.65 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -89,39 +89,39 @@ case. The following is the output from the highschool model:
 
     Model parameters:
      - 1/Rash period             : 0.2500
-     - Contact rate              : 3.8300
+     - Contact rate              : 4.2500
      - Incubation period         : 12.0000
      - Max days in rash          : 200.0000
      - N days                    : 50.0000
-     - Population size           : 20000.0000
+     - Population size           : 40000.0000
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
      - Quarantine willingness    : 1.0000
      - Rash period               : 4.0000
-     - Replicates                : 1000.0000
+     - Replicates                : 500.0000
      - Seed                      : 2231.0000
      - Threads                   : 10.0000
-     - Transmission rate         : 0.9900
+     - Transmission rate         : 0.1000
      - Vaccination rate          : 0.0e+00
      - Vax efficacy              : 0.9900
      - Vax improved recovery     : 0.5000
-     - initial number of exposed : 1.0000
+     - initial number of exposed : 50.0000
 
     Distribution of the population at time 50:
-      - (0) Susceptible             : 19999 -> 0
-      - (1) Exposed                 :     1 -> 2547
-      - (2) Prodromal               :     0 -> 805
-      - (3) Rash                    :     0 -> 307
+      - (0) Susceptible             : 39950 -> 39073
+      - (1) Exposed                 :    50 -> 381
+      - (2) Prodromal               :     0 -> 83
+      - (3) Rash                    :     0 -> 27
       - (4) Isolated                :     0 -> 0
       - (5) Quarantined Exposed     :     0 -> 0
       - (6) Quarantined Susceptible :     0 -> 0
       - (7) Quarantined Infectious  :     0 -> 0
-      - (8) Recovered               :     0 -> 16341
+      - (8) Recovered               :     0 -> 436
 
     Transition Probabilities:
-     - Susceptible              0.81  0.19  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.90  0.10  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.64  0.36  0.00  0.00  0.00  0.00  0.00
+     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Exposed                  0.00  0.92  0.08  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.70  0.30  0.00  0.00  0.00  0.00  0.00
      - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
      - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
@@ -145,9 +145,9 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s0 -->|0.192870| s1
-    s1 -->|0.100044| s2
-    s2 -->|0.362555| s3
+    s0 -->|0.000432| s1
+    s1 -->|0.081142| s2
+    s2 -->|0.302809| s3
     s3 -->|1.000000| s8
 
 ```
@@ -166,13 +166,27 @@ shows the cumulative number of detected cases over time:
 
 ### Reproductive number of the index case
 
+         sim_num       Rt
+           <int>    <num>
+      1:       0 2.533333
+      2:       1 2.323529
+      3:       2 2.317073
+      4:       3 2.400000
+      5:       4 2.000000
+     ---                 
+    496:     495 2.384615
+    497:     496 1.971429
+    498:     497 1.933333
+    499:     498 2.533333
+    500:     499 2.705882
+
 ![](calibration_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:14.636
+    Mean R0:2.2497554613629
 
-    Median R0:12
+    Median R0:2
 
-    95% CI R0:3,40.025
+    95% CI R0:1,6
 
 # References
 
