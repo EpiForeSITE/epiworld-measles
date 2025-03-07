@@ -4,19 +4,19 @@
 # And so far, the total outbreak size is about 60.
 Population size: 2000
 1/Rash period: 0.2500
-Contact rate: 30
+Contact rate: 2.380952
 Quarantine willingness: 1.0
 Incubation period: 12.0000
 Max days in rash: 2.0000
 Prodromal period: 3.0000
 Quarantine days: 21.0000
 Rash period: 4.0000
-Transmission rate: 0.99
+Transmission rate: 0.9
 Vaccination rate: 0.85
 Vax improved recovery: 0.5000
 Vax efficacy: 0.99
 initial number of exposed: 1.0000
 Seed: 2231
 N days: 60
-Replicates: 1000
+Replicates: 2000
 Threads: 10

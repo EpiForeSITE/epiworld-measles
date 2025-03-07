@@ -57,5 +57,9 @@ singularity_render_chpc:
 container_push: container_build
 	$(ENGINE) push quay.io/gvegayon/measles:latest
 
+hpc_alloc:
+	@echo "Allocating resources..."
+	salloc --partition=vegayon-shared-np --account=vegayon-np -c40 --mem=100GB
+
 .PHONY: update_epiworld container_build container_run container_build_mac singularity singularity_mac container_push
 

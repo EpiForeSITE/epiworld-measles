@@ -19,19 +19,22 @@ run: school_quarantine.o highschool-params.yaml
 school_quarantine.o: school_quarantine.cpp school_quarantine.hpp
 	g++ -std=c++14 $(CXX_FLAGS) -O3 school_quarantine.cpp -o school_quarantine.o
 
-texas.md: texas_params.yaml school_quarantine.o
+texas.md: texas_params.yaml 
 	ID=texas $(MAKE) report.md
 
-davis_90.md: davis_90_params.yaml school_quarantine.o
+davis_90.md: davis_90_params.yaml 
 	ID=davis_90 $(MAKE) report.md
 
-davis_95.md: davis_95_params.yaml school_quarantine.o
+davis_95.md: davis_95_params.yaml 
 	ID=davis_95 $(MAKE) report.md
 
-davis_85.md: davis_85_params.yaml school_quarantine.o
+davis_85.md: davis_85_params.yaml 
 	ID=davis_85 $(MAKE) report.md
 
-calibration.md: calibration_params.yaml school_quarantine.o
+davis_80.md: davis_80_params.yaml 
+	ID=davis_80 $(MAKE) report.md
+
+calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
 
 report.html: report.qmd 

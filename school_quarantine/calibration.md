@@ -1,6 +1,5 @@
 # School quarantine model
 
-
 ## School quarantine model for calibration
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -35,17 +34,17 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             |  Value | Reference                                                |
-|:----------------------|-------:|:---------------------------------------------------------|
-| Contact rate          |   4.25 | Negative binomial. Calibrated using Texas data.          |
-| Incubation period     |  12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
-| Max days in rash      | 200.00 | Fixed value.                                             |
-| Prodromal period      |   3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
-| Quarantine days       |  21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
-| Rash period           |   4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).      |
-| Transmission rate     |   0.10 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
-| Vax improved recovery |   0.50 | Fixed value.                                             |
-| Vax efficacy          |   0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).           |
+| Parameter             |      Value | Reference                                                |
+|:----------------------|-----------:|:---------------------------------------------------------|
+| Contact rate          |   3.142857 | Negative binomial. Calibrated using Texas data.          |
+| Incubation period     |  12.000000 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
+| Max days in rash      | 200.000000 | Fixed value.                                             |
+| Prodromal period      |   3.000000 | Geometric + 1. Ref.: Jones and Baranowski (2019)         |
+| Quarantine days       |  21.000000 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period           |   2.000000 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).      |
+| Transmission rate     |   0.700000 | Prob. of transmission fixed. Ref.: Liu et al. (2015).    |
+| Vax improved recovery |   0.500000 | Fixed value.                                             |
+| Vax efficacy          |   0.990000 | Prob. efficacy fixed. Ref.: Liu et al. (2015).           |
 
 Other parameters can be found the corresponding parameters document
 [here](calibration_params.yaml).
@@ -56,8 +55,8 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmpg7IjJo/file5fc1a9ddd0d.yaml
-    Starting multiple runs (500) using 10 thread(s)
+    Using file: /scratch/local/u6039184/3491631/Rtmp3jywVh/file2f1d4a33103f5c.yaml
+    Starting multiple runs (500) using 40 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
@@ -67,15 +66,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 40000
+    Population size     : 200000
     Agents' data        : (none)
     Number of entities  : 0
-    Days (duration)     : 50 (of 50)
+    Days (duration)     : 100 (of 100)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00s
-    Total elapsed t     : 73.00s (500 runs)
-    Last run speed      : 2.23 million agents x day / second
-    Average run speed   : 13.65 million agents x day / second
+    Last run elapsed t  : 6.00s
+    Total elapsed t     : 83.00s (500 runs)
+    Last run speed      : 3.04 million agents x day / second
+    Average run speed   : 119.79 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -88,41 +87,41 @@ case. The following is the output from the highschool model:
      - Vaccine
 
     Model parameters:
-     - 1/Rash period             : 0.2500
-     - Contact rate              : 4.2500
+     - 1/Rash period             : 0.5000
+     - Contact rate              : 3.1429
      - Incubation period         : 12.0000
      - Max days in rash          : 200.0000
-     - N days                    : 50.0000
-     - Population size           : 40000.0000
+     - N days                    : 100.0000
+     - Population size           : 200000.0000
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
      - Quarantine willingness    : 1.0000
-     - Rash period               : 4.0000
+     - Rash period               : 2.0000
      - Replicates                : 500.0000
      - Seed                      : 2231.0000
-     - Threads                   : 10.0000
-     - Transmission rate         : 0.1000
+     - Threads                   : 40.0000
+     - Transmission rate         : 0.7000
      - Vaccination rate          : 0.0e+00
      - Vax efficacy              : 0.9900
      - Vax improved recovery     : 0.5000
-     - initial number of exposed : 50.0000
+     - initial number of exposed : 1.0000
 
-    Distribution of the population at time 50:
-      - (0) Susceptible             : 39950 -> 39073
-      - (1) Exposed                 :    50 -> 381
-      - (2) Prodromal               :     0 -> 83
-      - (3) Rash                    :     0 -> 27
-      - (4) Isolated                :     0 -> 0
-      - (5) Quarantined Exposed     :     0 -> 0
-      - (6) Quarantined Susceptible :     0 -> 0
-      - (7) Quarantined Infectious  :     0 -> 0
-      - (8) Recovered               :     0 -> 436
+    Distribution of the population at time 100:
+      - (0) Susceptible             : 199999 -> 0
+      - (1) Exposed                 :      1 -> 3343
+      - (2) Prodromal               :      0 -> 1091
+      - (3) Rash                    :      0 -> 866
+      - (4) Isolated                :      0 -> 0
+      - (5) Quarantined Exposed     :      0 -> 0
+      - (6) Quarantined Susceptible :      0 -> 0
+      - (7) Quarantined Infectious  :      0 -> 0
+      - (8) Recovered               :      0 -> 194700
 
     Transition Probabilities:
-     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Susceptible              0.87  0.13  0.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Exposed                  0.00  0.92  0.08  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.70  0.30  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+     - Prodromal                0.00  0.00  0.64  0.36  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.49  0.00  0.00  0.00  0.00  0.51
      - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
@@ -145,10 +144,10 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s0 -->|0.000432| s1
-    s1 -->|0.081142| s2
-    s2 -->|0.302809| s3
-    s3 -->|1.000000| s8
+    s0 --&gt;|0.129424| s1
+    s1 --&gt;|0.081629| s2
+    s2 --&gt;|0.356656| s3
+    s3 --&gt;|0.511926| s8
 
 ```
 
@@ -166,32 +165,17 @@ shows the cumulative number of detected cases over time:
 
 ### Reproductive number of the index case
 
-         sim_num       Rt
-           <int>    <num>
-      1:       0 2.533333
-      2:       1 2.323529
-      3:       2 2.317073
-      4:       3 2.400000
-      5:       4 2.000000
-     ---                 
-    496:     495 2.384615
-    497:     496 1.971429
-    498:     497 1.933333
-    499:     498 2.533333
-    500:     499 2.705882
-
 ![](calibration_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:2.2497554613629
+    Mean R0:11.266
 
-    Median R0:2
+    Median R0:10
 
-    95% CI R0:1,6
+    95% CI R0:2,29
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

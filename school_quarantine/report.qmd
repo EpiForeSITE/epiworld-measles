@@ -50,6 +50,14 @@ if (all(sapply(params, length) == 0)) {
 }
 
 temp_params <- yaml::read_yaml(params$params_fn)
+
+# Theoretical R0
+temp_params$R0 <- with(temp_params, {
+  `Contact rate` * `Transmission rate` * (
+    1/`1/Rash period` + `Prodromal period`
+  )
+})
+
 # temp_params$`Population size` <- 1500
 # temp_params$`Replicates` <- 500
 temp_params_fn <- tempfile(fileext = ".yaml")
@@ -78,13 +86,14 @@ params_table <- params_table[
         "Rash period",
         "Transmission rate",
         "Vax improved recovery",
-        "Vax efficacy"
+        "Vax efficacy",
+        "R0"
         )
 ]
 
 params_table[
     Parameter == "Contact rate",
-    Reference := "Negative binomial. Calibrated using Texas data."
+    Reference := "Negative binomial. Calibrated using R0=15 as a reference."
 ]
 
 params_table[
@@ -114,7 +123,7 @@ params_table[
 
 params_table[
     Parameter == "Transmission rate",
-    Reference := "Prob. of transmission fixed. Ref.: @liuRoleVaccinationCoverage2015."
+    Reference := "Prob. of transmission fixed. Calibrated using R0=15 as a reference."
 ]
 
 params_table[
@@ -127,7 +136,12 @@ params_table[
     Reference := "Prob. efficacy fixed. Ref.: @liuRoleVaccinationCoverage2015."
 ]
 
-params_table |> knitr::kable()
+params_table[
+    Parameter == "R0",
+    Reference := "Theoretical R0."
+]
+
+params_table |> knitr::kable(digits = 2)
 ```
 
 Other parameters can be found the corresponding parameters document `r sprintf("[here](%s)", params$params_fn)`.
@@ -170,7 +184,7 @@ readLines(file.path(params$out_dir, "diagram.mmd")) |>
 cat("\n```")
 ```
 
-## Reading the output
+## Outbreak size
 
 ```{r}
 #| label: reading-history
@@ -189,6 +203,49 @@ counts <- histories[(state %in% exposed) & (date == max(date))]
 counts <- counts[, .(Total = sum(counts)), by = "fn"]
 ```
 
+Estimating the outbreak size:
+
+```{r}
+#| label: probability of outbreak sizes
+#| echo: false
+sizes <- c(2, 5, 10, 20)
+sizes <- data.table(
+  Size = sizes,
+  Probability = sapply(sizes, \(x) {
+    sum(counts$Total >= x)/nrow(counts)
+  }),
+  "Likely size (if > Size)" = sapply(sizes, \(s){
+    sprintf(
+      "[%.2f, %.2f]",
+      quantile(counts$Total[counts$Total >= s], .025),
+      quantile(counts$Total[counts$Total >= s], .975)
+    )})
+  )
+
+
+sizes[, Probability := fifelse(
+  Probability <= 0.01,
+  "< 0.01",
+  sprintf("%.2f", Probability)
+)]
+
+# Replaces NAs
+sizes[, `Likely size (if > Size)` := fifelse(
+  grepl("NA", `Likely size (if > Size)`),
+  "-",
+  `Likely size (if > Size)`
+  )]
+
+
+knitr::kable(
+    sizes,
+    caption = paste(
+        "Likely sizes of the outbreak based on",
+        temp_params$`Replicates`,
+        "simulations."
+    )
+)
+```
 
 ```{r}
 #| label: print-histogram
@@ -285,23 +342,25 @@ detected_cum |>
 #| warning: false
 #| message: false
 repnums <- list.files(params$out_dir, pattern = "reproduc", full.names = TRUE)
-repnums <- parallel::mclapply(repnums, \(fn) {
-    fread(fn)[, fn := fn]
+sim_nums <- gsub(".+/([0-9]+)_.+", "\\1", repnums) |> as.integer()
+repnums <- parallel::mclapply(seq_along(repnums), \(i) {
+    fread(repnums[i])[, sim_num := sim_nums[i]]
 }, mc.cores = ncores) |> rbindlist()
 
-repnums[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
-repnums[, fn := NULL]
+setnames(repnums, "source_exposure_date", "date")
 
-setorder(repnums, sim_num, source_exposure_date)
-repnums <- repnums[source_exposure_date == 0, .(Rt = rt, sim_num)]
+setorder(repnums, sim_num, date)
+repnums <- repnums[date == 0, .(Rt = rt, sim_num)]
 
 repnums <- repnums[, .(Rt = mean(Rt), n = .N), by = "sim_num"]
 
 # Complementing the list with zeros
 zeros <- setdiff(0:(temp_params$`Replicates` - 1), repnums$sim_num) 
-repnums <- rbindlist(
-    list(repnums, data.table(Rt = 0, sim_num = zeros))
-    )
+if (length(zeros) > 0) {
+  repnums <- rbindlist(
+    list(repnums, data.table(sim_num = zeros, Rt = 0, n = 0))
+  )
+}
 
 # In case we have multiple index cases
 repnums[, Rt := fifelse(

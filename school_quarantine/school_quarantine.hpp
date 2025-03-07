@@ -263,8 +263,8 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
         // Only infectious individuals can transmit
         if (
-            neighbor.get_state() != model->PRODROMAL &&
-            neighbor.get_state() != model->RASH
+            (neighbor.get_state() != model->PRODROMAL) &&
+            (neighbor.get_state() != model->RASH)
         )
             continue;
 
@@ -330,6 +330,7 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
 
     auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
     
+    #ifdef EPI_DEBUG
     if (model->day_quarantined_or_isolated.size() <= p->get_id())
         throw std::logic_error(
             "The agent is not in the list of quarantined or isolated agents: " +
@@ -338,16 +339,21 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
             std::to_string(model->day_quarantined_or_isolated.size()) +
             ". The model has " + std::to_string(model->size()) + " agents."
         );
+    #endif
 
+    // Checking if the agent will recover or not
     int days_since_rash = m->today() - model->day_quarantined_or_isolated[p->get_id()];
     if (days_since_rash >= m->par("Max days in rash"))
     {
         model->quarantine_status = ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
         p->change_state(m, ModelSchoolQuarantine::ISOLATED);
+
+    } else if (m->runif() < m->par("1/Rash period")) 
+    {
+        p->rm_agent_by_virus(m, ModelSchoolQuarantine::RECOVERED);
     }
 
-    if (m->runif() < (1.0/m->par("1/Rash period")))
-        p->change_state(m, ModelSchoolQuarantine::RECOVERED);
+    
     
 };
 
