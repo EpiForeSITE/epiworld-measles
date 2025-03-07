@@ -19,7 +19,7 @@
 /* Versioning */
 #define EPIWORLD_VERSION_MAJOR 0
 #define EPIWORLD_VERSION_MINOR 7
-#define EPIWORLD_VERSION_PATCH 1
+#define EPIWORLD_VERSION_PATCH 2
 
 static const int epiworld_version_major = EPIWORLD_VERSION_MAJOR;
 static const int epiworld_version_minor = EPIWORLD_VERSION_MINOR;
@@ -9509,7 +9509,7 @@ inline void Model<TSeq>::read_params(std::string fn, bool overwrite)
     if (!paramsfile)
         throw std::logic_error("The file " + fn + " was not found.");
 
-    std::regex pattern("^([^:]+)\\s*[:]\\s*([0-9]+|[0-9]*\\.[0-9]+)?\\s*$");
+    std::regex pattern("^([^:]+)\\s*[:]\\s*[-]?([0-9]+|[0-9]*\\.[0-9]+)?\\s*$");
 
     std::string line;
     std::smatch match;
@@ -10575,7 +10575,7 @@ inline VirusToAgentFun<TSeq> distribute_virus_randomly(
                 idx.push_back(agent.get_id());
 
         // Picking how many
-        int n = model->size();
+        int n = static_cast<int>(model->size());
         int n_available = static_cast<int>(idx.size());
         int n_to_sample;
         if (prevalence_as_proportion)
@@ -10585,8 +10585,8 @@ inline VirusToAgentFun<TSeq> distribute_virus_randomly(
             ));
 
             // Correcting for possible overflow
-            if (n_to_sample == (n + 1))
-                --n_to_sample;
+            if (n_to_sample > n)
+                n_to_sample = n;
         }
         else
         {
@@ -11828,8 +11828,8 @@ inline ToolToAgentFun<TSeq> distribute_tool_randomly(
                 n_to_distribute = static_cast<int>(std::floor(prevalence * n));
 
                 // Correcting for possible rounding errors
-                if (n_to_distribute == (n + 1))
-                    --n_to_distribute;
+                if (n_to_distribute > n)
+                    n_to_distribute = n;
 
             }
             else
@@ -12632,8 +12632,8 @@ inline EntityToAgentFun<TSeq> distribute_entity_randomly(
             n_to_sample = static_cast<int>(std::floor(prevalence * n));
 
             // Correcting for possible overflow
-            if (n_to_sample == (static_cast<int>(n) + 1))
-                --n_to_sample;
+            if (n_to_sample > static_cast<int>(n))
+                n_to_sample = static_cast<int>(n);
 
         } else
         {

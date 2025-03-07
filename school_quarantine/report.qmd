@@ -293,7 +293,13 @@ repnums[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 repnums[, fn := NULL]
 
 setorder(repnums, sim_num, source_exposure_date)
-repnums <- repnums[source_exposure_date == 0, .(Rt = rt)]
+repnums <- repnums[source_exposure_date == 0, .(Rt = rt, sim_num)]
+
+# Complementing the list with zeros
+zeros <- setdiff(0:(temp_params$`Replicates` - 1), repnums$sim_num) 
+repnums <- rbindlist(
+    list(repnums, data.table(Rt = 0, sim_num = zeros))
+    )
 
 quantile50 <- quantile(repnums$Rt, probs=.5)
 ggplot(repnums, aes(x = Rt)) +
@@ -304,7 +310,17 @@ ggplot(repnums, aes(x = Rt)) +
         x = quantile50,
         y = 0,
         vjust = -1
-        ) 
+        )
+```
+
+```{r}
+#| label: printing-R0
+#| echo: false
+message("Mean R0:", mean(repnums$Rt))
+message("Median R0:", quantile(repnums$Rt, probs=.5))
+message("95% CI R0:",
+    paste(quantile(repnums$Rt, probs=c(0.025, 0.975)), collapse = ",")
+    ) 
 ```
 
 # References

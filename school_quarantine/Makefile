@@ -31,6 +31,9 @@ davis_95.md: davis_95_params.yaml school_quarantine.o
 davis_85.md: davis_85_params.yaml school_quarantine.o
 	ID=davis_85 $(MAKE) report.md
 
+calibration.md: calibration_params.yaml school_quarantine.o
+	ID=calibration $(MAKE) report.md
+
 report.html: report.qmd 
 	quarto render report.qmd \
 		-M embed-resources:true \

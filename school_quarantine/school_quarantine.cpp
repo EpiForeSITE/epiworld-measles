@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn      = "params.yaml";
+    std::string fn      = "calibration_params.yaml";
     size_t n            = 1000;
     std::string out_dir = "highschool-out";
     if (argc != 4 && argc != 1) {

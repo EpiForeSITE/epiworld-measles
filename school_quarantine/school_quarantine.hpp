@@ -203,7 +203,7 @@ inline void ModelSchoolQuarantine::update_available() {
     // Assumes fixed contact rate throughout the simulation
     this->set_rand_binom(
         static_cast<int>(this->available.size()),
-        this->par("Contact rate")/static_cast<double>(this->size())
+        this->par("Contact rate")/ static_cast<double>(available.size())// static_cast<double>(this->size())
     );
 
 }
@@ -345,6 +345,9 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         model->quarantine_status = ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
         p->change_state(m, ModelSchoolQuarantine::ISOLATED);
     }
+
+    if (m->runif() < (1.0/m->par("1/Rash period")))
+        p->change_state(m, ModelSchoolQuarantine::RECOVERED);
     
 };
 
