@@ -2,14 +2,11 @@
 
 The different runs here include:
 
-- [**texas**](texas.md): An example.
+- New Bridge 88: 88% vaccination rate, no NPIs ([link](new_bridge_88.md)).
+- New Bridge 88 NPI: 88% vaccination rate, NPIs ([link](new_bridge_88_npi.md)).
+- Canyon grove 58: 58% vaccination rate, no NPIs ([link](canyon_grove_58.md)).
+- Canyon grove 58 NPI: 58% vaccination rate, NPIs ([link](canyon_grove_58_npi.md)).
 
-- [**davis\_80**](davis_80.md): Simulation of a school with vaccination coverage of 80% in the Davis county, Utah.
-
-- [**davis\_85**](davis_85.md): Simulation of a school with vaccination coverage of 85% in the Davis county, Utah.
-
-- [**davis\_90**](davis_90.md): Simulation of a school with vaccination coverage of 90% in the Davis county, Utah.
-
-- [**davis\_95**](davis_95.md): Simulation of a school with vaccination coverage of 95% in the Davis county, Utah.
+The NPI runs have quarantine willingness set to 1.0, which means that all individuals will accept quarantine if they develop the disease. Otherwise, there's no quarantine or isolation whatsoever.
 
 All runs were calibrated using an R0 of 15.

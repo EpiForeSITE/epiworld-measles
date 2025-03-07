@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3499126/RtmpwyFmDJ/file34940a6a56b6f0.yaml
+    Using file: /scratch/local/u6039184/3499126/Rtmp5NkRu7/file349956456f32d3.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 4.30 million agents x day / second
-    Average run speed   : 43.02 million agents x day / second
+    Last run speed      : 4.29 million agents x day / second
+    Average run speed   : 42.89 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -96,7 +96,7 @@ case. The following is the output from the highschool model:
      - Population size           : 614.0000
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
-     - Quarantine willingness    : 1.0000
+     - Quarantine willingness    : -1.0000
      - R0                        : 15.0000
      - Rash period               : 4.0000
      - Replicates                : 2000.0000
@@ -146,9 +146,9 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s1 --&gt;|0.500000| s2
-    s2 --&gt;|1.000000| s3
-    s3 --&gt;|1.000000| s8
+    s1 -->|0.500000| s2
+    s2 -->|1.000000| s3
+    s3 -->|1.000000| s8
 
 ```
 

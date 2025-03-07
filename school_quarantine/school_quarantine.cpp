@@ -5,9 +5,9 @@
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn      = "calibration_params.yaml";
+    std::string fn      = "new_bridge_88_params.yaml";
     size_t n            = 1000;
-    std::string out_dir = "highschool-out";
+    std::string out_dir = "new_bridge_88";
     if (argc != 4 && argc != 1) {
         std::cerr << "Usage: " << argv[0] << " <filename> <outdir> <size>" << std::endl;
         return 1;
