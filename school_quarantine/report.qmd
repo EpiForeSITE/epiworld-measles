@@ -323,7 +323,7 @@ transitions <- lapply(
 
 # Detected cases
 detected <- transitions[
-    from != "Isolated" & to == "Isolated",
+    (counts > 0) & (from != to),
     .(fn, from, date, counts)
     ]
 detected <- detected[counts > 0]
@@ -332,7 +332,7 @@ detected[, fn := NULL]
 
 fwrite(
     detected,
-    sprintf("%s_detected_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
+    sprintf("%s_transitions_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
 )
 ```
 
