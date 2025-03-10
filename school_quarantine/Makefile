@@ -40,6 +40,17 @@ new_bridge_88.md: new_bridge_88_params.yaml
 new_bridge_88_npi.md: new_bridge_88_npi_params.yaml 
 	ID=new_bridge_88_npi $(MAKE) report.md
 
+canyon_crest_74.md: canyon_crest_74_params.yaml 
+	ID=canyon_crest_74 $(MAKE) report.md
+
+canyon_crest_74_npi.md: canyon_crest_74_npi_params.yaml
+	ID=canyon_crest_74_npi $(MAKE) report.md
+
+edgemont_92.md: edgemont_92_params.yaml 
+	ID=edgemont_92 $(MAKE) report.md
+
+edgemont_92_npi.md: edgemont_92_npi_params.yaml 
+	ID=edgemont_92_npi $(MAKE) report.md
 
 report.html: report.qmd 
 	quarto render report.qmd \
