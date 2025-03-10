@@ -19,11 +19,11 @@ run: school_quarantine.o highschool-params.yaml
 school_quarantine.o: school_quarantine.cpp school_quarantine.hpp
 	g++ -std=c++14 $(CXX_FLAGS) -O3 school_quarantine.cpp -o school_quarantine.o
 
-texas.md: texas_params.yaml 
-	ID=texas $(MAKE) report.md
-
-davis_95.md: davis_95_params.yaml 
-	ID=davis_95 $(MAKE) report.md
+all: \
+	canyon_grove_58.md canyon_grove_58_npi.md \
+	new_bridge_88.md new_bridge_88_npi.md \
+	canyon_crest_74.md canyon_crest_74_npi.md \
+	edgemont_92.md edgemont_92_npi.md
 
 calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
@@ -72,4 +72,4 @@ compress:
 	zip -9 simulation_results.zip *.csv
 
 
-.PHONY: texas/README.md compress
+.PHONY: texas/README.md compress all
