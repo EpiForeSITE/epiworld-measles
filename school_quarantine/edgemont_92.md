@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3532978/Rtmp2PxEBc/file2614521b65b470.yaml
+    Using file: /scratch/local/u6039184/3564212/RtmpZun62F/file43096101b027f.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 4.80 million agents x day / second
-    Average run speed   : 48.19 million agents x day / second
+    Last run speed      : 4.81 million agents x day / second
+    Average run speed   : 47.98 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -146,10 +146,10 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s0 -->|0.000188| s1
-    s1 -->|0.052885| s2
-    s2 -->|0.266667| s3
-    s3 -->|0.210526| s8
+    s0 --&gt;|0.000188| s1
+    s1 --&gt;|0.052885| s2
+    s2 --&gt;|0.266667| s3
+    s3 --&gt;|0.210526| s8
 
 ```
 
@@ -159,12 +159,12 @@ Estimating the outbreak size:
 
 |    Size | Probability    | Likely size (if \> Size) |
 |--------:|:---------------|:-------------------------|
-|  2.0000 | 0.66           | \[2.00, 27.00\]          |
-|  5.0000 | 0.42           | \[5.00, 30.00\]          |
-| 10.0000 | 0.24           | \[10.00, 33.00\]         |
-| 20.0000 | 0.06           | \[20.00, 36.95\]         |
-|  3.0000 | Median (50%\>) | \[ 4 , 29 \]             |
-|  6.2665 | Mean (average) | \[ 7 , 31 \]             |
+|  2.0000 | 0.66           | \[2.00, 28.83\]          |
+|  5.0000 | 0.43           | \[5.00, 31.00\]          |
+| 10.0000 | 0.26           | \[10.00, 34.00\]         |
+| 20.0000 | 0.07           | \[20.00, 38.00\]         |
+|  3.0000 | Median (50%\>) | \[ 4 , 30 \]             |
+|  6.5705 | Mean (average) | \[ 7 , 32 \]             |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -172,9 +172,12 @@ Likely sizes of the outbreak based on 2000 simulations.
 
 Preparing the data for output
 
-Some statistics about the contact tracing. Each detected case is moved
-to the isolated state and triggers contact tracing. The following plot
-shows the cumulative number of detected cases over time:
+The following figure shows the cummulative number of new cases (detected
+or not) over time. Cases can be identified with the following
+transitions:
+
+- Susceptible to Exposed.
+- Susceptible to Quarantined Exposed.
 
 ![](edgemont_92_files/figure-commonmark/contact-tracing-1.png)
 
