@@ -3,6 +3,7 @@
 
 > [!CAUTION]
 > This project is a work in progress. Use it at your own risk.
+> **This model simulates a single school, so community transmission is not included**
 
 This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles.
 
