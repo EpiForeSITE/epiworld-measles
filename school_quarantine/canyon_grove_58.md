@@ -146,10 +146,10 @@ flowchart LR
     s6[Quarantined Susceptible]
     s7[Quarantined Infectious]
     s8[Recovered]
-    s0 --&gt;|0.008629| s1
-    s1 --&gt;|0.060515| s2
-    s2 --&gt;|0.290693| s3
-    s3 --&gt;|0.215853| s8
+    s0 -->|0.008629| s1
+    s1 -->|0.060515| s2
+    s2 -->|0.290693| s3
+    s3 -->|0.215853| s8
 
 ```
 
