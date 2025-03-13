@@ -1,7 +1,10 @@
 # epiworld-measles
 [![ForeSITE Group](https://github.com/EpiForeSITE/software/blob/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE)
 
-This project aims to generate an ABM using epiworldR to do scenario modeling of measles.
+> [!CAUTION]
+> This project is a work in progress. Use it at your own risk.
+
+This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles.
 
 An ABM in which we pass the following inputs: 
 - School size 
