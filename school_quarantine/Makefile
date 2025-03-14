@@ -3,14 +3,29 @@ ifndef CXX_FLAGS
 endif
 
 help:
+	@echo ""
+	@echo "SCHOOL QUARANTINE SIMULATION"
+	@echo ""
 	@echo "Usage: make [target]"
-	@echo "Targets:"
-	@echo "  run: Run the simulation with the default parameters"
-	@echo "  compress: Compress the simulation results"
-	@echo "  texas.md: Run the simulation with the Texas parameters"
-	@echo "  davis_90.md: Run the simulation with the Davis 90% parameters"
-	@echo "  davis_95.md: Run the simulation with the Davis 95% parameters"
-	@echo "  davis_85.md: Run the simulation with the Davis 85% parameters"
+	@echo ""
+	@echo "GENERAL TARGETS"
+	@echo "  run            : Run the simulation with the default parameters"
+	@echo "  compress       : Compress the simulation results"
+	@echo "  all            : Generate all reports"
+	@echo "  calibration.md : Generate the report for calibration"
+	@echo "  replace_html   : Replace '&gt;' with '>' in all .md files"
+	@echo "  help           : Display this help message"
+	@echo ""
+	@echo "SCHOOL-SPECIFIC REPORTS"
+	@echo "  canyon_grove_58.md     : Canyon Grove 58% vaccination"
+	@echo "  canyon_grove_58_npi.md : Canyon Grove 58% vaccination with NPI"
+	@echo "  new_bridge_88.md       : New Bridge 88% vaccination"
+	@echo "  new_bridge_88_npi.md   : New Bridge 88% vaccination with NPI"
+	@echo "  canyon_crest_74.md     : Canyon Crest 74% vaccination"
+	@echo "  canyon_crest_74_npi.md : Canyon Crest 74% vaccination with NPI"
+	@echo "  edgemont_92.md         : Edgemont 92% vaccination"
+	@echo "  edgemont_92_npi.md     : Edgemont 92% vaccination with NPI"
+	@echo ""
 
 run: school_quarantine.o highschool-params.yaml
 	rm -f highschool-out/* && \
@@ -24,9 +39,7 @@ all: \
 	new_bridge_88.md new_bridge_88_npi.md \
 	canyon_crest_74.md canyon_crest_74_npi.md \
 	edgemont_92.md edgemont_92_npi.md && \
-	sed -i 's/&gt;/>/g' *md
-
-
+	
 calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
 
@@ -73,5 +86,8 @@ report.md: report.qmd
 compress:
 	zip -9 simulation_results.zip *.csv
 
+replace_html:
+	sed -i 's/&gt;/>/g' *.md
 
-.PHONY: texas/README.md compress all
+
+.PHONY: texas/README.md compress all replace_html
