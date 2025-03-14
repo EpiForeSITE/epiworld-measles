@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpYFHhmn/file3bd70b48f8.yaml
+    Using file: /tmp/RtmpcrZ6I7/file6515bcbe46e.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.21 million agents x day / second
-    Average run speed   : 50.34 million agents x day / second
+    Last run speed      : 6.26 million agents x day / second
+    Average run speed   : 57.05 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -137,25 +137,30 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
+    s0[Exposed]
+    s1[Isolated]
     s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.000027| s1
-    s0 -->|0.001341| s6
-    s1 -->|0.043478| s2
-    s1 -->|0.043478| s5
-    s2 -->|0.222222| s3
-    s3 -->|0.500000| s4
-    s4 -->|0.500000| s8
-    s5 -->|0.035714| s7
-    s6 -->|0.047619| s0
-    s7 -->|1.000000| s2
+    s3[Quarantined Exposed]
+    s4[Quarantined Infectious]
+    s5[Quarantined Susceptible]
+    s6[Rash]
+    s7[Recovered]
+    s8[Susceptible]
+    s0 -->|0.079986| s2
+    s0 -->|0.030884| s3
+    s0 -->|0.002306| s4
+    s1 -->|0.350498| s7
+    s2 -->|0.014530| s4
+    s2 -->|0.334436| s6
+    s3 -->|0.081816| s4
+    s4 -->|0.337662| s1
+    s4 -->|0.042271| s2
+    s5 -->|0.043159| s8
+    s6 -->|0.424939| s1
+    s6 -->|0.148902| s7
+    s8 -->|0.000054| s0
+    s8 -->|0.000005| s3
+    s8 -->|0.001237| s5
 
 ```
 

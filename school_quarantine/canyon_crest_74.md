@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpOzKGRh/file26f6516ae8e.yaml
+    Using file: /tmp/RtmpBcZZI7/file5017c7eb85f.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.08 million agents x day / second
-    Average run speed   : 54.75 million agents x day / second
+    Last run speed      : 6.06 million agents x day / second
+    Average run speed   : 48.34 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -122,8 +122,8 @@ case. The following is the output from the highschool model:
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Exposed                  0.00  0.90  0.10  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.68  0.32  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.66  0.00  0.00  0.00  0.00  0.34
+     - Prodromal                0.00  0.00  0.63  0.37  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.65  0.00  0.00  0.00  0.00  0.35
      - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
@@ -137,19 +137,15 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.000435| s1
-    s1 -->|0.098693| s2
-    s2 -->|0.323529| s3
-    s3 -->|0.343750| s8
+    s0[Exposed]
+    s1[Prodromal]
+    s2[Rash]
+    s3[Recovered]
+    s4[Susceptible]
+    s0 -->|0.083434| s1
+    s1 -->|0.333277| s2
+    s2 -->|0.250808| s3
+    s4 -->|0.003250| s0
 
 ```
 

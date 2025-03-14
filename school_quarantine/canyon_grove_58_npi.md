@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpIuq9Q0/file11d77f63fea.yaml
+    Using file: /tmp/RtmpPxzonf/file3b13e103204.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.77 million agents x day / second
-    Average run speed   : 63.60 million agents x day / second
+    Last run speed      : 6.81 million agents x day / second
+    Average run speed   : 55.75 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -121,11 +121,11 @@ case. The following is the output from the highschool model:
 
     Transition Probabilities:
      - Susceptible              0.99  0.00  0.00  0.00  0.00  0.00  0.01  0.00  0.00
-     - Exposed                  0.00  0.90  0.05  0.00  0.00  0.05  0.00  0.00  0.00
+     - Exposed                  0.00  0.88  0.04  0.00  0.00  0.08  0.00  0.00  0.00
      - Prodromal                0.00  0.00  0.80  0.20  0.00  0.00  0.00  0.00  0.00
      - Rash                     0.00  0.00  0.00  0.50  0.50  0.00  0.00  0.00  0.00
      - Isolated                 0.00  0.00  0.00  0.00  0.33  0.00  0.00  0.00  0.67
-     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.87  0.00  0.13  0.00
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.82  0.00  0.18  0.00
      - Quarantined Susceptible  0.05  0.00  0.00  0.00  0.00  0.00  0.95  0.00  0.00
      - Quarantined Infectious   0.00  0.00  0.00  0.00  0.50  0.00  0.00  0.50  0.00
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
@@ -137,26 +137,30 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
+    s0[Exposed]
+    s1[Isolated]
     s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.000052| s1
-    s0 -->|0.000026| s5
-    s0 -->|0.007047| s6
-    s1 -->|0.050000| s2
-    s1 -->|0.050000| s5
-    s2 -->|0.200000| s3
-    s3 -->|0.500000| s4
-    s4 -->|0.666667| s8
-    s5 -->|0.128205| s7
-    s6 -->|0.047619| s0
-    s7 -->|0.500000| s4
+    s3[Quarantined Exposed]
+    s4[Quarantined Infectious]
+    s5[Quarantined Susceptible]
+    s6[Rash]
+    s7[Recovered]
+    s8[Susceptible]
+    s0 -->|0.069840| s2
+    s0 -->|0.141517| s3
+    s0 -->|0.013086| s4
+    s1 -->|0.262770| s7
+    s2 -->|0.069413| s4
+    s2 -->|0.335874| s6
+    s3 -->|0.084326| s4
+    s4 -->|0.335348| s1
+    s4 -->|0.032974| s2
+    s5 -->|0.036487| s8
+    s6 -->|0.425915| s1
+    s6 -->|0.144854| s7
+    s8 -->|0.000248| s0
+    s8 -->|0.000061| s3
+    s8 -->|0.011454| s5
 
 ```
 

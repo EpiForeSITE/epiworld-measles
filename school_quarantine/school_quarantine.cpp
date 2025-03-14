@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     // model.run(60, 331);
 
     auto saver = make_save_run<int>(
-        out_dir + std::string("/%03lu"),
+        out_dir + std::string("/%lu"),
         true, false, false, false, false, true, true, true, false
     );
 
@@ -55,9 +55,18 @@ int main(int argc, char *argv[]) {
 
     model.print();
 
-    draw_mermaid_diagram<>(
-        model.get_db(),
-        model,
+    epiworld::ModelDiagram model_diagram;
+
+    std::vector< std::string > fns;
+    for (int i = 0; i < static_cast<int>(model("Replicates")); ++i)
+    {
+        fns.push_back(
+            out_dir + "/" + std::to_string(i) + "_transition.csv"
+        );
+    }
+
+    model_diagram.draw_from_files(
+        fns,
         out_dir + std::string("/diagram.mmd")
     );
 

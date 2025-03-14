@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmppt7Q22/fileae3a212186.yaml
+    Using file: /tmp/Rtmploipv4/file341379144b1.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.19 million agents x day / second
-    Average run speed   : 56.22 million agents x day / second
+    Last run speed      : 5.64 million agents x day / second
+    Average run speed   : 51.57 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -121,9 +121,9 @@ case. The following is the output from the highschool model:
 
     Transition Probabilities:
      - Susceptible              0.99  0.01  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.94  0.06  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.71  0.29  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.78  0.00  0.00  0.00  0.00  0.22
+     - Exposed                  0.00  0.92  0.08  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.68  0.32  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.74  0.00  0.00  0.00  0.00  0.26
      - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
@@ -137,19 +137,15 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.008629| s1
-    s1 -->|0.060515| s2
-    s2 -->|0.290693| s3
-    s3 -->|0.215853| s8
+    s0[Exposed]
+    s1[Prodromal]
+    s2[Rash]
+    s3[Recovered]
+    s4[Susceptible]
+    s0 -->|0.083351| s1
+    s1 -->|0.333065| s2
+    s2 -->|0.249582| s3
+    s4 -->|0.007410| s0
 
 ```
 

@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmp6C6dNE/file34e3f791686.yaml
+    Using file: /tmp/Rtmpp5KQ7f/file5e1715b5866.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.11 million agents x day / second
-    Average run speed   : 51.59 million agents x day / second
+    Last run speed      : 5.50 million agents x day / second
+    Average run speed   : 46.75 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -137,19 +137,15 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.000188| s1
-    s1 -->|0.052885| s2
-    s2 -->|0.266667| s3
-    s3 -->|0.210526| s8
+    s0[Exposed]
+    s1[Prodromal]
+    s2[Rash]
+    s3[Recovered]
+    s4[Susceptible]
+    s0 -->|0.083001| s1
+    s1 -->|0.333962| s2
+    s2 -->|0.252410| s3
+    s4 -->|0.000171| s0
 
 ```
 
