@@ -1,5 +1,6 @@
 # School quarantine model
 
+
 ## School quarantine model for edgemont_92_npi
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -56,12 +57,11 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3564212/Rtmp8aQfQ4/file4316d1e90dfc9.yaml
+    Using file: /tmp/RtmpYFHhmn/file3bd70b48f8.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-     done.
     ________________________________________________________________________________
     ________________________________________________________________________________
     SIMULATION STUDY
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 4.90 million agents x day / second
-    Average run speed   : 48.26 million agents x day / second
+    Last run speed      : 6.21 million agents x day / second
+    Average run speed   : 50.34 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -199,7 +199,8 @@ transitions:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

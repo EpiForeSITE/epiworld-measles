@@ -38,7 +38,7 @@ all: \
 	canyon_grove_58.md canyon_grove_58_npi.md \
 	new_bridge_88.md new_bridge_88_npi.md \
 	canyon_crest_74.md canyon_crest_74_npi.md \
-	edgemont_92.md edgemont_92_npi.md && \
+	edgemont_92.md edgemont_92_npi.md 
 	
 calibration.md: calibration_params.yaml 
 	ID=calibration $(MAKE) report.md
