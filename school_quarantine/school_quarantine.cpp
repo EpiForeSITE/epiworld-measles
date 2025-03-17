@@ -18,24 +18,26 @@ int main(int argc, char *argv[]) {
     }
     std::cout << "Using file: " << fn << std::endl;
 
+    // Reading parameters from the model
+    auto params = epiworld::read_yaml<epiworld_double>(fn);
 
     ModelSchoolQuarantine model(
-        n, // Population size
-        1,    // initial number of exposed
-        10,   // Contact rate  
-        0.95, // Transmission rate
-        0.98, // Vaccine reduction in susceptibility
-        0.5,  // Vaccine reduction in recovery rate
-        5,    // Incubation period
-        4,    // Prodromal period
-        4,    // Rash period
-        2,    // Max days in rash
-        .9,   // Vaccination rate
-        14,   // Quarantine days for vaccinated
-        0.9   // Quarantine success rate
+        (size_t) params["Population size"],                 
+        (int) params["initial number of exposed"], 
+        params["Contact rate"],   // Contact rate  
+        params["Transmission rate"], // Transmission rate
+        params["Vax efficacy"], // Vaccine reduction in susceptibility
+        params["Vax improved recovery"],  // Vaccine reduction in recovery rate
+        params["Incubation period"],    // Incubation period
+        params["Prodromal period"],    // Prodromal period
+        params["Rash period"],    // Rash period
+        params["Max days in rash"],    // Max days in rash
+        params["Vaccination rate"],   // Vaccination rate
+        params["Quarantine days"],   // Quarantine days for vaccinated
+        params["Quarantine willingness"]   // Quarantine success rate
     );
 
-    model.read_params(fn, true);
+    // model.read_params(fn, true);
     // model.run(60, 331);
 
     auto saver = make_save_run<int>(
@@ -44,13 +46,13 @@ int main(int argc, char *argv[]) {
     );
 
     model.run_multiple(
-        static_cast<int>(model("N days")), // Number of days
-        static_cast<int>(model("Replicates")), // Number of sims
-        static_cast<int>(model("Seed")), // Seed
+        static_cast<int>(params["N days"]), // Number of days
+        static_cast<int>(params["Replicates"]), // Number of sims
+        static_cast<int>(params["Seed"]), // Seed
         saver,
         true,
         true,
-        static_cast<int>(model("Threads"))
+        static_cast<int>(params["Threads"])
     );
 
     model.print();
@@ -58,7 +60,7 @@ int main(int argc, char *argv[]) {
     epiworld::ModelDiagram model_diagram;
 
     std::vector< std::string > fns;
-    for (int i = 0; i < static_cast<int>(model("Replicates")); ++i)
+    for (int i = 0; i < static_cast<int>(params["Replicates"]); ++i)
     {
         fns.push_back(
             out_dir + "/" + std::to_string(i) + "_transition.csv"

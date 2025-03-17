@@ -1,5 +1,6 @@
 # School quarantine model
 
+
 ## School quarantine model for calibration
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -56,26 +57,25 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /scratch/local/u6039184/3499126/RtmpxNnald/file34916617e605f7.yaml
-    Starting multiple runs (500) using 40 thread(s)
+    Using file: /tmp/Rtmp8f7UZd/fileb453e86637.yaml
+    Starting multiple runs (1000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-     done.
     ________________________________________________________________________________
     ________________________________________________________________________________
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 200000
+    Population size     : 2000
     Agents' data        : (none)
     Number of entities  : 0
-    Days (duration)     : 100 (of 100)
+    Days (duration)     : 50 (of 50)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00m
-    Total elapsed t     : 1.00m (500 runs)
-    Last run speed      : 2.52 million agents x day / second
-    Average run speed   : 98.12 million agents x day / second
+    Last run elapsed t  : 0.00s
+    Total elapsed t     : 2.00s (1000 runs)
+    Last run speed      : 4.79 million agents x day / second
+    Average run speed   : 47.32 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -92,37 +92,37 @@ case. The following is the output from the highschool model:
      - Contact rate              : 3.1429
      - Incubation period         : 12.0000
      - Max days in rash          : 200.0000
-     - N days                    : 100.0000
-     - Population size           : 200000.0000
+     - N days                    : 50.0000
+     - Population size           : 2000.0000
      - Prodromal period          : 3.0000
      - Quarantine days           : 21.0000
-     - Quarantine willingness    : 1.0000
+     - Quarantine willingness    : -1.0000
      - R0                        : 11.0000
      - Rash period               : 2.0000
-     - Replicates                : 500.0000
+     - Replicates                : 1000.0000
      - Seed                      : 2231.0000
-     - Threads                   : 40.0000
+     - Threads                   : 10.0000
      - Transmission rate         : 0.7000
      - Vaccination rate          : 0.0e+00
      - Vax efficacy              : 0.9900
      - Vax improved recovery     : 0.5000
      - initial number of exposed : 1.0000
 
-    Distribution of the population at time 100:
-      - (0) Susceptible             : 199999 -> 0
-      - (1) Exposed                 :      1 -> 3343
-      - (2) Prodromal               :      0 -> 1091
-      - (3) Rash                    :      0 -> 866
-      - (4) Isolated                :      0 -> 0
-      - (5) Quarantined Exposed     :      0 -> 0
-      - (6) Quarantined Susceptible :      0 -> 0
-      - (7) Quarantined Infectious  :      0 -> 0
-      - (8) Recovered               :      0 -> 194700
+    Distribution of the population at time 50:
+      - (0) Susceptible             : 1999 -> 0
+      - (1) Exposed                 :    1 -> 219
+      - (2) Prodromal               :    0 -> 72
+      - (3) Rash                    :    0 -> 47
+      - (4) Isolated                :    0 -> 0
+      - (5) Quarantined Exposed     :    0 -> 0
+      - (6) Quarantined Susceptible :    0 -> 0
+      - (7) Quarantined Infectious  :    0 -> 0
+      - (8) Recovered               :    0 -> 1662
 
     Transition Probabilities:
-     - Susceptible              0.87  0.13  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Susceptible              0.96  0.04  0.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Exposed                  0.00  0.92  0.08  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.64  0.36  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.66  0.34  0.00  0.00  0.00  0.00  0.00
      - Rash                     0.00  0.00  0.00  0.49  0.00  0.00  0.00  0.00  0.51
      - Isolated                    -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -
@@ -137,19 +137,15 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Susceptible]
-    s1[Exposed]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Isolated]
-    s5[Quarantined Exposed]
-    s6[Quarantined Susceptible]
-    s7[Quarantined Infectious]
-    s8[Recovered]
-    s0 -->|0.129424| s1
-    s1 -->|0.081629| s2
-    s2 -->|0.356656| s3
-    s3 -->|0.511926| s8
+    s0[Exposed]
+    s1[Prodromal]
+    s2[Rash]
+    s3[Recovered]
+    s4[Susceptible]
+    s0 -->|0.083357| s1
+    s1 -->|0.333141| s2
+    s2 -->|0.500066| s3
+    s4 -->|0.024903| s0
 
 ```
 
@@ -157,24 +153,27 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|     Size | Probability    | Likely size (if \> Size)  |
-|---------:|:---------------|:--------------------------|
-|      2.0 | 1.00           | \[179253.50, 199630.00\]  |
-|      5.0 | 1.00           | \[179253.50, 199630.00\]  |
-|     10.0 | 1.00           | \[179253.50, 199630.00\]  |
-|     20.0 | 1.00           | \[179253.50, 199630.00\]  |
-| 199102.0 | Median (50%\>) | \[ 199119.4 , 199653 \]   |
-| 196746.5 | Mean (average) | \[ 197131.2 , 199641.2 \] |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|    2.00 | 0.98           | \[40.45, 2000.00\]       |
+|    5.00 | 0.98           | \[50.35, 2000.00\]       |
+|   10.00 | 0.98           | \[70.75, 2000.00\]       |
+|   20.00 | 0.97           | \[80.68, 2000.00\]       |
+| 2000.00 | Median (50%\>) | \[ NA , NA \]            |
+| 1758.42 | Mean (average) | \[ 1885.35 , 2000 \]     |
 
-Likely sizes of the outbreak based on 500 simulations.
+Likely sizes of the outbreak based on 1000 simulations.
 
 ![](calibration_files/figure-commonmark/print-histogram-1.png)
 
 Preparing the data for output
 
-Some statistics about the contact tracing. Each detected case is moved
-to the isolated state and triggers contact tracing. The following plot
-shows the cumulative number of detected cases over time:
+The following figure shows the cummulative number of new cases (detected
+or not) over time. Cases can be identified with the following
+transitions:
+
+- Susceptible to Exposed.
+- Susceptible to Quarantined Exposed.
 
 ![](calibration_files/figure-commonmark/contact-tracing-1.png)
 
@@ -182,15 +181,16 @@ shows the cumulative number of detected cases over time:
 
 ![](calibration_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:11.266
+    Mean R0:10.614
 
-    Median R0:10
+    Median R0:9
 
-    95% CI R0:2,29
+    95% CI R0:1,27
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

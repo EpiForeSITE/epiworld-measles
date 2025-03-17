@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpcrZ6I7/file6515bcbe46e.yaml
+    Using file: /tmp/Rtmpy1o1r7/file69f340cca11.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -74,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.26 million agents x day / second
-    Average run speed   : 57.05 million agents x day / second
+    Last run speed      : 5.20 million agents x day / second
+    Average run speed   : 49.67 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -88,25 +88,17 @@ case. The following is the output from the highschool model:
      - Vaccine
 
     Model parameters:
-     - 1/Rash period             : 0.2500
-     - Contact rate              : 2.3810
-     - Incubation period         : 12.0000
-     - Max days in rash          : 2.0000
-     - N days                    : 60.0000
-     - Population size           : 634.0000
-     - Prodromal period          : 3.0000
-     - Quarantine days           : 21.0000
-     - Quarantine willingness    : 1.0000
-     - R0                        : 15.0000
-     - Rash period               : 4.0000
-     - Replicates                : 2000.0000
-     - Seed                      : 2231.0000
-     - Threads                   : 10.0000
-     - Transmission rate         : 0.9000
-     - Vaccination rate          : 0.9200
-     - Vax efficacy              : 0.9900
-     - Vax improved recovery     : 0.5000
-     - initial number of exposed : 1.0000
+     - 1/Rash period          : 0.2500
+     - Contact rate           : 2.3810
+     - Incubation period      : 12.0000
+     - Max days in rash       : 2.0000
+     - Prodromal period       : 3.0000
+     - Quarantine days        : 21.0000
+     - Quarantine willingness : 1.0000
+     - Transmission rate      : 0.9000
+     - Vaccination rate       : 0.9200
+     - Vax efficacy           : 0.9900
+     - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
       - (0) Susceptible             : 633 -> 632
