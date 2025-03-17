@@ -33,7 +33,7 @@ public:
         ISOLATED,                //< Isolated
         QUARANTINED_EXPOSED,     //< In case of potential exposure
         QUARANTINED_SUSCEPTIBLE, //< In case of potential exposure
-        QUARANTINED_INFECTIOUS,  //< In case of potential exposure
+        QUARANTINED_PRODROMAL,  //< In case of potential exposure
         RECOVERED                //< Recovered with permanent immunity
     };
 
@@ -173,7 +173,7 @@ inline void ModelContactTracing::contact_tracing() {
                     else if (get_agent(i).get_state() == states::PRODROMAL)
                         get_agent(i).change_state(
                             this,
-                            states::QUARANTINED_INFECTIOUS
+                            states::QUARANTINED_PRODROMAL
                         );
 
                     // And we add the day of quarantine
@@ -384,7 +384,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
         p->change_state(
             m,
-            ModelContactTracing::states::QUARANTINED_INFECTIOUS
+            ModelContactTracing::states::QUARANTINED_PRODROMAL
         );
 
     return;
@@ -402,7 +402,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
 
 }
 
-EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
+EPI_NEW_UPDATEFUN(update_quanrantined_prodromal, int) {
 
     auto * model = dynamic_cast<ModelContactTracing *>(m);
     
@@ -454,7 +454,7 @@ inline ModelContactTracing::ModelContactTracing(
     model.add_state("Isolated", default_update_exposed<>);
     model.add_state("Quarantined Exposed", update_quarantined_exposed);
     model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
-    model.add_state("Quarantined Infectious", update_quanrantined_infectious);
+    model.add_state("Quarantined Infectious", update_quanrantined_prodromal);
     model.add_state("Recovered");
 
     // Adding the model parameters

@@ -31,6 +31,8 @@ int main(int argc, char *argv[]) {
         params["Incubation period"],    // Incubation period
         params["Prodromal period"],    // Prodromal period
         params["Rash period"],    // Rash period
+        params["Hospitalization rate"],    // Hospitalization rate
+        params["Hospitalization days"],
         params["Max days in rash"],    // Max days in rash
         params["Vaccination rate"],   // Vaccination rate
         params["Quarantine days"],   // Quarantine days for vaccinated

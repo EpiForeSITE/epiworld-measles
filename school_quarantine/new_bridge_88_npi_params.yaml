@@ -12,6 +12,8 @@ Prodromal period: 3.0000
 Quarantine days: 21.0000
 Rash period: 4.0000
 Transmission rate: 0.9
+Hospitalization rate: 0.2
+Hospitalization days: 7
 # Mean rate for last 5 years
 Vaccination rate: 0.88
 Vax improved recovery: 0.5000
