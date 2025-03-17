@@ -157,27 +157,8 @@ EPI_NEW_GLOBALFUN(update_model, int) {
 
 inline void ModelSchoolQuarantine::reset() {
     
-    // Initializing the population
-    Model<>::agents_empty_graph(
-        static_cast<size_t>(Model<>::operator()("Population size"))
-    );
-
     quarantine_status = QuarantineStatus::INACTIVE;
-    
-    Model<>::get_virus(0u).set_distribution(
-        distribute_virus_randomly(
-            Model<>::operator()("initial number of exposed"),
-            false
-        )
-    );
-
-    Model<>::get_tool(0u).set_distribution(
-        distribute_tool_randomly(
-            Model<>::operator()("Vaccination rate"),
-            true
-        )
-    );
-    
+        
     day_quarantined_or_isolated.resize(size(), 0);
     std::fill(
         day_quarantined_or_isolated.begin(),
@@ -456,6 +437,9 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     measles.set_prob_infecting(&model("Transmission rate"));
     measles.set_prob_recovery(&model("1/Rash period"));
     measles.set_incubation(&model("Incubation period"));
+    measles.set_distribution(
+        distribute_virus_randomly(n_exposed, false)
+    );
 
     model.add_virus(measles);
 

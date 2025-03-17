@@ -2,7 +2,7 @@
 # Davis highschool is also about 2,000
 # Gains county (Texas outbreak) has 836 students.
 # And so far, the total outbreak size is about 60.
-Population size: 200000
+Population size: 2000
 1/Rash period: 0.500
 Contact rate: 3.142857
 Quarantine willingness: -1.0
@@ -17,6 +17,6 @@ Vax improved recovery: 0.5000
 Vax efficacy: 0.99
 initial number of exposed: 1.0000
 Seed: 2231
-N days: 100
-Replicates: 500
-Threads: 40
+N days: 50
+Replicates: 1000
+Threads: 10
