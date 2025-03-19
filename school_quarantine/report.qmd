@@ -436,12 +436,14 @@ ggplot(repnums, aes(x = Rt)) +
         )
 ```
 
+Althougth the model was calibrated with an R0 of 15, adding vaccination, a smaller population, and quarantine changes (lowers) the reproductive number:
+
 ```{r}
-#| label: printing-R0
+#| label: printing-Rt
 #| echo: false
-message("Mean R0:", mean(repnums$Rt))
-message("Median R0:", quantile(repnums$Rt, probs=.5))
-message("95% CI R0:",
+message("Mean Rt:", mean(repnums$Rt))
+message("Median Rt:", quantile(repnums$Rt, probs=.5))
+message("95% CI Rt:",
     paste(quantile(repnums$Rt, probs=c(0.025, 0.975)), collapse = ",")
     ) 
 ```
