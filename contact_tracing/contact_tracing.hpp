@@ -454,7 +454,7 @@ inline ModelContactTracing::ModelContactTracing(
     model.add_state("Isolated", default_update_exposed<>);
     model.add_state("Quarantined Exposed", update_quarantined_exposed);
     model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
-    model.add_state("Quarantined Infectious", update_quanrantined_prodromal);
+    model.add_state("Quarantined Prodromal", update_quanrantined_prodromal);
     model.add_state("Recovered");
 
     // Adding the model parameters

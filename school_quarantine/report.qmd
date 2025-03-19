@@ -219,7 +219,7 @@ exposed <- c(
   "Rash",
   "Isolated",
   "Quarantined Exposed",
-  "Quarantined Infectious",
+  "Quarantined Prodromal",
   "Quarantined Recovered",
   "Hospitalized",
   "Recovered"
@@ -270,23 +270,19 @@ sizes <- rbind(
   data.table(
     Size = median_cases,
     Probability = "Median (50%>)",
-    "Likely size (if > Size)" = paste(
-      "[",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
       quantile(counts$Total[counts$Total > median_cases], probs=.025),
-      ",",
-      quantile(counts$Total[counts$Total > median_cases], probs=.975),
-      "]"
+      quantile(counts$Total[counts$Total > median_cases], probs=.975)
     )
   ),
   data.table(
     Size = mean_cases,
     Probability = "Mean (average)",
-    "Likely size (if > Size)" = paste(
-      "[",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
       quantile(counts$Total[counts$Total > mean_cases], probs=.025),
-      ",",
-      quantile(counts$Total[counts$Total > mean_cases], probs=.975),
-      "]"
+      quantile(counts$Total[counts$Total > mean_cases], probs=.975)
     )
   )
 )

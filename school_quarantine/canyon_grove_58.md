@@ -1,5 +1,6 @@
 # School quarantine model
 
+
 ## School quarantine model for canyon_grove_58
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -34,18 +35,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             | Value | Reference                                                           |
-|:----------------------|------:|:--------------------------------------------------------------------|
-| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Days undetected       | -1.00 | Fixed value.                                                        |
-| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |  0.50 | Fixed value.                                                        |
-| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    | 15.00 | Theoretical R0.                                                     |
+| Parameter | Value | Reference |
+|:---|---:|:---|
+| Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
+| Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Days undetected | -1.00 | Fixed value. |
+| Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
+| Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery | 0.50 | Fixed value. |
+| Vax efficacy | 0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015). |
+| R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
 [here](canyon_grove_58_params.yaml).
@@ -56,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpntNuvF/fileb0c4e258fd508.yaml
+    Using file: /tmp/Rtmp6rDuS0/file25221b84474.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -73,8 +74,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 4.30 million agents x day / second
-    Average run speed   : 43.64 million agents x day / second
+    Last run speed      : 6.76 million agents x day / second
+    Average run speed   : 69.27 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -109,7 +110,7 @@ case. The following is the output from the highschool model:
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
       - ( 6) Quarantined Susceptible :   0 -> 0
-      - ( 7) Quarantined Infectious  :   0 -> 0
+      - ( 7) Quarantined Prodromal   :   0 -> 0
       - ( 8) Quarantined Recovered   :   0 -> 0
       - ( 9) Hospitalized            :   0 -> 2
       - (10) Recovered               :   0 -> 40
@@ -122,7 +123,7 @@ case. The following is the output from the highschool model:
      - Isolated                    -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Infectious      -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
      - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.56  0.44
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
@@ -159,8 +160,8 @@ Estimating the outbreak size:
 |   5.0000 | 0.90           | \[13.88, 288.00\]        |
 |  10.0000 | 0.88           | \[20.15, 288.00\]        |
 |  20.0000 | 0.86           | \[35.15, 288.00\]        |
-| 232.0000 | Median (50%\>) | \[ 236 , 290 \]          |
-| 185.4915 | Mean (average) | \[ 192.925 , 290 \]      |
+| 232.0000 | Median (50%\>) | \[236.00, 290.00\]       |
+| 185.4915 | Mean (average) | \[192.93, 290.00\]       |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -189,7 +190,8 @@ transitions:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

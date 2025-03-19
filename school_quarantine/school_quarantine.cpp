@@ -1,5 +1,6 @@
 // #define EPI_DEBUG
 #include "school_quarantine.hpp"
+#include <iostream>
 
 // Defining the 
 
