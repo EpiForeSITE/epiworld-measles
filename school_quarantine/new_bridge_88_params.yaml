@@ -20,5 +20,5 @@ Vax efficacy: 0.99
 initial number of exposed: 1.0000
 Seed: 2231
 N days: 60
-Replicates: 1000
-Threads: 30
+Replicates: 2000
+Threads: 10

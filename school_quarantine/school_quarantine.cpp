@@ -6,8 +6,8 @@
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn      = "new_bridge_88_npi_params.yaml";
-    std::string out_dir = "new_bridge_88_npi";
+    std::string fn      = "new_bridge_88_params.yaml";
+    std::string out_dir = "new_bridge_88";
     if (argc != 3 && argc != 1) {
         std::cerr << "Usage: " << argv[0] << " <filename> <outdir>" << std::endl;
         return 1;

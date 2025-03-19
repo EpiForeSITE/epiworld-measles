@@ -40,8 +40,8 @@ The following is a raw list of the parameters included in the model:
 #| echo: false
 if (interactive()) {
     params <- list(
-        params_fn = "new_bridge_88_npi_params.yaml",
-        out_dir = "new_bridge_88_npi"
+        params_fn = "new_bridge_88_params.yaml",
+        out_dir = "new_bridge_88"
     )
 }
 ```

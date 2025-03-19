@@ -3,15 +3,16 @@
 # Gains county (Texas outbreak) has 836 students.
 # And so far, the total outbreak size is about 60.
 Population size: 634
-1/Rash period: 0.25
 Contact rate: 2.380952
 Quarantine willingness: -1.0
 Incubation period: 12.0000
-Days undetected: 2000.0000
+Days undetected: -1
 Prodromal period: 3.0000
 Quarantine days: 21.0000
 Rash period: 4.0000
 Transmission rate: 0.9
+Hospitalization rate: 0.2
+Hospitalization days: 7
 # Mean rate for last 5 years
 Vaccination rate: 0.92
 Vax improved recovery: 0.5000
