@@ -540,7 +540,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     model.add_state("Quarantined Exposed", update_quarantined_exposed);
     model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
     model.add_state("Quarantined Infectious", update_quanrantined_prodromal);
-    model.add_state("Quarantined Recovered", update_quarantined_exposed);
+    model.add_state("Quarantined Recovered", update_quarantined_recovered);
     model.add_state("Hospitalized", update_hospitalized);
     model.add_state("Recovered");
 
