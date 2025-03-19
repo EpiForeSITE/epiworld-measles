@@ -1,6 +1,5 @@
 # School quarantine model
 
-
 ## School quarantine model for new_bridge_88_npi
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -57,8 +56,8 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: new_bridge_88_npi_params.yaml
-    Starting multiple runs (500) using 10 thread(s)
+    Using file: /tmp/RtmpoYaBk0/fileb126462aa3b8d.yaml
+    Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
@@ -72,10 +71,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 6.00ms
-    Total elapsed t     : 376.00ms (500 runs)
-    Last run speed      : 5.31 million agents x day / second
-    Average run speed   : 48.98 million agents x day / second
+    Last run elapsed t  : 0.00s
+    Total elapsed t     : 1.00s (2000 runs)
+    Last run speed      : 4.41 million agents x day / second
+    Average run speed   : 44.13 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -103,28 +102,28 @@ case. The following is the output from the highschool model:
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 613 -> 613
+      - ( 0) Susceptible             : 613 -> 539
       - ( 1) Exposed                 :   1 -> 0
       - ( 2) Prodromal               :   0 -> 0
       - ( 3) Rash                    :   0 -> 0
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
-      - ( 6) Quarantined Susceptible :   0 -> 0
+      - ( 6) Quarantined Susceptible :   0 -> 72
       - ( 7) Quarantined Infectious  :   0 -> 0
-      - ( 8) Quarantined Recovered   :   0 -> 0
+      - ( 8) Quarantined Recovered   :   0 -> 1
       - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 1
+      - (10) Recovered               :   0 -> 2
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.86  0.14  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.67  0.33  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
-     - Isolated                    -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Infectious      -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
+     - Exposed                  0.00  0.95  0.02  0.00  0.00  0.00  0.00  0.02  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.50  0.00  0.00  0.00  0.00  0.50  0.00  0.00
+     - Isolated                 0.00  0.00  0.00  0.00  0.33  0.00  0.00  0.00  0.00  0.00  0.67
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.88  0.00  0.12  0.00  0.00  0.00
+     - Quarantined Susceptible  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00
+     - Quarantined Infectious   0.00  0.00  0.00  0.00  0.50  0.00  0.00  0.50  0.00  0.00  0.00
+     - Quarantined Recovered    0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00
      - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
@@ -146,28 +145,28 @@ flowchart LR
     s8[Rash]
     s9[Recovered]
     s10[Susceptible]
-    s0 -->|0.078167| s3
-    s0 -->|0.029919| s4
-    s0 -->|0.004223| s5
-    s1 -->|0.152144| s9
-    s2 -->|0.156662| s1
-    s2 -->|0.620791| s9
-    s3 -->|0.010093| s2
-    s3 -->|0.020187| s5
-    s3 -->|0.318131| s8
-    s4 -->|0.009920| s3
-    s4 -->|0.069636| s5
-    s5 -->|0.323911| s2
-    s5 -->|0.013751| s3
-    s6 -->|0.042129| s9
-    s7 -->|0.042717| s10
-    s8 -->|0.132771| s1
-    s8 -->|0.097998| s2
-    s8 -->|0.322445| s6
-    s8 -->|0.339305| s9
-    s10 -->|0.000071| s0
-    s10 -->|0.000008| s4
-    s10 -->|0.001674| s7
+    s0 --&gt;|0.080571| s3
+    s0 --&gt;|0.033876| s4
+    s0 --&gt;|0.003470| s5
+    s1 --&gt;|0.138953| s9
+    s2 --&gt;|0.149629| s1
+    s2 --&gt;|0.622568| s9
+    s3 --&gt;|0.009565| s2
+    s3 --&gt;|0.016369| s5
+    s3 --&gt;|0.328469| s8
+    s4 --&gt;|0.010524| s3
+    s4 --&gt;|0.072949| s5
+    s5 --&gt;|0.328059| s2
+    s5 --&gt;|0.014087| s3
+    s6 --&gt;|0.043338| s9
+    s7 --&gt;|0.043551| s10
+    s8 --&gt;|0.144676| s1
+    s8 --&gt;|0.112436| s2
+    s8 --&gt;|0.316987| s6
+    s8 --&gt;|0.324302| s9
+    s10 --&gt;|0.000069| s0
+    s10 --&gt;|0.000007| s4
+    s10 --&gt;|0.001700| s7
 
 ```
 
@@ -175,16 +174,16 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|   Size | Probability    | Likely size (if \> Size) |
-|-------:|:---------------|:-------------------------|
-|  2.000 | 0.59           | \[2.00, 10.00\]          |
-|  5.000 | 0.16           | \[5.00, 12.00\]          |
-| 10.000 | 0.02           | \[10.00, 12.72\]         |
-| 20.000 | \< 0.01        | \-                       |
-|  2.000 | Median (50%\>) | \[ 3 , 11.425 \]         |
-|  2.686 | Mean (average) | \[ 3 , 11.425 \]         |
+|    Size | Probability    | Likely size (if \> Size)   |
+|--------:|:---------------|:---------------------------|
+|  2.0000 | 0.60           | \[2.00, 11.00\]            |
+|  5.0000 | 0.17           | \[5.00, 13.00\]            |
+| 10.0000 | 0.02           | \[10.00, 17.60\]           |
+| 20.0000 | \< 0.01        | \[22.00, 22.00\]           |
+|  2.0000 | Median (50%\>) | \[ 3 , 11.4499999999999 \] |
+|  2.7705 | Mean (average) | \[ 3 , 11.4499999999999 \] |
 
-Likely sizes of the outbreak based on 500 simulations.
+Likely sizes of the outbreak based on 2000 simulations.
 
 ![](new_bridge_88_npi_files/figure-commonmark/print-histogram-1.png)
 
@@ -203,7 +202,7 @@ transitions:
 
 ![](new_bridge_88_npi_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:1.042
+    Mean R0:1.073
 
     Median R0:1
 
@@ -211,8 +210,7 @@ transitions:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

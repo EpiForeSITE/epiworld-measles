@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     if (argc != 3 && argc != 1) {
         std::cerr << "Usage: " << argv[0] << " <filename> <outdir>" << std::endl;
         return 1;
-    } else if (argc == 4) {
+    } else if (argc == 3) {
         fn      = std::string(argv[1]);
         out_dir = std::string(argv[2]);
     }

@@ -38,7 +38,7 @@ The following is a raw list of the parameters included in the model:
 ```{r}
 #| label: in-case-of-interactive
 #| echo: false
-if (interactive()) {
+if (interactive() && !exists("params")) {
     params <- list(
         params_fn = "new_bridge_88_params.yaml",
         out_dir = "new_bridge_88"
@@ -220,6 +220,8 @@ exposed <- c(
   "Isolated",
   "Quarantined Exposed",
   "Quarantined Infectious",
+  "Quarantined Recovered",
+  "Hospitalized",
   "Recovered"
   )
 counts <- histories[(state %in% exposed) & (date == max(date))]

@@ -1,6 +1,5 @@
 # School quarantine model
 
-
 ## School quarantine model for canyon_crest_74
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -35,18 +34,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter | Value | Reference |
-|:---|---:|:---|
-| Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
-| Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
-| Days undetected | -1.00 | Fixed value. |
-| Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
-| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
-| Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
-| Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery | 0.50 | Fixed value. |
-| Vax efficacy | 0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015). |
-| R0 | 15.00 | Theoretical R0. |
+| Parameter             | Value | Reference                                                           |
+|:----------------------|------:|:--------------------------------------------------------------------|
+| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
+| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Days undetected       | -1.00 | Fixed value.                                                        |
+| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
+| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
+| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
+| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery |  0.50 | Fixed value.                                                        |
+| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
+| R0                    | 15.00 | Theoretical R0.                                                     |
 
 Other parameters can be found the corresponding parameters document
 [here](canyon_crest_74_params.yaml).
@@ -57,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: canyon_crest_74_params.yaml
+    Using file: /tmp/RtmpKmmBXV/fileb13d040e040f.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -72,10 +71,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 3.00ms
-    Total elapsed t     : 756.00ms (2000 runs)
-    Last run speed      : 8.14 million agents x day / second
-    Average run speed   : 75.20 million agents x day / second
+    Last run elapsed t  : 0.00s
+    Total elapsed t     : 1.00s (2000 runs)
+    Last run speed      : 4.31 million agents x day / second
+    Average run speed   : 40.11 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -141,12 +140,12 @@ flowchart LR
     s3[Rash]
     s4[Recovered]
     s5[Susceptible]
-    s0 -->|0.083533| s2
-    s1 -->|0.144126| s4
-    s2 -->|0.331922| s3
-    s3 -->|0.157657| s1
-    s3 -->|0.631381| s4
-    s5 -->|0.001553| s0
+    s0 --&gt;|0.083533| s2
+    s1 --&gt;|0.144126| s4
+    s2 --&gt;|0.331922| s3
+    s3 --&gt;|0.157657| s1
+    s3 --&gt;|0.631381| s4
+    s5 --&gt;|0.001553| s0
 
 ```
 
@@ -154,14 +153,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|   Size | Probability    | Likely size (if \> Size) |
-|-------:|:---------------|:-------------------------|
-|  2.000 | 0.83           | \[2.00, 112.00\]         |
-|  5.000 | 0.74           | \[6.00, 113.00\]         |
-| 10.000 | 0.69           | \[11.00, 114.00\]        |
-| 20.000 | 0.61           | \[21.00, 115.00\]        |
-| 35.000 | Median (50%\>) | \[ 38 , 116.25 \]        |
-| 42.271 | Mean (average) | \[ 44 , 117 \]           |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|  2.0000 | 0.83           | \[2.00, 116.00\]         |
+|  5.0000 | 0.75           | \[6.00, 116.00\]         |
+| 10.0000 | 0.70           | \[11.00, 117.00\]        |
+| 20.0000 | 0.61           | \[21.00, 118.00\]        |
+| 36.0000 | Median (50%\>) | \[ 38 , 119 \]           |
+| 43.5315 | Mean (average) | \[ 45 , 119.125 \]       |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -190,8 +189,7 @@ transitions:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-jones2019measles" class="csl-entry">
 
