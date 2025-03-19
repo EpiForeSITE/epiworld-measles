@@ -104,6 +104,10 @@ public:
 
 inline void ModelSchoolQuarantine::quarantine_agents() {
 
+    // When max days in rash is negative, then we do not quarantine
+    if (this->par("Max days in rash") < 0)
+        return;
+
     // Capturing the days that matter and the probability of success
     epiworld_double willingness = this->par("Quarantine willingness");
 
@@ -125,7 +129,7 @@ inline void ModelSchoolQuarantine::quarantine_agents() {
             continue;
 
         // The rash is now evident, so they go straight to 
-        // isolation
+        // isolation, regardless of if they are willing or not.
         if (agent_state == RASH)
         {
             get_agent(i).change_state(this, ISOLATED);
