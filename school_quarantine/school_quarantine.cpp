@@ -1,5 +1,4 @@
-
-#define EPI_DEBUG
+// #define EPI_DEBUG
 #include "school_quarantine.hpp"
 
 // Defining the 
@@ -8,15 +7,13 @@ int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
     std::string fn      = "new_bridge_88_params.yaml";
-    size_t n            = 1000;
     std::string out_dir = "new_bridge_88";
-    if (argc != 4 && argc != 1) {
-        std::cerr << "Usage: " << argv[0] << " <filename> <outdir> <size>" << std::endl;
+    if (argc != 3 && argc != 1) {
+        std::cerr << "Usage: " << argv[0] << " <filename> <outdir>" << std::endl;
         return 1;
     } else if (argc == 4) {
         fn      = std::string(argv[1]);
         out_dir = std::string(argv[2]);
-        n       = std::stoul(argv[3]);
     }
     std::cout << "Using file: " << fn << std::endl;
 

@@ -36,6 +36,17 @@ This model is a discrete-time Agent-Based Model [ABM] that includes the followin
 The following is a raw list of the parameters included in the model:
 
 ```{r}
+#| label: in-case-of-interactive
+#| echo: false
+if (interactive()) {
+    params <- list(
+        params_fn = "new_bridge_88_npi_params.yaml",
+        out_dir = "new_bridge_88_npi"
+    )
+}
+```
+
+```{r}
 #| label: update-params
 #| echo: false
 #| warning: false
@@ -167,7 +178,7 @@ n <- temp_params$`Population size`
 n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 system2(
     "./school_quarantine.o",
-    c(temp_params_fn, params$out_dir, n),
+    c(temp_params_fn, params$out_dir),
     wait = TRUE, stdout=TRUE
     ) |>
     cat(sep = "\n")

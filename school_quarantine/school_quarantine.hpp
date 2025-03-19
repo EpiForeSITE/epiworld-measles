@@ -385,7 +385,8 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         // If hospitalized, then the agent is removed from the system
         // effectively
         p->change_state(m, ModelSchoolQuarantine::HOSPITALIZED);
-    } else
+    }
+    else if (which != 0)
     {
         throw std::logic_error("The roulette returned an unexpected value.");
     }
@@ -503,7 +504,7 @@ EPI_NEW_UPDATEFUN(update_isolated, int) {
         // If hospitalized, then the agent is removed from the system
         // effectively
         p->change_state(m, ModelSchoolQuarantine::HOSPITALIZED);
-    } else
+    } else if (which != 0)
     {
         throw std::logic_error("The roulette returned an unexpected value.");
     }
