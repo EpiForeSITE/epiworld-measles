@@ -28,18 +28,20 @@ models/README.md: models/README.qmd
 		quarto render README.qmd
 
 container_build:
-	@echo "Building container..."
+	@echo "Building container..." && \
+	cd .devcontainer && \
 	$(ENGINE) build $(CONT_ARGS) -t epiworld-measles -f ContainerFile . && \
 	$(ENGINE) tag epiworld-measles $(IMAGE)
 
 container_run:
 	@echo "Running container..."
-	$(ENGINE) run -it --rm --mount \
+	$(ENGINE) run -it --rm  \
+		--userns=keep-id --mount \
 		type=bind,source=$(PWD),target=/measles \
 		--workdir /measles/ epiworld-measles bash
 
 container_build_mac:
-	CONT_ARGS=--platform=linux/amd64 $(MAKE) container_build
+	CONT_ARGS=--platform=linux/arm64 $(MAKE) container_build
 
 singularity:
 	$(ENGINE) run $(CONT_ARGS) -it --rm \

@@ -35,18 +35,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             |   Value | Reference                                                           |
-|:----------------------|--------:|:--------------------------------------------------------------------|
-| Contact rate          |    2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     |   12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Days undetected      | 2000.00 | Fixed value.                                                        |
-| Prodromal period      |    3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       |   21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |    4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |    0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |    0.50 | Fixed value.                                                        |
-| Vax efficacy          |    0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    |   15.00 | Theoretical R0.                                                     |
+| Parameter | Value | Reference |
+|:---|---:|:---|
+| Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
+| Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Days undetected | -1.00 | Fixed value. |
+| Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
+| Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery | 0.50 | Fixed value. |
+| Vax efficacy | 0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015). |
+| R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
 [here](canyon_crest_74_params.yaml).
@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpB1KNeD/file54f32c6ebbd.yaml
+    Using file: canyon_crest_74_params.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -72,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00s
-    Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 5.32 million agents x day / second
-    Average run speed   : 49.16 million agents x day / second
+    Last run elapsed t  : 3.00ms
+    Total elapsed t     : 756.00ms (2000 runs)
+    Last run speed      : 8.14 million agents x day / second
+    Average run speed   : 75.20 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -88,39 +88,45 @@ case. The following is the output from the highschool model:
      - Vaccine
 
     Model parameters:
-     - 1/Rash period          : 0.2500
      - Contact rate           : 2.3810
+     - Days undetected        : -1.0000
+     - Hospitalization days   : 7.0000
+     - Hospitalization rate   : 0.2000
      - Incubation period      : 12.0000
-     - Days undetected       : 2000.0000
      - Prodromal period       : 3.0000
      - Quarantine days        : 21.0000
      - Quarantine willingness : -1.0000
+     - Rash days              : 4.0000
      - Transmission rate      : 0.9000
      - Vaccination rate       : 0.7400
      - Vax efficacy           : 0.9900
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - (0) Susceptible             : 473 -> 460
-      - (1) Exposed                 :   1 -> 5
-      - (2) Prodromal               :   0 -> 2
-      - (3) Rash                    :   0 -> 1
-      - (4) Isolated                :   0 -> 0
-      - (5) Quarantined Exposed     :   0 -> 0
-      - (6) Quarantined Susceptible :   0 -> 0
-      - (7) Quarantined Infectious  :   0 -> 0
-      - (8) Recovered               :   0 -> 6
+      - ( 0) Susceptible             : 473 -> 473
+      - ( 1) Exposed                 :   1 -> 0
+      - ( 2) Prodromal               :   0 -> 0
+      - ( 3) Rash                    :   0 -> 0
+      - ( 4) Isolated                :   0 -> 0
+      - ( 5) Quarantined Exposed     :   0 -> 0
+      - ( 6) Quarantined Susceptible :   0 -> 0
+      - ( 7) Quarantined Infectious  :   0 -> 0
+      - ( 8) Quarantined Recovered   :   0 -> 0
+      - ( 9) Hospitalized            :   0 -> 0
+      - (10) Recovered               :   0 -> 1
 
     Transition Probabilities:
-     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.90  0.10  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.63  0.37  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.65  0.00  0.00  0.00  0.00  0.35
-     - Isolated                    -     -     -     -     -     -     -     -     -
-     - Quarantined Exposed         -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -
-     - Quarantined Infectious      -     -     -     -     -     -     -     -     -
-     - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Exposed                  0.00  0.94  0.06  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+     - Isolated                    -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Infectious      -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
+     - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
+     - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
 
@@ -130,14 +136,17 @@ model:
 ``` mermaid
 flowchart LR
     s0[Exposed]
-    s1[Prodromal]
-    s2[Rash]
-    s3[Recovered]
-    s4[Susceptible]
-    s0 -->|0.083434| s1
-    s1 -->|0.333277| s2
-    s2 -->|0.250808| s3
-    s4 -->|0.003250| s0
+    s1[Hospitalized]
+    s2[Prodromal]
+    s3[Rash]
+    s4[Recovered]
+    s5[Susceptible]
+    s0 -->|0.083533| s2
+    s1 -->|0.144126| s4
+    s2 -->|0.331922| s3
+    s3 -->|0.157657| s1
+    s3 -->|0.631381| s4
+    s5 -->|0.001553| s0
 
 ```
 
@@ -145,14 +154,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|     Size | Probability    | Likely size (if \> Size) |
-|---------:|:---------------|:-------------------------|
-|   2.0000 | 0.93           | \[4.00, 140.00\]         |
-|   5.0000 | 0.89           | \[9.00, 140.00\]         |
-|  10.0000 | 0.87           | \[15.00, 140.00\]        |
-|  20.0000 | 0.83           | \[28.00, 140.00\]        |
-| 108.0000 | Median (50%\>) | \[ 110 , 142 \]          |
-|  88.1525 | Mean (average) | \[ 92 , 141 \]           |
+|   Size | Probability    | Likely size (if \> Size) |
+|-------:|:---------------|:-------------------------|
+|  2.000 | 0.83           | \[2.00, 112.00\]         |
+|  5.000 | 0.74           | \[6.00, 113.00\]         |
+| 10.000 | 0.69           | \[11.00, 114.00\]        |
+| 20.000 | 0.61           | \[21.00, 115.00\]        |
+| 35.000 | Median (50%\>) | \[ 38 , 116.25 \]        |
+| 42.271 | Mean (average) | \[ 44 , 117 \]           |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -173,11 +182,11 @@ transitions:
 
 ![](canyon_crest_74_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:3.8375
+    Mean R0:2.4365
 
-    Median R0:3
+    Median R0:2
 
-    95% CI R0:0,11
+    95% CI R0:0,8
 
 # References
 
