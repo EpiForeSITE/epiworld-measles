@@ -356,6 +356,14 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
     m->array_double_tmp[0] = 1.0/m->par("Rash days");
     m->array_double_tmp[1] = m->par("Hospitalization rate");
 
+    #ifdef EPI_DEBUG
+    EPI_DEBUG_PRINTF(
+        "Rash days: %f, Hospitalization rate: %f\n",
+        m->array_double_tmp[0],
+        m->array_double_tmp[1]
+    );
+    #endif
+
     int which = epiworld::roulette(2, m);
 
     // Recovers

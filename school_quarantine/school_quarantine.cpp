@@ -1,3 +1,5 @@
+
+#define EPI_DEBUG
 #include "school_quarantine.hpp"
 
 // Defining the 
@@ -31,9 +33,9 @@ int main(int argc, char *argv[]) {
         params["Incubation period"],    // Incubation period
         params["Prodromal period"],    // Prodromal period
         params["Rash period"],    // Rash period
+        params["Days undetected"],    // Days undetected
         params["Hospitalization rate"],    // Hospitalization rate
         params["Hospitalization days"],
-        params["Days undetected"],    // Days undetected
         params["Vaccination rate"],   // Vaccination rate
         params["Quarantine days"],   // Quarantine days for vaccinated
         params["Quarantine willingness"]   // Quarantine success rate
