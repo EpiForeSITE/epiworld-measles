@@ -58,7 +58,7 @@ temp_params <- yaml::read_yaml(params$params_fn)
 # Theoretical R0
 temp_params$R0 <- with(temp_params, {
   `Contact rate` * `Transmission rate` * (
-    1/`1/Rash period` + `Prodromal period`
+    `Rash period` + `Prodromal period`
   )
 })
 

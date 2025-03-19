@@ -353,7 +353,7 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
 
     // Probability of Staying in the rash period vs becoming
     // hospitalized
-    m->array_double_tmp[0] = m->par("1/Rash period");
+    m->array_double_tmp[0] = 1.0/m->par("Rash days");
     m->array_double_tmp[1] = m->par("Hospitalization rate");
 
     int which = epiworld::roulette(2, m);
@@ -478,7 +478,7 @@ EPI_NEW_UPDATEFUN(update_isolated, int) {
 
     // Probability of staying in the rash period vs becoming
     // hospitalized
-    m->array_double_tmp[0] = m->par("1/Rash period");
+    m->array_double_tmp[0] = 1.0/m->par("Rash days");
     m->array_double_tmp[1] = m->par("Hospitalization rate");
 
     int which = epiworld::roulette(2, m);
@@ -540,7 +540,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     model.add_param(transmission_rate, "Transmission rate");
     model.add_param(incubation_period, "Incubation period");
     model.add_param(prodromal_period, "Prodromal period");
-    model.add_param(1.0 / rash_period, "1/Rash period");
+    model.add_param(rash_period, "Rash days");
     model.add_param(days_undetected, "Days undetected");
     model.add_param(quarantine_days, "Quarantine days");
     model.add_param(
@@ -556,7 +556,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     Virus<> measles("Measles");
     measles.set_state(EXPOSED, RECOVERED);
     measles.set_prob_infecting(&model("Transmission rate"));
-    measles.set_prob_recovery(&model("1/Rash period"));
+    measles.set_prob_recovery(&model("Rash days"));
     measles.set_incubation(&model("Incubation period"));
     measles.set_distribution(
         distribute_virus_randomly(n_exposed, false)
