@@ -84,7 +84,7 @@ params_table <- params_table[
     Parameter %in% c(
         "Contact rate",
         "Incubation period",
-        "Max days in rash",
+        "Days undetected",
         "Prodromal period",
         "Quarantine days",
         "Rash period",
@@ -106,7 +106,7 @@ params_table[
 ]
 
 params_table[
-    Parameter == "Max days in rash",
+    Parameter == "Days undetected",
     Reference := "Fixed value."
 ]
 

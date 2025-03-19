@@ -33,8 +33,9 @@ public:
     static const epiworld_fast_uint QUARANTINED_EXPOSED     = 5u;
     static const epiworld_fast_uint QUARANTINED_SUSCEPTIBLE = 6u;
     static const epiworld_fast_uint QUARANTINED_PRODROMAL   = 7u;
-    static const epiworld_fast_uint HOSPITALIZED            = 8u;
-    static const epiworld_fast_uint RECOVERED               = 9u;
+    static const epiworld_fast_uint QUARANTINED_RECOVERED   = 8u;
+    static const epiworld_fast_uint HOSPITALIZED            = 9u;
+    static const epiworld_fast_uint RECOVERED               = 10u;
     
     // Default constructor
     ModelSchoolQuarantine() {};
@@ -51,7 +52,7 @@ public:
         epiworld_double incubation_period,
         epiworld_double prodromal_period,
         epiworld_double rash_period,
-        epiworld_double max_days_in_rash,
+        epiworld_double days_undetected,
         epiworld_double hospitalization_rate,
         epiworld_double hospitalization_duration,
         // Policy parameters
@@ -71,7 +72,7 @@ public:
         epiworld_double incubation_period,
         epiworld_double prodromal_period,
         epiworld_double rash_period,
-        epiworld_double max_days_in_rash,
+        epiworld_double days_undetected,
         epiworld_double hospitalization_rate,
         epiworld_double hospitalization_duration,
         // Policy parameters
@@ -90,7 +91,6 @@ public:
     };
 
     QuarantineStatus quarantine_status;
-
     std::vector< int > day_quarantined_or_isolated;
     
     void quarantine_agents();
@@ -104,50 +104,52 @@ public:
 
 inline void ModelSchoolQuarantine::quarantine_agents() {
 
-    // When max days in rash is negative, then we do not quarantine
-    if (this->par("Max days in rash") < 0)
+    // Iterating through the new cases
+    if (quarantine_status != QuarantineStatus::TRIGGERED)
         return;
 
     // Capturing the days that matter and the probability of success
     epiworld_double willingness = this->par("Quarantine willingness");
-
-    // Iterating through the new cases
-    if (quarantine_status != QuarantineStatus::TRIGGERED)
-        return;
 
     // Iterating through the
     for (size_t i = 0u; i < size(); ++i) {
 
         auto agent_state = get_agent(i).get_state();
 
+        // Already quarantined or isolated
+        if (agent_state > RASH)
+            continue;
+
+        // Rash is evident, so they go straight to isolation, in all
+        // cases.
+        if (agent_state == RASH)
+        {
+            get_agent(i).change_state(this, ISOLATED);
+            day_quarantined_or_isolated[i] = today();
+            continue;
+        }
+
         // If the agent has a vaccine, then no need for quarantine
         if (get_agent(i).get_n_tools() != 0u)
             continue;
 
-        // Is it already in quarantine or isolated?
-        if (agent_state > RASH)
-            continue;
 
-        // The rash is now evident, so they go straight to 
-        // isolation, regardless of if they are willing or not.
-        if (agent_state == RASH)
+        // Quarantine will depend on the willingness of the agent
+        // to be quarantined. If negative, then quarantine never happens.
+        if (runif() < willingness)
         {
-            get_agent(i).change_state(this, ISOLATED);
+
+            if (agent_state == SUSECPTIBLE)
+                get_agent(i).change_state(this, QUARANTINED_SUSCEPTIBLE);
+            else if (agent_state == EXPOSED)
+                get_agent(i).change_state(this, QUARANTINED_EXPOSED);
+            else if (agent_state == PRODROMAL)
+                get_agent(i).change_state(this, QUARANTINED_PRODROMAL);
+
+            // And we add the day of quarantine
+            day_quarantined_or_isolated[i] = today();
+
         }
-
-        // Are we successful in quarantining the agent?
-        if (runif() > willingness)
-            continue;
-
-        if (agent_state == SUSECPTIBLE)
-            get_agent(i).change_state(this, QUARANTINED_SUSCEPTIBLE);
-        else if (agent_state == EXPOSED)
-            get_agent(i).change_state(this, QUARANTINED_EXPOSED);
-        else if (agent_state == PRODROMAL)
-            get_agent(i).change_state(this, QUARANTINED_PRODROMAL);
-
-        // And we add the day of quarantine
-        day_quarantined_or_isolated[i] = today();
 
     }
 
@@ -167,6 +169,8 @@ EPI_NEW_GLOBALFUN(update_model, int) {
 
 inline void ModelSchoolQuarantine::reset() {
     
+    Model<>::reset();
+
     quarantine_status = QuarantineStatus::INACTIVE;
         
     day_quarantined_or_isolated.resize(size(), 0);
@@ -175,10 +179,9 @@ inline void ModelSchoolQuarantine::reset() {
         day_quarantined_or_isolated.end(),
         0);
 
-    Model<>::reset();
-
     update_model(dynamic_cast<Model<>*>(this));
     return;
+    
 }
 
 inline void ModelSchoolQuarantine::update_available() {
@@ -212,6 +215,7 @@ inline Model<> * ModelSchoolQuarantine::clone_ptr()
 
 EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
+    // How many contacts to draw
     int ndraw = m->rbinom();
 
     if (ndraw == 0)
@@ -225,12 +229,11 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
 
     // Drawing from the set
     int nviruses_tmp = 0;
-    for (int i = 0; i < ndraw; ++i)
+    int i = 0;
+    while (i < ndraw)
     {
-        // Now selecting who is transmitting the disease
-        int which = static_cast<int>(
-            std::floor(n_available * m->runif())
-        );
+        // Picking the actual contacts
+        int which = static_cast<int>(std::floor(n_available * m->runif()));
 
         /* There is a bug in which runif() returns 1.0. It is rare, but
             * we saw it here. See the Notes section in the C++ manual
@@ -248,7 +251,10 @@ EPI_NEW_UPDATEFUN(update_susceptible, int) {
         if (neighbor.get_id() == p->get_id())
             continue;
 
-        // The neighbor is infected because it is on the list!
+        // We successfully drew a contact, so we increment the counter
+        i++;
+
+        // No virus, no way to transmit
         if (neighbor.get_virus() == nullptr)
             continue;
 
@@ -331,12 +337,13 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         );
     #endif
 
-    // Checking if the agent will recover or not
-    int days_since_rash = m->today() -
-        model->day_quarantined_or_isolated[p->get_id()];
-    
+    // Checking if the agent will be detected or not
+    // How many days since detected  
     bool isolate = false;
-    if (days_since_rash >= m->par("Max days in rash"))
+    if (
+        (m->par("Days undetected") > 0) &&
+        (m->runif() > 1.0/m->par("Days undetected"))
+    )
     {
         model->quarantine_status =  
             ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
@@ -344,18 +351,26 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         isolate = true;
     }
 
-    // Probability of leaving the rash period
-    m->array_double_tmp[0] = 1.0 - m->par("1/Rash period"); 
-
+    // Probability of Staying in the rash period vs becoming
+    // hospitalized
+    m->array_double_tmp[0] = m->par("1/Rash period");
     m->array_double_tmp[1] = m->par("Hospitalization rate");
 
     int which = epiworld::roulette(2, m);
 
-    if (which == 0)
+    // Recovers
+    if (which == -1)
     {
-        // Recovers. It doesn't affect if quarantine has been triggered,
-        // since recovered agents effectively leave the system.
-        p->rm_agent_by_virus(m, ModelSchoolQuarantine::RECOVERED);
+        if (isolate)
+        {
+            model->day_quarantined_or_isolated[p->get_id()] = m->today();
+            p->rm_agent_by_virus(
+                m,
+                ModelSchoolQuarantine::QUARANTINED_RECOVERED
+            );
+        }
+        else
+            p->rm_agent_by_virus(m, ModelSchoolQuarantine::RECOVERED);
     }
     else if (which == 1)
     {
@@ -367,25 +382,38 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         throw std::logic_error("The roulette returned an unexpected value.");
     }
 
-    // If not hospitalized, then the agent can be come isolated
-    if ((which != 1) && isolate)
-    {
-        p->change_state(m, ModelSchoolQuarantine::ISOLATED);
-        model->day_quarantined_or_isolated[p->get_id()] = m->today();
-    }
     
 };
 
 EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
 
-    // Extract the rate
-    if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
-        p->change_state(
-            m,
-            ModelSchoolQuarantine::QUARANTINED_PRODROMAL
-        );
+    // How many days since quarantine started
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
+    int days_since =
+        m->today() - model->day_quarantined_or_isolated[p->get_id()];
 
-    return;
+    bool unquarantine =
+        (m->par("Quarantine days") <= days_since) ?
+        true: false;
+
+    // Will develop prodromal symptoms?
+    if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
+    {
+        // If the quarantine period is over, then they are moved to
+        // the prodromal period. Otherwise, they are moved to the
+        // quarantined prodromal period.
+        if (unquarantine)
+            p-> change_state(
+                m,
+                ModelSchoolQuarantine::PRODROMAL
+            );
+        else
+            p->change_state(
+                m,
+                ModelSchoolQuarantine::QUARANTINED_PRODROMAL
+            );
+
+    }
 
 }
 
@@ -408,10 +436,10 @@ EPI_NEW_UPDATEFUN(update_quanrantined_prodromal, int) {
     // tracing is triggered.
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
-        model->quarantine_status = 
-            ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
+
         p->change_state(m, ModelSchoolQuarantine::ISOLATED);
         return;
+
     }
 
     // Otherwise, these are moved to the prodromal period, if
@@ -422,7 +450,17 @@ EPI_NEW_UPDATEFUN(update_quanrantined_prodromal, int) {
     if (days_since >= m->par("Quarantine days"))
         p->change_state(m, ModelSchoolQuarantine::PRODROMAL);
 
-    return;
+
+}
+
+EPI_NEW_UPDATEFUN(update_quarantined_recovered, int) {
+
+    auto * model = dynamic_cast<ModelSchoolQuarantine *>(m);
+    int days_since =
+        m->today() - model->day_quarantined_or_isolated[p->get_id()];
+    
+    if (days_since >= m->par("Quarantine days"))
+        p->change_state(m, ModelSchoolQuarantine::RECOVERED);
 
 }
 
@@ -438,14 +476,15 @@ EPI_NEW_UPDATEFUN(update_hospitalized, int) {
 
 EPI_NEW_UPDATEFUN(update_isolated, int) {
 
-    // Probability of leaving the rash period
-    m->array_double_tmp[0] = 1.0 - m->par("1/Rash period");
-
+    // Probability of staying in the rash period vs becoming
+    // hospitalized
+    m->array_double_tmp[0] = m->par("1/Rash period");
     m->array_double_tmp[1] = m->par("Hospitalization rate");
 
     int which = epiworld::roulette(2, m);
 
-    if (which == 0)
+    // Recovers
+    if (which == -1)
     {
         // Recovers. It doesn't affect if quarantine has been triggered,
         // since recovered agents effectively leave the system.
@@ -475,7 +514,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     epiworld_double incubation_period,
     epiworld_double prodromal_period,
     epiworld_double rash_period,
-    epiworld_double max_days_in_rash,
+    epiworld_double days_undetected,
     epiworld_double hospitalization_rate,
     epiworld_double hospitalization_duration,
     // Policy parameters
@@ -492,6 +531,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     model.add_state("Quarantined Exposed", update_quarantined_exposed);
     model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
     model.add_state("Quarantined Infectious", update_quanrantined_prodromal);
+    model.add_state("Quarantined Recovered", update_quarantined_exposed);
     model.add_state("Hospitalized", update_hospitalized);
     model.add_state("Recovered");
 
@@ -501,7 +541,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     model.add_param(incubation_period, "Incubation period");
     model.add_param(prodromal_period, "Prodromal period");
     model.add_param(1.0 / rash_period, "1/Rash period");
-    model.add_param(max_days_in_rash, "Max days in rash");
+    model.add_param(days_undetected, "Days undetected");
     model.add_param(quarantine_days, "Quarantine days");
     model.add_param(
         contact_tracing_success_rate, "Quarantine willingness"
@@ -556,7 +596,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
     epiworld_double incubation_period,
     epiworld_double prodromal_period,
     epiworld_double rash_period,
-    epiworld_double max_days_in_rash,
+    epiworld_double days_undetected,
     epiworld_double hospitalization_rate,
     epiworld_double hospitalization_duration,
     // Policy parameters
@@ -576,7 +616,7 @@ inline ModelSchoolQuarantine::ModelSchoolQuarantine(
         incubation_period,
         prodromal_period,
         rash_period,
-        max_days_in_rash,
+        days_undetected,
         hospitalization_rate,
         hospitalization_duration,
         prop_vaccinated,

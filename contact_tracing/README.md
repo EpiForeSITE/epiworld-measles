@@ -45,7 +45,7 @@ The following is a raw list of the parameters included in the model:
      $ Contact tracing success rate: num 0.9
      $ How many days back to trace : num 14
      $ Incubation period           : num 5
-     $ Max days in rash            : num 2
+     $ Days undetected            : num 2
      $ Prodromal period            : num 4
      $ Quarantine days             : num 14
      $ Rash period                 : num 4
@@ -102,7 +102,7 @@ one index case. The following is the output from the highschool model:
      - Contact tracing success rate : 0.9000
      - How many days back to trace  : 14.0000
      - Incubation period            : 5.0000
-     - Max days in rash             : 2.0000
+     - Days undetected             : 2.0000
      - N days                       : 60.0000
      - Population size              : 1000.0000
      - Prodromal period             : 4.0000

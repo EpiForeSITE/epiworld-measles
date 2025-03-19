@@ -7,7 +7,7 @@ Population size: 2000
 Contact rate: 30
 Quarantine willingness: 1.0
 Incubation period: 12.0000
-Max days in rash: 2.0000
+Days undetected: 2.0000
 Prodromal period: 3.0000
 Quarantine days: 14.0000
 Rash period: 4.0000

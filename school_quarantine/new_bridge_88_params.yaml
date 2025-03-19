@@ -7,7 +7,7 @@ Population size: 614
 Contact rate: 2.380952
 Quarantine willingness: -1.0
 Incubation period: 12.0000
-Max days in rash: 2000.0000
+Days undetected: -1
 Prodromal period: 3.0000
 Quarantine days: 21.0000
 Rash period: 4.0000
@@ -21,5 +21,5 @@ Vax efficacy: 0.99
 initial number of exposed: 1.0000
 Seed: 2231
 N days: 60
-Replicates: 2000
+Replicates: 100
 Threads: 10

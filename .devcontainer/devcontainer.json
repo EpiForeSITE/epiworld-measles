@@ -7,7 +7,9 @@
         "vscode": {
             "extensions": [
                 "quarto.quarto",
-                "ms-vscode.makefile-tools"
+                "ms-vscode.makefile-tools",
+                "ms-vscode.cpptools-extension-pack",
+                "eamodio.gitlens"
             ]
         }
     },

@@ -39,7 +39,7 @@ The following is a raw list of the parameters included in the model:
 |:----------------------|------:|:--------------------------------------------------------------------|
 | Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
 | Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Max days in rash      |  2.00 | Fixed value.                                                        |
+| Days undetected      |  2.00 | Fixed value.                                                        |
 | Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
 | Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
 | Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
@@ -93,7 +93,7 @@ case. The following is the output from the highschool model:
      - Hospitalization days   : 2.0000
      - Hospitalization rate   : 7.0000
      - Incubation period      : 12.0000
-     - Max days in rash       : 0.2000
+     - Days undetected       : 0.2000
      - Prodromal period       : 3.0000
      - Quarantine days        : 21.0000
      - Quarantine willingness : 1.0000
