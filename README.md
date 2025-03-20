@@ -67,12 +67,13 @@ average duration of the prodromal and rash periods, respectively.
 
 To calculate the needed vaccination rate to achieve herd immunity, we
 need to lower the transmission rate. To do so, we can reduce $p_t$ by
-$(1 - v)$, where $v$ is the proportion of vaccinated individuals. We can
-write:
+$(1 - v)$, where $v$ is the proportion of vaccinated individuals. Herd
+immunity is achieve when the effective reproduction number
+($\mathcal{R}_e$) is less than 1:
 
 ``` math
 \begin{align*}
-1 & > C \times p_t (1 - v) \left(\mu_{prodromal} + \mu_{rash}\right) \\
+\mathcal{R}_e = 1 & > C \times p_t (1 - v) \left(\mu_{prodromal} + \mu_{rash}\right) \\
 1 & > \mathcal{R}_0 (1 - v) \\
 1 - v & < \frac{1}{\mathcal{R}_0} \\
 v & > 1 - \frac{1}{\mathcal{R}_0} \\
@@ -91,8 +92,8 @@ An example
 1 - 1 / 15
 ## [1] 0.9333333
 
-# R0 for a community with 88% vaccination rate
-(Rt <- 15 * (1 - .88))
+# Re for a community with 88% vaccination rate
+(Re <- 15 * (1 - .88))
 ## [1] 1.8
 ```
 
