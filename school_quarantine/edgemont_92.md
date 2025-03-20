@@ -56,7 +56,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpkWbz2P/fileb172d74e473c2.yaml
+    Using file: /tmp/RtmpXG4awj/file34363a7345bee5.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -73,8 +73,8 @@ case. The following is the output from the highschool model:
     Number of viruses   : 1
     Last run elapsed t  : 0.00s
     Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 4.32 million agents x day / second
-    Average run speed   : 43.17 million agents x day / second
+    Last run speed      : 6.51 million agents x day / second
+    Average run speed   : 65.15 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -109,7 +109,7 @@ case. The following is the output from the highschool model:
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
       - ( 6) Quarantined Susceptible :   0 -> 0
-      - ( 7) Quarantined Infectious  :   0 -> 0
+      - ( 7) Quarantined Prodromal   :   0 -> 0
       - ( 8) Quarantined Recovered   :   0 -> 0
       - ( 9) Hospitalized            :   0 -> 0
       - (10) Recovered               :   0 -> 10
@@ -122,7 +122,7 @@ case. The following is the output from the highschool model:
      - Isolated                    -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Infectious      -     -     -     -     -     -     -     -     -     -     -
+     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
      - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.50  0.50
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
@@ -159,8 +159,8 @@ Estimating the outbreak size:
 |  5.0000 | 0.19           | \[5.00, 17.00\]          |
 | 10.0000 | 0.06           | \[10.00, 19.00\]         |
 | 20.0000 | \< 0.01        | \[20.05, 27.65\]         |
-|  2.0000 | Median (50%\>) | \[ 3 , 15.275 \]         |
-|  2.9925 | Mean (average) | \[ 3 , 15.275 \]         |
+|  2.0000 | Median (50%\>) | \[3.00, 15.27\]          |
+|  2.9925 | Mean (average) | \[3.00, 15.27\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -181,11 +181,15 @@ transitions:
 
 ![](edgemont_92_files/figure-commonmark/reproductive-number-1.png)
 
-    Mean R0:0.795
+Althougth the model was calibrated with an R0 of 15, adding vaccination,
+a smaller population, and quarantine changes (lowers) the reproductive
+number:
 
-    Median R0:1
+    Mean Rt:0.795
 
-    95% CI R0:0,3
+    Median Rt:1
+
+    95% CI Rt:0,3
 
 # References
 
