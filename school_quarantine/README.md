@@ -17,33 +17,154 @@ All runs were calibrated using an R0 of 15.
 
 # Implementation details
 
-## Rash updates
+The model is fairly complex and it includes ten different states:
+
+0. Susceptible
+1. Exposed
+2. Prodromal
+3. Rash
+4. Isolated
+5. Quarantined Exposed
+6. Quarantined Susceptible
+7. Quarantined Prodromal
+8. Quarantined Recovered
+9. Hospitalized
+10. Recovered
+
+Throughout the model, agents can either stay in their current state or transition to a new state. The following flowchart shows the overall transition patterns between all states in the model:
 
 ```mermaid
-
 flowchart LR
-    check_isolate["Check detection"]
-    next_state["Next state<br>(roulette)"]
-    next_state-->Recover
-    next_state-->Hospitalize
-    Recover-->detected
-    Hospitalize-->detected
-    check_isolate-->detected{"Detected"}
-    detected
+    Susceptible -->|Undetected|Exposed
+    Susceptible -->|Quarantined|QuarantinedSusceptible["Quarantined<br>Susceptible"]
+    Susceptible -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
 
+    Exposed -->|Undetected|Prodromal
+    Exposed -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
+    Exposed -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
 
+    Prodromal -->|Undetected|Rash
+    Prodromal -->|Quarantined|Isolated
+    Prodromal -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+
+    Rash -->|Detected|Isolated
+    Rash -->|Detected|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Rash -->|Detected or not|Hospitalized
+    Rash -->|Undetected|Recovered
+
+    Isolated -->|"End period (returns)"|Rash
+    Isolated -->|End period|Recovered
+    Isolated -->|Still isolated|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Isolated -->|End or not|Hospitalized
+
+    QuarantineExposed -->|Ends period|Exposed
+    QuarantineExposed -->|Ends period|Prodromal
+    QuarantineExposed -->|Still in quarantine|QuarantineProdromal["Quarantined<br>Prodromal"]
+
+    QuarantineSusceptible -->|Ends period|Susceptible
+
+    QuarantineProdromal -->|Ends period|Prodromal
+    QuarantineProdromal-->|Develops the disease|Isolated
+    QuarantineProdromal-->|Ends period|Rash
+
+    QuarantineRecovered -->|Ends period|Recovered
+
+    Hospitalized -->Recovered
 ```
+
+The possible transitions are shown in the following diagrams:
+
+```mermaid
+flowchart LR
+    Susceptible(("Susceptible")) -->|Undetected|Exposed
+    Susceptible -->|Quarantined|QuarantinedSusceptible["Quarantined<br>Susceptible"]
+    Susceptible -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
+```
+
+```mermaid
+flowchart LR
+    Exposed(("Exposed [1]")) -->|Undetected|Prodromal
+    Exposed -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
+    Exposed -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+```
+
+```mermaid
+flowchart LR
+    Prodromal(("Prodromal [2]")) -->|Undetected|Rash
+    Prodromal -->|Quarantined|Isolated
+    Prodromal -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+```
+
+```mermaid
+flowchart LR
+    Rash(("Rash [3]<br>(undetected)")) -->|Detected|Isolated
+    Rash -->|Detected|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Rash -->|Detected or not|Hospitalized
+    Rash -->|Undetected|Recovered
+```
+
+```mermaid
+flowchart LR
+    Isolated(("Isolated [4]<br>(detected)")) -->|"End period (returns)"|Rash
+    Isolated -->|End period|Recovered
+    Isolated -->|Still isolated|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Isolated -->|End or not|Hospitalized
+```
+
+```mermaid
+flowchart LR
+    QuarantineExposed(("Quarantined<br>Exposed [5]")) -->|Ends period|Exposed
+    QuarantineExposed -->|Ends period|Prodromal
+    QuarantineExposed -->|Still in quarantine|QuarantineProdromal["Quarantined<br>Prodromal"]
+```
+
+```mermaid
+flowchart LR
+    QuarantineSusceptible(("Quarantined<br>Susceptible [6]")) -->|Ends period|Susceptible
+```
+
+```mermaid
+flowchart LR
+    QuarantineProdromal(("Quarantined<br>Prodromal [7]")) -->|Ends period|Prodromal
+    QuarantineProdromal-->|Develops the disease|Isolated
+    QuarantineProdromal-->|Ends period|Rash
+```
+
+```mermaid
+flowchart LR
+    QuarantineRecovered(("Quarantined<br>Recovered [8]")) -->|Ends period|Recovered
+```
+
+```mermaid
+flowchart LR
+    Hospitalized(("Hospitalized [9]")) -->Recovered
+```
+
+
+
+## Transition probabilities
+
+In the case of more than one possible transition, the model computes the conditional probability of moving to at most one state, for instance, individuals in the isolation state can either recover, become hospitalizad, or stay isolated, but not be recovered *and* hospitalized. Formally:
+
+```math
+P(i\to j | \text{at most one event}) = \frac{
+    p_i \times \prod_{k \ne i} (1 - p_k)}{
+    \prod_k (1-p_k) + \sum_{k} p_k \times \prod_{l \ne k} (1 - p_l)
+    }
+```
+
+Where $p_i$ is the unadjusted probability of moving to state $i$. This rationale applies also to cases in which agents may be exposed to more than one infectious peer, so agents can become infected by at most one peer.
 
 # Notes from walkthrough
 
 - Think about matrix combining states (ij) to simplify model.
-- Rename vax_reduction_suscept to vax_efficacy.
-- Replace day_detected -> day_flagged.
+~~- Rename vax_reduction_suscept to vax_efficacy.~~
+~~- Replace day_detected -> day_flagged.~~
 - Assuming that rash is forcefully isolated.
 - Prodromal vax may skip quarantine.
-- Change `quarantine_status` to `system_quarantine_status`.
+~~- Change `quarantine_status` to `system_quarantine_status`.~~
 - Change willigness to be fixed at the beginning.
-- Double check the update_model (what's the order of the events?)?
+~~- Double check the update_model (what's the order of the events?)?~~
 - Add details about sampling from multiple viruses for update susceptible.
 - Think about perfect detection, right now, if "Days undetected" == 0, then it's doing nothing.
 - ~~Checkout update of rash who recovers but moves to quarantine.~~

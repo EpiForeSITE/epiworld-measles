@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpxJkdFM/file27065ce4c058.yaml
+    Using file: /tmp/RtmpBlTerc/file105e10f3365a.yaml
     Starting multiple runs (1000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -73,9 +73,9 @@ case. The following is the output from the highschool model:
     Days (duration)     : 120 (of 120)
     Number of viruses   : 1
     Last run elapsed t  : 5.00ms
-    Total elapsed t     : 565.00ms (1000 runs)
-    Last run speed      : 13.30 million agents x day / second
-    Average run speed   : 137.97 million agents x day / second
+    Total elapsed t     : 603.00ms (1000 runs)
+    Last run speed      : 13.52 million agents x day / second
+    Average run speed   : 129.24 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -146,30 +146,32 @@ flowchart LR
     s8[Rash]
     s9[Recovered]
     s10[Susceptible]
-    s0 -->|0.072792| s3
-    s0 -->|0.123105| s4
-    s0 -->|0.010838| s5
-    s1 -->|0.142030| s9
-    s2 -->|0.155983| s1
-    s2 -->|0.635533| s9
-    s3 -->|0.034577| s2
-    s3 -->|0.065383| s5
-    s3 -->|0.295949| s8
-    s4 -->|0.014944| s0
-    s4 -->|0.001494| s3
-    s4 -->|0.082525| s5
-    s5 -->|0.660018| s2
-    s5 -->|0.006233| s3
-    s5 -->|0.012597| s8
-    s6 -->|0.045911| s9
-    s7 -->|0.045855| s10
-    s8 -->|0.168270| s1
-    s8 -->|0.112415| s2
-    s8 -->|0.319409| s6
-    s8 -->|0.308848| s9
-    s10 -->|0.000178| s0
+    s0 -->|0.072550| s3
+    s0 -->|0.123154| s4
+    s0 -->|0.010934| s5
+    s1 -->|0.142039| s9
+    s2 -->|0.155790| s1
+    s2 -->|0.623160| s6
+    s2 -->|0.003516| s8
+    s2 -->|0.012012| s9
+    s3 -->|0.034617| s2
+    s3 -->|0.066396| s5
+    s3 -->|0.294447| s8
+    s4 -->|0.015005| s0
+    s4 -->|0.001502| s3
+    s4 -->|0.082256| s5
+    s5 -->|0.659406| s2
+    s5 -->|0.006205| s3
+    s5 -->|0.012673| s8
+    s6 -->|0.069497| s9
+    s7 -->|0.045899| s10
+    s8 -->|0.169097| s1
+    s8 -->|0.112888| s2
+    s8 -->|0.319614| s6
+    s8 -->|0.306679| s9
+    s10 -->|0.000177| s0
     s10 -->|0.000046| s4
-    s10 -->|0.007526| s7
+    s10 -->|0.007569| s7
 
 ```
 
@@ -179,12 +181,12 @@ Estimating the outbreak size:
 
 |   Size | Probability    | Likely size (if \> Size) |
 |-------:|:---------------|:-------------------------|
-|  2.000 | 0.93           | \[2.00, 47.00\]          |
-|  5.000 | 0.74           | \[5.00, 49.00\]          |
-| 10.000 | 0.54           | \[10.00, 55.52\]         |
-| 20.000 | 0.29           | \[20.00, 60.40\]         |
+|  2.000 | 0.93           | \[2.00, 47.82\]          |
+|  5.000 | 0.74           | \[5.00, 49.55\]          |
+| 10.000 | 0.54           | \[10.00, 55.60\]         |
+| 20.000 | 0.29           | \[20.00, 59.75\]         |
 | 11.000 | Median (50%\>) | \[12.00, 56.00\]         |
-| 15.048 | Mean (average) | \[16.00, 57.32\]         |
+| 14.917 | Mean (average) | \[15.00, 56.82\]         |
 
 Likely sizes of the outbreak based on 1000 simulations.
 

@@ -330,9 +330,12 @@ histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 histories_wide[, fn := NULL]
 
 fwrite(
-    histories_wide,
+  histories_wide,
+  file.path(
+    params$out_dir,
     sprintf("%s_histories_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
-    )
+  )
+)
 
 # Reading the 'transition.csv' files
 transitions <- parallel::mclapply(
@@ -350,8 +353,11 @@ detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
 detected[, fn := NULL]
 
 fwrite(
-    detected,
+  detected,
+  file.path(
+    params$out_dir,
     sprintf("%s_transitions_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
+  )
 )
 ```
 

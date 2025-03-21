@@ -90,7 +90,8 @@ report.md: report.qmd
 	sed -i 's/report_files/$(ID)_files/g' $(ID).md
 
 compress:
-	zip -9 simulation_results.zip *.csv
+	rm -f simulation_results.zip && \
+		zip -9 simulation_results.zip */*.csv
 
 replace_html:
 	sed -i 's/&gt;/>/g' *.md
