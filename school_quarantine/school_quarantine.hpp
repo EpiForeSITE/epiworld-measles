@@ -482,24 +482,31 @@ EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
 EPI_NEW_UPDATEFUN(update_quanrantined_prodromal, int) {
 
     GET_MODEL(model, m);
+
+    // Otherwise, these are moved to the prodromal period, if
+    // the quanrantine period is over.
+    int days_since = m->today() - model->day_detected[p->get_id()];
+
+    bool unquarantine =
+        (m->par("Quarantine days") <= days_since) ?
+        true: false;
     
     // If they develop rash, then they are isolated and contact
     // tracing is triggered.
     if (m->runif() < (1.0/m->par("Prodromal period")))
     {
+        if (unquarantine)
+            p->change_state(m, ModelSchoolQuarantine::PRODROMAL);
+    }
+    else
+    {
 
-        p->change_state(m, ModelSchoolQuarantine::ISOLATED);
-        return;
+        if (unquarantine)
+            p->change_state(m, ModelSchoolQuarantine::RASH);
+        else
+            p->change_state(m, ModelSchoolQuarantine::ISOLATED);        
 
     }
-
-    // Otherwise, these are moved to the prodromal period, if
-    // the quanrantine period is over.
-    int days_since = m->today() - model->day_detected[p->get_id()];
-    
-    if (days_since >= m->par("Quarantine days"))
-        p->change_state(m, ModelSchoolQuarantine::PRODROMAL);
-
 
 }
 

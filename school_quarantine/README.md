@@ -47,5 +47,5 @@ flowchart LR
 - Add details about sampling from multiple viruses for update susceptible.
 - Think about perfect detection, right now, if "Days undetected" == 0, then it's doing nothing.
 - ~~Checkout update of rash who recovers but moves to quarantine.~~
-- Double check the prodromal period move in update_quarantined_prodromal.
+~~- Double check the prodromal period move in update_quarantined_prodromal.~~
 - Update isolated should also look at the quarantine days.
