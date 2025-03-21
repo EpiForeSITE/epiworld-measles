@@ -24,19 +24,19 @@ int main(int argc, char *argv[]) {
     ModelSchoolQuarantine model(
         (size_t) params["Population size"],                 
         (int) params["initial number of exposed"], 
-        params["Contact rate"],   // Contact rate  
-        params["Transmission rate"], // Transmission rate
-        params["Vax efficacy"], // Vaccine reduction in susceptibility
-        params["Vax improved recovery"],  // Vaccine reduction in recovery rate
-        params["Incubation period"],    // Incubation period
-        params["Prodromal period"],    // Prodromal period
-        params["Rash period"],    // Rash period
-        params["Days undetected"],    // Days undetected
-        params["Hospitalization rate"],    // Hospitalization rate
+        params["Contact rate"],          // Contact rate  
+        params["Transmission rate"],     // Transmission rate
+        params["Vax efficacy"],          // Vaccine reduction in susceptibility
+        params["Vax improved recovery"], // Vaccine reduction in recovery rate
+        params["Incubation period"],     // Incubation period
+        params["Prodromal period"],      // Prodromal period
+        params["Rash period"],           // Rash period
+        params["Days undetected"],       // Days undetected
+        params["Hospitalization rate"],  // Hospitalization rate
         params["Hospitalization days"],
-        params["Vaccination rate"],   // Vaccination rate
-        params["Quarantine days"],   // Quarantine days for vaccinated
-        params["Quarantine willingness"]   // Quarantine success rate
+        params["Vaccination rate"],      // Vaccination rate
+        params["Quarantine days"],       // Quarantine days for vaccinated
+        params["Quarantine willingness"] // Quarantine success rate
     );
 
     // model.read_params(fn, true);
