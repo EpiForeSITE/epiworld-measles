@@ -1,20 +1,20 @@
+// #define EPI_DEBUG
 #include "school_quarantine.hpp"
+#include <iostream>
 
 // Defining the 
 
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn      = "new_bridge_88_params.yaml";
-    size_t n            = 1000;
-    std::string out_dir = "new_bridge_88";
-    if (argc != 4 && argc != 1) {
-        std::cerr << "Usage: " << argv[0] << " <filename> <outdir> <size>" << std::endl;
+    std::string fn      = "canyon_crest_74_params.yaml";
+    std::string out_dir = "canyon_crest_74";
+    if (argc != 3 && argc != 1) {
+        std::cerr << "Usage: " << argv[0] << " <filename> <outdir>" << std::endl;
         return 1;
-    } else if (argc == 4) {
+    } else if (argc == 3) {
         fn      = std::string(argv[1]);
         out_dir = std::string(argv[2]);
-        n       = std::stoul(argv[3]);
     }
     std::cout << "Using file: " << fn << std::endl;
 
@@ -24,17 +24,19 @@ int main(int argc, char *argv[]) {
     ModelSchoolQuarantine model(
         (size_t) params["Population size"],                 
         (int) params["initial number of exposed"], 
-        params["Contact rate"],   // Contact rate  
-        params["Transmission rate"], // Transmission rate
-        params["Vax efficacy"], // Vaccine reduction in susceptibility
-        params["Vax improved recovery"],  // Vaccine reduction in recovery rate
-        params["Incubation period"],    // Incubation period
-        params["Prodromal period"],    // Prodromal period
-        params["Rash period"],    // Rash period
-        params["Max days in rash"],    // Max days in rash
-        params["Vaccination rate"],   // Vaccination rate
-        params["Quarantine days"],   // Quarantine days for vaccinated
-        params["Quarantine willingness"]   // Quarantine success rate
+        params["Contact rate"],          // Contact rate  
+        params["Transmission rate"],     // Transmission rate
+        params["Vax efficacy"],          // Vaccine reduction in susceptibility
+        params["Vax improved recovery"], // Vaccine reduction in recovery rate
+        params["Incubation period"],     // Incubation period
+        params["Prodromal period"],      // Prodromal period
+        params["Rash period"],           // Rash period
+        params["Days undetected"],       // Days undetected
+        params["Hospitalization rate"],  // Hospitalization rate
+        params["Hospitalization days"],
+        params["Vaccination rate"],      // Vaccination rate
+        params["Quarantine days"],       // Quarantine days for vaccinated
+        params["Quarantine willingness"] // Quarantine success rate
     );
 
     // model.read_params(fn, true);

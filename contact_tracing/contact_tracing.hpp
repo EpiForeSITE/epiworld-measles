@@ -33,7 +33,7 @@ public:
         ISOLATED,                //< Isolated
         QUARANTINED_EXPOSED,     //< In case of potential exposure
         QUARANTINED_SUSCEPTIBLE, //< In case of potential exposure
-        QUARANTINED_INFECTIOUS,  //< In case of potential exposure
+        QUARANTINED_PRODROMAL,  //< In case of potential exposure
         RECOVERED                //< Recovered with permanent immunity
     };
 
@@ -52,7 +52,7 @@ public:
         epiworld_double incubation_period,
         epiworld_double prodromal_period,
         epiworld_double rash_period,
-        epiworld_double max_days_in_rash,
+        epiworld_double days_undetected,
         // Policy parameters
         epiworld_double prop_vaccinated,
         epiworld_fast_uint quarantine_days,
@@ -71,7 +71,7 @@ public:
         epiworld_double incubation_period,
         epiworld_double prodromal_period,
         epiworld_double rash_period,
-        epiworld_double max_days_in_rash,
+        epiworld_double days_undetected,
         // Policy parameters
         epiworld_double prop_vaccinated,
         epiworld_fast_uint quarantine_days,
@@ -173,7 +173,7 @@ inline void ModelContactTracing::contact_tracing() {
                     else if (get_agent(i).get_state() == states::PRODROMAL)
                         get_agent(i).change_state(
                             this,
-                            states::QUARANTINED_INFECTIOUS
+                            states::QUARANTINED_PRODROMAL
                         );
 
                     // And we add the day of quarantine
@@ -370,7 +370,7 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
 
     auto * model = dynamic_cast<ModelContactTracing *>(m);
     int days_since_rash = m->today() - model->day_quarantined_or_isolated[p->get_id()];
-    if (days_since_rash >= m->par("Max days in rash"))
+    if (days_since_rash >= m->par("Days undetected"))
     {
         model->ids_triggered_contact_tracing.push_back(p->get_id());
         p->change_state(m, ModelContactTracing::states::ISOLATED);
@@ -384,7 +384,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_exposed, int) {
     if (m->runif() < (1.0/p->get_virus()->get_incubation(m)))
         p->change_state(
             m,
-            ModelContactTracing::states::QUARANTINED_INFECTIOUS
+            ModelContactTracing::states::QUARANTINED_PRODROMAL
         );
 
     return;
@@ -402,7 +402,7 @@ EPI_NEW_UPDATEFUN(update_quarantined_susceptible, int) {
 
 }
 
-EPI_NEW_UPDATEFUN(update_quanrantined_infectious, int) {
+EPI_NEW_UPDATEFUN(update_quanrantined_prodromal, int) {
 
     auto * model = dynamic_cast<ModelContactTracing *>(m);
     
@@ -439,7 +439,7 @@ inline ModelContactTracing::ModelContactTracing(
     epiworld_double incubation_period,
     epiworld_double prodromal_period,
     epiworld_double rash_period,
-    epiworld_double max_days_in_rash,
+    epiworld_double days_undetected,
     // Policy parameters
     epiworld_double prop_vaccinated,
     epiworld_fast_uint quarantine_days,
@@ -454,7 +454,7 @@ inline ModelContactTracing::ModelContactTracing(
     model.add_state("Isolated", default_update_exposed<>);
     model.add_state("Quarantined Exposed", update_quarantined_exposed);
     model.add_state("Quarantined Susceptible", update_quarantined_susceptible);
-    model.add_state("Quarantined Infectious", update_quanrantined_infectious);
+    model.add_state("Quarantined Prodromal", update_quanrantined_prodromal);
     model.add_state("Recovered");
 
     // Adding the model parameters
@@ -463,7 +463,7 @@ inline ModelContactTracing::ModelContactTracing(
     model.add_param(incubation_period, "Incubation period");
     model.add_param(prodromal_period, "Prodromal period");
     model.add_param(1.0 / rash_period, "1/Rash period");
-    model.add_param(max_days_in_rash, "Max days in rash");
+    model.add_param(days_undetected, "Days undetected");
     model.add_param(quarantine_days, "Quarantine days");
     model.add_param(contact_tracing_days_back, "How many days back to trace");
     model.add_param(
@@ -517,7 +517,7 @@ inline ModelContactTracing::ModelContactTracing(
     epiworld_double incubation_period,
     epiworld_double prodromal_period,
     epiworld_double rash_period,
-    epiworld_double max_days_in_rash,
+    epiworld_double days_undetected,
     // Policy parameters
     epiworld_double prop_vaccinated,
     epiworld_fast_uint quarantine_days,
@@ -536,7 +536,7 @@ inline ModelContactTracing::ModelContactTracing(
         incubation_period,
         prodromal_period,
         rash_period,
-        max_days_in_rash,
+        days_undetected,
         prop_vaccinated,
         quarantine_days,
         contact_tracing_days_back,

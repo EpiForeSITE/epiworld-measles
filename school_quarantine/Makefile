@@ -1,5 +1,11 @@
-ifndef CXX_FLAGS
-	CXX_FLAGS=-fopenmp
+ifndef OMP
+	CXX_OMP=-fopenmp
+endif
+
+ifdef EPI_DEBUG
+	CXX_FLAGS=-O0 -g $(CXX_OMP) -DEPI_DEBUG
+else
+	CXX_FLAGS=-O3 $(CXX_OMP)
 endif
 
 help:
@@ -32,7 +38,7 @@ run: school_quarantine.o highschool-params.yaml
 	./school_quarantine.o highschool-params.yaml
 
 school_quarantine.o: school_quarantine.cpp school_quarantine.hpp
-	g++ -std=c++14 $(CXX_FLAGS) -O3 school_quarantine.cpp -o school_quarantine.o
+	g++ -std=c++14 $(CXX_FLAGS) school_quarantine.cpp -o school_quarantine.o
 
 all: \
 	canyon_grove_58.md canyon_grove_58_npi.md \

@@ -8,3 +8,10 @@ vgcore.*
 .DS_Store
 .singularity
 *.sif
+
+# Output files
+*.pdf
+*.html
+*.txt
+*.log
+*_files/libs

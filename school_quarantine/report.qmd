@@ -36,6 +36,17 @@ This model is a discrete-time Agent-Based Model [ABM] that includes the followin
 The following is a raw list of the parameters included in the model:
 
 ```{r}
+#| label: in-case-of-interactive
+#| echo: false
+if (interactive() && !exists("params")) {
+    params <- list(
+        params_fn = "new_bridge_88_params.yaml",
+        out_dir = "new_bridge_88"
+    )
+}
+```
+
+```{r}
 #| label: update-params
 #| echo: false
 #| warning: false
@@ -58,7 +69,7 @@ temp_params <- yaml::read_yaml(params$params_fn)
 # Theoretical R0
 temp_params$R0 <- with(temp_params, {
   `Contact rate` * `Transmission rate` * (
-    1/`1/Rash period` + `Prodromal period`
+    `Rash period` + `Prodromal period`
   )
 })
 
@@ -84,7 +95,7 @@ params_table <- params_table[
     Parameter %in% c(
         "Contact rate",
         "Incubation period",
-        "Max days in rash",
+        "Days undetected",
         "Prodromal period",
         "Quarantine days",
         "Rash period",
@@ -106,7 +117,7 @@ params_table[
 ]
 
 params_table[
-    Parameter == "Max days in rash",
+    Parameter == "Days undetected",
     Reference := "Fixed value."
 ]
 
@@ -167,7 +178,7 @@ n <- temp_params$`Population size`
 n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 system2(
     "./school_quarantine.o",
-    c(temp_params_fn, params$out_dir, n),
+    c(temp_params_fn, params$out_dir),
     wait = TRUE, stdout=TRUE
     ) |>
     cat(sep = "\n")
@@ -208,7 +219,9 @@ exposed <- c(
   "Rash",
   "Isolated",
   "Quarantined Exposed",
-  "Quarantined Infectious",
+  "Quarantined Prodromal",
+  "Quarantined Recovered",
+  "Hospitalized",
   "Recovered"
   )
 counts <- histories[(state %in% exposed) & (date == max(date))]
@@ -257,23 +270,19 @@ sizes <- rbind(
   data.table(
     Size = median_cases,
     Probability = "Median (50%>)",
-    "Likely size (if > Size)" = paste(
-      "[",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
       quantile(counts$Total[counts$Total > median_cases], probs=.025),
-      ",",
-      quantile(counts$Total[counts$Total > median_cases], probs=.975),
-      "]"
+      quantile(counts$Total[counts$Total > median_cases], probs=.975)
     )
   ),
   data.table(
     Size = mean_cases,
     Probability = "Mean (average)",
-    "Likely size (if > Size)" = paste(
-      "[",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
       quantile(counts$Total[counts$Total > mean_cases], probs=.025),
-      ",",
-      quantile(counts$Total[counts$Total > mean_cases], probs=.975),
-      "]"
+      quantile(counts$Total[counts$Total > mean_cases], probs=.975)
     )
   )
 )
@@ -427,12 +436,14 @@ ggplot(repnums, aes(x = Rt)) +
         )
 ```
 
+Althougth the model was calibrated with an R0 of 15, adding vaccination, a smaller population, and quarantine changes (lowers) the reproductive number:
+
 ```{r}
-#| label: printing-R0
+#| label: printing-Rt
 #| echo: false
-message("Mean R0:", mean(repnums$Rt))
-message("Median R0:", quantile(repnums$Rt, probs=.5))
-message("95% CI R0:",
+message("Mean Rt:", mean(repnums$Rt))
+message("Median Rt:", quantile(repnums$Rt, probs=.5))
+message("95% CI Rt:",
     paste(quantile(repnums$Rt, probs=c(0.025, 0.975)), collapse = ",")
     ) 
 ```

@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
         5,    // Incubation period
         4,    // Prodromal period
         4,    // Rash period
-        2,    // Max days in rash
+        2,    // Days undetected
         .9,   // Vaccination rate
         14,   // Quarantine days for vaccinated
         14,    // Days back to trace
