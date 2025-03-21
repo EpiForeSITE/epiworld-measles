@@ -1,5 +1,6 @@
 # School quarantine model
 
+
 ## School quarantine model for canyon_crest_74
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -34,18 +35,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             | Value | Reference                                                           |
-|:----------------------|------:|:--------------------------------------------------------------------|
-| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Days undetected       | -1.00 | Fixed value.                                                        |
-| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |  0.50 | Fixed value.                                                        |
-| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    | 15.00 | Theoretical R0.                                                     |
+| Parameter | Value | Reference |
+|:---|---:|:---|
+| Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
+| Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Days undetected | -1.00 | Fixed value. |
+| Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
+| Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery | 0.50 | Fixed value. |
+| Vax efficacy | 0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015). |
+| R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
 [here](canyon_crest_74_params.yaml).
@@ -56,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpF2Ayjf/file3433a37be0c09.yaml
+    Using file: /tmp/Rtmp7lYETZ/filecae15239d8e.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -71,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 4.00ms
-    Total elapsed t     : 867.00ms (2000 runs)
-    Last run speed      : 6.52 million agents x day / second
-    Average run speed   : 65.58 million agents x day / second
+    Last run elapsed t  : 2.00ms
+    Total elapsed t     : 440.00ms (2000 runs)
+    Last run speed      : 13.08 million agents x day / second
+    Average run speed   : 129.07 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -193,7 +194,8 @@ number:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jones2019measles" class="csl-entry">
 

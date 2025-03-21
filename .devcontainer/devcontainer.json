@@ -2,18 +2,22 @@
     "build": {
         "dockerfile": "Containerfile"
     },
-    "remoteUser": "root",
     "customizations": {
         "vscode": {
             "extensions": [
                 "quarto.quarto",
-                "ms-vscode.makefile-tools",
                 "ms-vscode.cpptools-extension-pack",
-                "eamodio.gitlens"
+                "bierner.markdown-mermaid"
             ]
         }
     },
+    "remoteUser": "root",
     "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly"
+        // Mount the .ssh directory into the container
+        "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly",
+        // Mount the .vscode configuration into the container
+        "source=${localWorkspaceFolder}/.devcontainer/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
     ]
+    //,
+    // "workspaceMount": "/workspaces/${workspaceFolderBasename}"
 }
