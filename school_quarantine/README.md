@@ -17,6 +17,8 @@ All runs were calibrated using an R0 of 15.
 
 # Implementation details
 
+## States
+
 The model is fairly complex and it includes ten different states:
 
 0. Susceptible
@@ -36,25 +38,25 @@ Throughout the model, agents can either stay in their current state or transitio
 ```mermaid
 flowchart LR
     Susceptible -->|Undetected|Exposed
-    Susceptible -->|Quarantined|QuarantinedSusceptible["Quarantined<br>Susceptible"]
-    Susceptible -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
+    Susceptible -->|Quarantined|QuarantineSusceptible["Quarantined<br>Susceptible"]
+    Susceptible -->|Quarantined|QuarantineExposed["Quarantined<br>Exposed"]
 
     Exposed -->|Undetected|Prodromal
-    Exposed -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
-    Exposed -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+    Exposed -->|Quarantined|QuarantineExposed["Quarantined<br>Exposed"]
+    Exposed -->|Quarantined|QuarantineProdromal["Quarantined<br>Prodromal"]
 
     Prodromal -->|Undetected|Rash
     Prodromal -->|Quarantined|Isolated
-    Prodromal -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+    Prodromal -->|Quarantined|QuarantineProdromal["Quarantined<br>Prodromal"]
 
     Rash -->|Detected|Isolated
-    Rash -->|Detected|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Rash -->|Detected|QuarantineRecovered["Quarantined<br>Recovered"]
     Rash -->|Detected or not|Hospitalized
     Rash -->|Undetected|Recovered
 
     Isolated -->|"End period (returns)"|Rash
     Isolated -->|End period|Recovered
-    Isolated -->|Still isolated|RecoveredQuarantined["Recovered +<br>Quarantined"]
+    Isolated -->|Still isolated|QuarantineRecovered
     Isolated -->|End or not|Hospitalized
 
     QuarantineExposed -->|Ends period|Exposed
@@ -72,75 +74,51 @@ flowchart LR
     Hospitalized -->Recovered
 ```
 
-The possible transitions are shown in the following diagrams:
+A simplified version aggregating quarantine states:
 
 ```mermaid
 flowchart LR
-    Susceptible(("Susceptible")) -->|Undetected|Exposed
-    Susceptible -->|Quarantined|QuarantinedSusceptible["Quarantined<br>Susceptible"]
-    Susceptible -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
+    Susceptible -->|Starts quarantine| QuarantineS["Quarantine<br>Susceptible"]
+    QuarantineS -->|Ends quarantine| Susceptible
+    Susceptible --> Exposed
+
+    Exposed     -->|Starts quarantine| Quarantine["Quarantine<br>or Isolated"]
+    Quarantine  -->|Ends quarantine| Exposed
+    Exposed     -->|Disease progression| Prodromal
+    
+    Prodromal   -->|Starts quarantine| Quarantine
+    Quarantine  -->|Ends quarantine| Prodromal
+    Prodromal   -->|Disease progression| Rash
+    
+    Rash        --> |Starts quarantine| Quarantine
+    Quarantine  --> |Ends quarantine| Rash
+    Rash        --> |Disease progression| Hospitalized
+    Rash        --> |Disease progression| Recovered
+    
+    Quarantine  --> |Disease progression| Hospitalized
+    Hospitalized--> |Disease progression| Recovered
+    Hospitalized--> |Starts quarantine| Quarantine
+    Quarantine  --> |Ends quarantine| Recovered
 ```
+
+Individual transitions can be viewed in detail in [**individual_transitions.md**](individual_transitions.md).
+
+
+## Quarantine process
+
+The quarantine is executed once throughout the simulation, and it is triggered as soon as an agent is detected in the rash period. Once that occurs, agents' states are updated according to the following process:
 
 ```mermaid
 flowchart LR
-    Exposed(("Exposed [1]")) -->|Undetected|Prodromal
-    Exposed -->|Quarantined|QuarantinedExposed["Quarantined<br>Exposed"]
-    Exposed -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
+    Start((Start)) --> infected{"Already<br>quarantined<br>or isolated?"}
+    infected -->|Yes|End((End))
+    infected -->|No|Rash{"Rash?"}
+    Rash -->|Yes|Isolate((Isolate))
+    Rash -->|No|vax
+    vax{"Vaccinated?"}
+    vax -->|Yes|End
+    vax -->|No|Quarantine((Quarantine))
 ```
-
-```mermaid
-flowchart LR
-    Prodromal(("Prodromal [2]")) -->|Undetected|Rash
-    Prodromal -->|Quarantined|Isolated
-    Prodromal -->|Quarantined|QuarantinedProdromal["Quarantined<br>Prodromal"]
-```
-
-```mermaid
-flowchart LR
-    Rash(("Rash [3]<br>(undetected)")) -->|Detected|Isolated
-    Rash -->|Detected|RecoveredQuarantined["Recovered +<br>Quarantined"]
-    Rash -->|Detected or not|Hospitalized
-    Rash -->|Undetected|Recovered
-```
-
-```mermaid
-flowchart LR
-    Isolated(("Isolated [4]<br>(detected)")) -->|"End period (returns)"|Rash
-    Isolated -->|End period|Recovered
-    Isolated -->|Still isolated|RecoveredQuarantined["Recovered +<br>Quarantined"]
-    Isolated -->|End or not|Hospitalized
-```
-
-```mermaid
-flowchart LR
-    QuarantineExposed(("Quarantined<br>Exposed [5]")) -->|Ends period|Exposed
-    QuarantineExposed -->|Ends period|Prodromal
-    QuarantineExposed -->|Still in quarantine|QuarantineProdromal["Quarantined<br>Prodromal"]
-```
-
-```mermaid
-flowchart LR
-    QuarantineSusceptible(("Quarantined<br>Susceptible [6]")) -->|Ends period|Susceptible
-```
-
-```mermaid
-flowchart LR
-    QuarantineProdromal(("Quarantined<br>Prodromal [7]")) -->|Ends period|Prodromal
-    QuarantineProdromal-->|Develops the disease|Isolated
-    QuarantineProdromal-->|Ends period|Rash
-```
-
-```mermaid
-flowchart LR
-    QuarantineRecovered(("Quarantined<br>Recovered [8]")) -->|Ends period|Recovered
-```
-
-```mermaid
-flowchart LR
-    Hospitalized(("Hospitalized [9]")) -->Recovered
-```
-
-
 
 ## Transition probabilities
 
@@ -155,7 +133,15 @@ P(i\to j | \text{at most one event}) = \frac{
 
 Where $p_i$ is the unadjusted probability of moving to state $i$. This rationale applies also to cases in which agents may be exposed to more than one infectious peer, so agents can become infected by at most one peer.
 
-# Notes from walkthrough
+## Update susceptibles
+
+Throughout the simulation, the contact rate is held constant, even when agents are isolated. The update schedule of susceptible agents is a function of the "available agents" of the model (excludes isolated, quarantined, or recovered). Thus, the number of contacts susceptible agents make is binomially distributed as follows:
+
+```math
+n \sim\text{Binomial}\left(N_{\text{available}}, \frac{C_{rate}}{N_{\text{available}}}\right)
+```
+
+<!-- # Notes from walkthrough
 
 - Think about matrix combining states (ij) to simplify model.
 ~~- Rename vax_reduction_suscept to vax_efficacy.~~
@@ -169,4 +155,4 @@ Where $p_i$ is the unadjusted probability of moving to state $i$. This rationale
 - Think about perfect detection, right now, if "Days undetected" == 0, then it's doing nothing.
 - ~~Checkout update of rash who recovers but moves to quarantine.~~
 ~~- Double check the prodromal period move in update_quarantined_prodromal.~~
-- Update isolated should also look at the quarantine days.
+- Update isolated should also look at the quarantine days. -->
