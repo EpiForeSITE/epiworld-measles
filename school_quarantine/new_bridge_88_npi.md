@@ -1,5 +1,6 @@
 # School quarantine model
 
+
 ## School quarantine model for new_bridge_88_npi
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
@@ -34,18 +35,18 @@ the following features:
 
 The following is a raw list of the parameters included in the model:
 
-| Parameter             | Value | Reference                                                           |
-|:----------------------|------:|:--------------------------------------------------------------------|
-| Contact rate          |  2.38 | Negative binomial. Calibrated using R0=15 as a reference.           |
-| Incubation period     | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Days undetected       |  2.00 | Fixed value.                                                        |
-| Prodromal period      |  3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019)                    |
-| Quarantine days       | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019).            |
-| Rash period           |  4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019).                 |
-| Transmission rate     |  0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
-| Vax improved recovery |  0.50 | Fixed value.                                                        |
-| Vax efficacy          |  0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015).                      |
-| R0                    | 15.00 | Theoretical R0.                                                     |
+| Parameter | Value | Reference |
+|:---|---:|:---|
+| Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
+| Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Days undetected | 2.00 | Fixed value. |
+| Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
+| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
+| Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
+| Vax improved recovery | 0.50 | Fixed value. |
+| Vax efficacy | 0.99 | Prob. efficacy fixed. Ref.: Liu et al. (2015). |
+| R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
 [here](new_bridge_88_npi_params.yaml).
@@ -56,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmp4JETAc/file3432674f2aae94.yaml
+    Using file: /tmp/RtmpP5yFn1/file5912586bec17.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -71,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 0.00s
-    Total elapsed t     : 1.00s (2000 runs)
-    Last run speed      : 6.62 million agents x day / second
-    Average run speed   : 66.50 million agents x day / second
+    Last run elapsed t  : 2.00ms
+    Total elapsed t     : 570.00ms (2000 runs)
+    Last run speed      : 13.76 million agents x day / second
+    Average run speed   : 129.09 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -110,22 +111,22 @@ case. The following is the output from the highschool model:
       - ( 5) Quarantined Exposed     :   0 -> 0
       - ( 6) Quarantined Susceptible :   0 -> 72
       - ( 7) Quarantined Prodromal   :   0 -> 0
-      - ( 8) Quarantined Recovered   :   0 -> 1
+      - ( 8) Quarantined Recovered   :   0 -> 3
       - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 2
+      - (10) Recovered               :   0 -> 0
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Exposed                  0.00  0.95  0.02  0.00  0.00  0.00  0.00  0.02  0.00  0.00  0.00
      - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Rash                     0.00  0.00  0.00  0.50  0.00  0.00  0.00  0.00  0.50  0.00  0.00
-     - Isolated                 0.00  0.00  0.00  0.00  0.33  0.00  0.00  0.00  0.00  0.00  0.67
-     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.88  0.00  0.12  0.00  0.00  0.00
+     - Isolated                 0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00
      - Quarantined Susceptible  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00
-     - Quarantined Prodromal    0.00  0.00  0.00  0.00  0.50  0.00  0.00  0.50  0.00  0.00  0.00
+     - Quarantined Prodromal    0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00
      - Quarantined Recovered    0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00
      - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
-     - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+     - Recovered                   -     -     -     -     -     -     -     -     -     -     -
 
 ## Flowchart
 
@@ -145,29 +146,32 @@ flowchart LR
     s8[Rash]
     s9[Recovered]
     s10[Susceptible]
-    s0 -->|0.081102| s3
-    s0 -->|0.032795| s4
-    s0 -->|0.003217| s5
-    s1 -->|0.138958| s9
-    s2 -->|0.149721| s1
-    s2 -->|0.622563| s9
-    s3 -->|0.009583| s2
-    s3 -->|0.016202| s5
-    s3 -->|0.328888| s8
-    s4 -->|0.013517| s0
-    s4 -->|0.001443| s3
-    s4 -->|0.082332| s5
-    s5 -->|0.330002| s2
-    s5 -->|0.014030| s3
-    s6 -->|0.043457| s9
-    s7 -->|0.043415| s10
-    s8 -->|0.141930| s1
-    s8 -->|0.114896| s2
-    s8 -->|0.314139| s6
-    s8 -->|0.323060| s9
-    s10 -->|0.000070| s0
+    s0 -->|0.080234| s3
+    s0 -->|0.031835| s4
+    s0 -->|0.003281| s5
+    s1 -->|0.134082| s9
+    s2 -->|0.154196| s1
+    s2 -->|0.612937| s6
+    s2 -->|0.000699| s8
+    s2 -->|0.006993| s9
+    s3 -->|0.009264| s2
+    s3 -->|0.015270| s5
+    s3 -->|0.329431| s8
+    s4 -->|0.012916| s0
+    s4 -->|0.001700| s3
+    s4 -->|0.084920| s5
+    s5 -->|0.648385| s2
+    s5 -->|0.006762| s3
+    s5 -->|0.010143| s8
+    s6 -->|0.055618| s9
+    s7 -->|0.043747| s10
+    s8 -->|0.145059| s1
+    s8 -->|0.113955| s2
+    s8 -->|0.308560| s6
+    s8 -->|0.326727| s9
+    s10 -->|0.000068| s0
     s10 -->|0.000007| s4
-    s10 -->|0.001700| s7
+    s10 -->|0.001673| s7
 
 ```
 
@@ -177,12 +181,12 @@ Estimating the outbreak size:
 
 |    Size | Probability    | Likely size (if \> Size) |
 |--------:|:---------------|:-------------------------|
-|  2.0000 | 0.60           | \[2.00, 11.00\]          |
-|  5.0000 | 0.17           | \[5.00, 13.32\]          |
-| 10.0000 | 0.02           | \[10.00, 16.00\]         |
-| 20.0000 | \< 0.01        | \-                       |
-|  2.0000 | Median (50%\>) | \[3.00, 11.27\]          |
-|  2.7775 | Mean (average) | \[3.00, 11.27\]          |
+|  2.0000 | 0.60           | \[2.00, 10.00\]          |
+|  5.0000 | 0.16           | \[5.00, 14.00\]          |
+| 10.0000 | 0.02           | \[10.00, 17.90\]         |
+| 20.0000 | \< 0.01        | \[20.00, 20.00\]         |
+|  2.0000 | Median (50%\>) | \[3.00, 11.00\]          |
+|  2.7285 | Mean (average) | \[3.00, 11.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -207,7 +211,7 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:1.073
+    Mean Rt:1.0725
 
     Median Rt:1
 
@@ -215,7 +219,8 @@ number:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-jones2019measles" class="csl-entry">
 
