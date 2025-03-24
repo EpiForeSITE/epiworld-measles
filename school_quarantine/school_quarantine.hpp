@@ -87,20 +87,7 @@ public:
 
     std::vector<epiworld::Agent<> *> available; ///< Agents available for contact
 
-    /**
-     * Quarantine status of the model. It can be:
-     * - INACTIVE: No quarantine has been triggered.
-     * - TRIGGERED: Quarantine has been triggered, but not yet
-     *  active.
-     * - ACTIVE: Quarantine is active.
-     */
-    enum class QuarantineStatus {
-        INACTIVE,
-        TRIGGERED,
-        ACTIVE
-    };
-
-    QuarantineStatus system_quarantine_status;
+    bool system_quarantine_triggered = false;
 
     std::vector< int > day_flagged; ///< Either detected or started quarantine
 
@@ -136,7 +123,7 @@ public:
 inline void ModelSchoolQuarantine::quarantine_agents() {
 
     // Iterating through the new cases
-    if (system_quarantine_status != QuarantineStatus::TRIGGERED)
+    if (!system_quarantine_triggered)
         return;
 
     // Capturing the days that matter and the probability of success
@@ -184,7 +171,7 @@ inline void ModelSchoolQuarantine::quarantine_agents() {
     }
 
     // Clearing the list of ids
-    system_quarantine_status = QuarantineStatus::ACTIVE;
+    system_quarantine_triggered = false;
 
     return;
 
@@ -204,7 +191,7 @@ inline void ModelSchoolQuarantine::reset() {
     
     Model<>::reset();
 
-    system_quarantine_status = QuarantineStatus::INACTIVE;
+    system_quarantine_triggered = false;
         
     day_flagged.resize(size(), 0);
     std::fill(
@@ -374,8 +361,7 @@ EPI_NEW_UPDATEFUN(update_rash, int) {
         (m->runif() > 1.0/m->par("Days undetected"))
     )
     {
-        model->system_quarantine_status =  
-            ModelSchoolQuarantine::QuarantineStatus::TRIGGERED;
+        model->system_quarantine_triggered = true;
 
         detected = true;
 
