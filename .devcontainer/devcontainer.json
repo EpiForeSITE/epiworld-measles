@@ -18,11 +18,7 @@
     },
     "remoteUser": "root",
     "mounts": [
-        // // Mount the .ssh directory into the container
-        // "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached,readonly",
         // Mount the .vscode configuration into the container
         "source=${localWorkspaceFolder}/.devcontainer/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
     ]
-    //,
-    // "workspaceMount": "/workspaces/${workspaceFolderBasename}"
 }

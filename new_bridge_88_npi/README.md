@@ -1,7 +1,7 @@
 # School quarantine model
 
 
-## School quarantine model for edgemont_92_npi
+## School quarantine model for output
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
 the following features:
@@ -49,7 +49,7 @@ The following is a raw list of the parameters included in the model:
 | R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
-[here](edgemont_92_npi_params.yaml).
+[here](params.yaml).
 
 ### Run
 
@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpT8ykJ8/fileaae8728c396b.yaml
+    Using file: /tmp/RtmpvTmoLS/filed46f2c31526.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -67,15 +67,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 634
+    Population size     : 614
     Agents' data        : (none)
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 2.00ms
-    Total elapsed t     : 607.00ms (2000 runs)
-    Last run speed      : 13.94 million agents x day / second
-    Average run speed   : 125.15 million agents x day / second
+    Total elapsed t     : 566.00ms (2000 runs)
+    Last run speed      : 12.75 million agents x day / second
+    Average run speed   : 130.04 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -98,35 +98,35 @@ case. The following is the output from the highschool model:
      - Quarantine willingness : 1.0000
      - Rash days              : 4.0000
      - Transmission rate      : 0.9000
-     - Vaccination rate       : 0.9200
+     - Vaccination rate       : 0.8800
      - Vax efficacy           : 0.9900
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 633 -> 631
+      - ( 0) Susceptible             : 613 -> 539
       - ( 1) Exposed                 :   1 -> 0
       - ( 2) Prodromal               :   0 -> 0
       - ( 3) Rash                    :   0 -> 0
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
-      - ( 6) Quarantined Susceptible :   0 -> 0
+      - ( 6) Quarantined Susceptible :   0 -> 72
       - ( 7) Quarantined Prodromal   :   0 -> 0
-      - ( 8) Quarantined Recovered   :   0 -> 0
+      - ( 8) Quarantined Recovered   :   0 -> 3
       - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 3
+      - (10) Recovered               :   0 -> 0
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.79  0.07  0.00  0.00  0.14  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.93  0.07  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Isolated                 0.00  0.00  0.00  0.00  0.25  0.00  0.00  0.00  0.25  0.50  0.00
-     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.89  0.00  0.11  0.00  0.00  0.00
-     - Quarantined Susceptible  0.05  0.00  0.00  0.00  0.00  0.00  0.95  0.00  0.00  0.00  0.00
+     - Exposed                  0.00  0.95  0.02  0.00  0.00  0.00  0.00  0.02  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.50  0.00  0.00  0.00  0.00  0.50  0.00  0.00
+     - Isolated                 0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00
+     - Quarantined Susceptible  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00
      - Quarantined Prodromal    0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Quarantined Recovered    0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.92  0.00  0.08
-     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.75  0.25
-     - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+     - Quarantined Recovered    0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00  0.00  0.00
+     - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
+     - Recovered                   -     -     -     -     -     -     -     -     -     -     -
 
 ## Flowchart
 
@@ -146,32 +146,32 @@ flowchart LR
     s8[Rash]
     s9[Recovered]
     s10[Susceptible]
-    s0 -->|0.080888| s3
-    s0 -->|0.021867| s4
-    s0 -->|0.001914| s5
-    s1 -->|0.155718| s9
-    s2 -->|0.160867| s1
-    s2 -->|0.609812| s6
-    s2 -->|0.004564| s8
-    s2 -->|0.010839| s9
-    s3 -->|0.005426| s2
-    s3 -->|0.010964| s5
-    s3 -->|0.331073| s8
-    s4 -->|0.014095| s0
-    s4 -->|0.001013| s3
-    s4 -->|0.080424| s5
-    s5 -->|0.658120| s2
-    s5 -->|0.006575| s3
-    s5 -->|0.013149| s8
-    s6 -->|0.052684| s9
-    s7 -->|0.044158| s10
-    s8 -->|0.166667| s1
-    s8 -->|0.102611| s2
-    s8 -->|0.314208| s6
-    s8 -->|0.310565| s9
-    s10 -->|0.000052| s0
-    s10 -->|0.000004| s4
-    s10 -->|0.001008| s7
+    s0 -->|0.080234| s3
+    s0 -->|0.031835| s4
+    s0 -->|0.003281| s5
+    s1 -->|0.134082| s9
+    s2 -->|0.154196| s1
+    s2 -->|0.612937| s6
+    s2 -->|0.000699| s8
+    s2 -->|0.006993| s9
+    s3 -->|0.009264| s2
+    s3 -->|0.015270| s5
+    s3 -->|0.329431| s8
+    s4 -->|0.012916| s0
+    s4 -->|0.001700| s3
+    s4 -->|0.084920| s5
+    s5 -->|0.648385| s2
+    s5 -->|0.006762| s3
+    s5 -->|0.010143| s8
+    s6 -->|0.055618| s9
+    s7 -->|0.043747| s10
+    s8 -->|0.145059| s1
+    s8 -->|0.113955| s2
+    s8 -->|0.308560| s6
+    s8 -->|0.326727| s9
+    s10 -->|0.000068| s0
+    s10 -->|0.000007| s4
+    s10 -->|0.001673| s7
 
 ```
 
@@ -179,18 +179,18 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|   Size | Probability    | Likely size (if \> Size) |
-|-------:|:---------------|:-------------------------|
-|  2.000 | 0.49           | \[2.00, 8.00\]           |
-|  5.000 | 0.09           | \[5.00, 10.00\]          |
-| 10.000 | \< 0.01        | \[10.00, 12.60\]         |
-| 20.000 | \< 0.01        | \-                       |
-|  1.000 | Median (50%\>) | \[2.00, 8.00\]           |
-|  2.109 | Mean (average) | \[3.00, 8.70\]           |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|  2.0000 | 0.60           | \[2.00, 10.00\]          |
+|  5.0000 | 0.16           | \[5.00, 14.00\]          |
+| 10.0000 | 0.02           | \[10.00, 17.90\]         |
+| 20.0000 | \< 0.01        | \[20.00, 20.00\]         |
+|  2.0000 | Median (50%\>) | \[3.00, 11.00\]          |
+|  2.7285 | Mean (average) | \[3.00, 11.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
-![](edgemont_92_npi_files/figure-commonmark/print-histogram-1.png)
+![](README_files/figure-commonmark/print-histogram-1.png)
 
 Preparing the data for output
 
@@ -201,21 +201,21 @@ transitions:
 - Susceptible to Exposed.
 - Susceptible to Quarantined Exposed.
 
-![](edgemont_92_npi_files/figure-commonmark/contact-tracing-1.png)
+![](README_files/figure-commonmark/contact-tracing-1.png)
 
 ### Reproductive number of the index case
 
-![](edgemont_92_npi_files/figure-commonmark/reproductive-number-1.png)
+![](README_files/figure-commonmark/reproductive-number-1.png)
 
 Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:0.774
+    Mean Rt:1.0725
 
-    Median Rt:0
+    Median Rt:1
 
-    95% CI Rt:0,3
+    95% CI Rt:0,4
 
 # References
 

@@ -1,5 +1,5 @@
 #define epiworld_double double
-#include "../epiworld.hpp"
+#include "epiworld.hpp"
 
 #ifndef SCHOOL_QUARANTINE_HPP
 #define SCHOOL_QUARANTINE_HPP
@@ -95,8 +95,7 @@ public:
      * @brief Quarantine agents that are in the system.
      * 
      * The flow should be:
-     * - The function only runs if the quarantine status is
-     *  TRIGGERED.
+     * - The function only runs if the quarantine status is active.
      * 
      * - Agents who are in quarantine, isolation, removed, or 
      *   hospitalized are ignored.
@@ -108,8 +107,7 @@ public:
      * - Susceptible, Exposed, and Prodromal agents are moved to the
      *   QUARANTINED_* state.
      * 
-     * - At the end of the function, the quarantine status is set to
-     *   ACTIVE.
+     * - At the end of the function, the quarantine status is set false.
      */
     void quarantine_agents();
 

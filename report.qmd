@@ -3,11 +3,10 @@ format: gfm
 title: School quarantine model
 params:
     params_fn: ""
-    out_dir: ""  
-bibliography: ["references.bib"]
+bibliography: ["../references.bib"]
 ---
 
-## School quarantine model for `r params$out_dir`
+## School quarantine model for `r "output"`
 
 This model is a discrete-time Agent-Based Model [ABM] that includes the following features:
 
@@ -40,8 +39,7 @@ The following is a raw list of the parameters included in the model:
 #| echo: false
 if (interactive() && !exists("params")) {
     params <- list(
-        params_fn = "new_bridge_88_params.yaml",
-        out_dir = "new_bridge_88"
+        params_fn = "new_bridge_88_params.yaml"
     )
 }
 ```
@@ -56,7 +54,7 @@ ncores <- parallel::detectCores()
 if (all(sapply(params, length) == 0)) {
     stop(
         "No parameters found. ",
-        "please specify the parameters, including the params_fn and out_dir"
+        "please specify the parameters, including the params_fn"
         )
 }
 
@@ -170,15 +168,15 @@ This model simulates the spread of measles in a highschool. The highschool has `
 #| label: run-model
 #| warning: false
 #| message: false
-unlink(params$out_dir, recursive = TRUE)
-dir.create(params$out_dir)
+unlink("./output", recursive = TRUE)
+dir.create("./output")
 
 # Size of the population
 n <- temp_params$`Population size`
 n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 system2(
-    "./school_quarantine.o",
-    c(temp_params_fn, params$out_dir),
+    ".././school_quarantine.o",
+    c(temp_params_fn, "output"),
     wait = TRUE, stdout=TRUE
     ) |>
     cat(sep = "\n")
@@ -194,7 +192,7 @@ This diagram shows the possible transitions between the states in the model:
 #| output: asis
 #| echo: false
 cat("```{mermaid}\n")
-readLines(file.path(params$out_dir, "diagram.mmd")) |>
+readLines(file.path("output", "diagram.mmd")) |>
     cat(sep = "\n")
 cat("\n```")
 ```
@@ -207,7 +205,7 @@ cat("\n```")
 #| warning: false
 library(data.table)
 histories <- parallel::mclapply(list.files(
-    params$out_dir, pattern="total_hist", full.names = TRUE),
+    "output", pattern="total_hist", full.names = TRUE),
    \(fn) {
       cbind(fn = fn, data.table::fread(fn, nThread = 1L))
    }, mc.cores = ncores) |> rbindlist()
@@ -332,14 +330,14 @@ histories_wide[, fn := NULL]
 fwrite(
   histories_wide,
   file.path(
-    params$out_dir,
-    sprintf("%s_histories_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
+    "output",
+    sprintf("%s_histories_n=%i_vax=%s.csv", "output", n, n_vax)
   )
 )
 
-# Reading the 'transition.csv' files
+# Reading the 'transition.csv' files`
 transitions <- parallel::mclapply(
-    list.files(params$out_dir, pattern="transition", full.names = TRUE),
+    list.files("output", pattern="transition", full.names = TRUE),
    \(fn) {
       cbind(fn = fn, fread(fn, nThread = 1L))
     }, mc.cores = ncores) |> rbindlist()
@@ -355,8 +353,8 @@ detected[, fn := NULL]
 fwrite(
   detected,
   file.path(
-    params$out_dir,
-    sprintf("%s_transitions_n=%i_vax=%s.csv", params$out_dir, n, n_vax)
+    "output",
+    sprintf("%s_transitions_n=%i_vax=%s.csv", "output", n, n_vax)
   )
 )
 ```
@@ -402,7 +400,7 @@ detected_cum |>
 #| echo: false
 #| warning: false
 #| message: false
-repnums <- list.files(params$out_dir, pattern = "reproduc", full.names = TRUE)
+repnums <- list.files("output", pattern = "reproduc", full.names = TRUE)
 sim_nums <- gsub(".+/([0-9]+)_.+", "\\1", repnums) |> as.integer()
 repnums <- parallel::mclapply(seq_along(repnums), \(i) {
     fread(repnums[i])[, sim_num := sim_nums[i]]

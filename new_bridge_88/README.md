@@ -1,7 +1,7 @@
 # School quarantine model
 
 
-## School quarantine model for canyon_grove_58
+## School quarantine model for output
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
 the following features:
@@ -49,7 +49,7 @@ The following is a raw list of the parameters included in the model:
 | R0 | 15.00 | Theoretical R0. |
 
 Other parameters can be found the corresponding parameters document
-[here](canyon_grove_58_params.yaml).
+[here](params.yaml).
 
 ### Run
 
@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmptjGvjw/file9fc17415ee89.yaml
+    Using file: /tmp/RtmpVEzF0l/filed25141c1545c.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -67,15 +67,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 650
+    Population size     : 614
     Agents' data        : (none)
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 2.00ms
-    Total elapsed t     : 666.00ms (2000 runs)
-    Last run speed      : 13.27 million agents x day / second
-    Average run speed   : 116.97 million agents x day / second
+    Total elapsed t     : 598.00ms (2000 runs)
+    Last run speed      : 13.63 million agents x day / second
+    Average run speed   : 123.05 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -98,34 +98,34 @@ case. The following is the output from the highschool model:
      - Quarantine willingness : -1.0000
      - Rash days              : 4.0000
      - Transmission rate      : 0.9000
-     - Vaccination rate       : 0.5800
+     - Vaccination rate       : 0.8800
      - Vax efficacy           : 0.9900
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 649 -> 518
-      - ( 1) Exposed                 :   1 -> 77
-      - ( 2) Prodromal               :   0 -> 10
-      - ( 3) Rash                    :   0 -> 3
+      - ( 0) Susceptible             : 613 -> 613
+      - ( 1) Exposed                 :   1 -> 0
+      - ( 2) Prodromal               :   0 -> 0
+      - ( 3) Rash                    :   0 -> 0
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
       - ( 6) Quarantined Susceptible :   0 -> 0
       - ( 7) Quarantined Prodromal   :   0 -> 0
       - ( 8) Quarantined Recovered   :   0 -> 0
-      - ( 9) Hospitalized            :   0 -> 2
-      - (10) Recovered               :   0 -> 40
+      - ( 9) Hospitalized            :   0 -> 0
+      - (10) Recovered               :   0 -> 1
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.93  0.07  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.63  0.37  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.28  0.00  0.00  0.00  0.00  0.00  0.13  0.58
+     - Exposed                  0.00  0.98  0.02  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
      - Isolated                    -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.56  0.44
+     - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
@@ -141,12 +141,12 @@ flowchart LR
     s3[Rash]
     s4[Recovered]
     s5[Susceptible]
-    s0 -->|0.083450| s2
-    s1 -->|0.142449| s4
-    s2 -->|0.333719| s3
-    s3 -->|0.157555| s1
-    s3 -->|0.632854| s4
-    s5 -->|0.005129| s0
+    s0 -->|0.083509| s2
+    s1 -->|0.143886| s4
+    s2 -->|0.335437| s3
+    s3 -->|0.157812| s1
+    s3 -->|0.626775| s4
+    s5 -->|0.000157| s0
 
 ```
 
@@ -154,18 +154,18 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|     Size | Probability    | Likely size (if \> Size) |
-|---------:|:---------------|:-------------------------|
-|   2.0000 | 0.92           | \[5.00, 288.00\]         |
-|   5.0000 | 0.90           | \[13.88, 288.00\]        |
-|  10.0000 | 0.88           | \[20.15, 288.00\]        |
-|  20.0000 | 0.86           | \[35.15, 288.00\]        |
-| 232.0000 | Median (50%\>) | \[236.00, 290.00\]       |
-| 185.4915 | Mean (average) | \[192.93, 290.00\]       |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|  2.0000 | 0.62           | \[2.00, 31.00\]          |
+|  5.0000 | 0.38           | \[5.00, 34.00\]          |
+| 10.0000 | 0.21           | \[10.00, 36.62\]         |
+| 20.0000 | 0.07           | \[20.00, 39.55\]         |
+|  2.0000 | Median (50%\>) | \[3.00, 33.00\]          |
+|  5.8515 | Mean (average) | \[6.00, 35.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
-![](canyon_grove_58_files/figure-commonmark/print-histogram-1.png)
+![](README_files/figure-commonmark/print-histogram-1.png)
 
 Preparing the data for output
 
@@ -176,21 +176,21 @@ transitions:
 - Susceptible to Exposed.
 - Susceptible to Quarantined Exposed.
 
-![](canyon_grove_58_files/figure-commonmark/contact-tracing-1.png)
+![](README_files/figure-commonmark/contact-tracing-1.png)
 
 ### Reproductive number of the index case
 
-![](canyon_grove_58_files/figure-commonmark/reproductive-number-1.png)
+![](README_files/figure-commonmark/reproductive-number-1.png)
 
 Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:3.794
+    Mean Rt:1.1425
 
-    Median Rt:3
+    Median Rt:1
 
-    95% CI Rt:0,12
+    95% CI Rt:0,4
 
 # References
 
