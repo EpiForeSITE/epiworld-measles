@@ -8,8 +8,7 @@ jobs:
     runs-on: ubuntu-latest
       
     container:
-      image: rocker/tidyverse:4.4.0 # ghcr.io/epiforesite/epiworld-measles:latest
-      options: --user root
+      image: rocker/tidyverse:4.4.0
 
     steps:
       - name: Checkout repository
@@ -25,10 +24,10 @@ jobs:
           cd scenarios
           // Replacing the numbre of threads
           // with two
-          sed -i 's/^Threads:.+/Threads: 1/g' */params.yaml
+          sed -i 's/^Threads:.*/Threads: 1/g' */params.yaml
 
           // Replacing the number of runs
-          sed -i 's/^Replicates:.+/Replicates: 100/g' */params.yaml
+          sed -i 's/^Replicates:.*/Replicates: 100/g' */params.yaml
 
           // Running all
           make all -B
