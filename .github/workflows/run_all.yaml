@@ -19,7 +19,7 @@ jobs:
           cd model
           make school_quarantine.o -B
 
-      - name: Compile and run all scenarios
+      - name: Prepare scenarios
         run: |
           cd scenarios
           // Replacing the numbre of threads
@@ -28,8 +28,9 @@ jobs:
 
           // Replacing the number of runs
           sed -i 's/^Replicates:.*/Replicates: 100/g' */params.yaml
-
-          // Running all
+      
+      - name: Run scenarios
+        run: |
           make all -B
 
 
