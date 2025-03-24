@@ -1,0 +1,33 @@
+name: Run all scenarios
+
+on:
+  push:
+
+jobs:
+  run_all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile the program
+        run: |
+          cd model
+          make school_quarantine.o -B
+
+      - name: Compile and run all scenarios
+        run: |
+          cd scenarios
+          // Replacing the numbre of threads
+          // with two
+          sed -i 's/^Threads:.+/Threads: 1/g' */params.yaml
+
+          // Replacing the number of runs
+          sed -i 's/^Replicates:.+/Replicates: 100/g' */params.yaml
+
+          // Running all
+          make all -B
+
+
+
+      
