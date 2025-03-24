@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
     // Reading parameters from the model
     auto params = epiworld::read_yaml<epiworld_double>(fn);
 
-    ModelSchoolQuarantine model(
+    ModelSchoolQuarantine<> model(
         (size_t) params["Population size"],                 
         (int) params["initial number of exposed"], 
         params["Contact rate"],          // Contact rate  
