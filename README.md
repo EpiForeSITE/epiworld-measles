@@ -8,22 +8,18 @@
 > [!CAUTION]
 > The code and model are still under development. We would love to hear your feedback and suggestions. Please open an issue in the [GitHub repository](https://github.com/EpiForeSITE/epiworld-measles) if you have any questions or suggestions.
 
-This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles.
+This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles. The contents of this project follow:
 
-# Models of school quarantine
+- **Model details**: A detailed description of the model, including the model's assumptions, implementation using epiworld, and detailed description can be found in the [**model**](./model/README.md) folder.
 
-The different runs here include:
+- **Scenarios**: A description of the different scenarios and their results can be found in the [**scenarios**](./scenarios/README.md) folder.
 
-- New Bridge 88: 88% vaccination rate, no NPIs ([link](./new_bridge_88)).
-- New Bridge 88 NPI: 88% vaccination rate, NPIs ([link](./new_bridge_88_npi)).
-- Canyon grove 58: 58% vaccination rate, no NPIs ([link](./canyon_grove_58)).
-- Canyon grove 58 NPI: 58% vaccination rate, NPIs ([link](./canyon_grove_58_npi)).
-- Edgemont 92: 92% vaccination rate, no NPIs ([link](./edgemont_92)).
-- Edgemont 92 NPI: 92% vaccination rate, NPIs ([link](./edgemont_92_npi)).
-- Canyon Crest 74: 74% vaccination rate, no NPIs ([link](./canyon_crest_74)).
-- Canyon Crest 74 NPI: 74% vaccination rate, NPIs ([link](./canyon_crest_74_npi)).
+Both folders include a `Makefile` that provides a handful of targets users can call. Within the command line, users can type `make` inside each folder and get a description of the available targets.
 
-The NPI runs have quarantine willingness set to 1.0, which means that all individuals will accept quarantine if they develop the disease. Otherwise, there's no quarantine or isolation whatsoever.
+## Development
 
-All runs were calibrated using an R0 of 15.
+The development of the project has been carried out using a [Development Container](https://containers.dev). All the configuration is available under the [`.devcontainer` folder](./.devcontainer). 
+
+
+
 

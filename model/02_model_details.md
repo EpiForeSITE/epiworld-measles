@@ -1,5 +1,23 @@
 # Implementation details
 
+This model implements a time-discrete Agent-Based Model [ABM] with perfect mixing. The model starts with the introduction of one or more infected individuals. Depending on the vaccination rate, the model simulates the spread of the disease through a population of agents. The model includes a quarantine process that is triggered when an agent is detected in the rash period. The model includes the following parameters:
+
+- **Contact rate**: Contact rate  .
+- **Transmission rate**: Transmission rate.
+- **Vax efficacy**: Vaccine reduction in susceptibility.
+- **Vax improved recovery**: Vaccine reduction in recovery rate.
+- **Incubation period**: Incubation period.
+- **Prodromal period**: Prodromal period.
+- **Rash period**: Rash period.
+- **Days undetected**: Days undetected.
+- **Hospitalization rate**: Hospitalization rate.
+- **Hospitalization days**: Hospitalization duration.
+- **Vaccination rate**: Vaccination rate.
+- **Quarantine days**: Quarantine days for vaccinated.
+- **Quarantine willingness**: Quarantine success rate.
+
+As implemented in the `school_quarantine.cpp` file, the model takes two arguments: (a) A filepath to the model parameters in `yaml` and (b) a filepath to the output directory. The program runs multiple replicates of the model and saves them in the output directory. An example of model parameters in included in the [example_params.yaml](./example_params.yaml) file. 
+
 ## States
 
 The model is fairly complex and it includes ten different states:
@@ -100,7 +118,9 @@ flowchart LR
     Rash -->|No|vax
     vax{"Vaccinated?"}
     vax -->|Yes|End
-    vax -->|No|Quarantine((Quarantine))
+    vax -->|No|WillQuarantine
+    WillQuarantine{"Willing to<br>Quarantine?"} -->|No|End
+    WillQuarantine -->|Yes|Quarantine((Quarantine))
 ```
 
 ## Transition probabilities

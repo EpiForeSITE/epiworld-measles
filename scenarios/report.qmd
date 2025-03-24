@@ -3,7 +3,7 @@ format: gfm
 title: School quarantine model
 params:
     params_fn: ""
-bibliography: ["../references.bib"]
+bibliography: ["../../model/references.bib"]
 ---
 
 ## School quarantine model for `r "output"`
@@ -175,7 +175,7 @@ dir.create("./output")
 n <- temp_params$`Population size`
 n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 system2(
-    ".././school_quarantine.o",
+    "../../model/./school_quarantine.o",
     c(temp_params_fn, "output"),
     wait = TRUE, stdout=TRUE
     ) |>

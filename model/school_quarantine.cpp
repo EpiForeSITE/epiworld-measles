@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
         params["Rash period"],           // Rash period
         params["Days undetected"],       // Days undetected
         params["Hospitalization rate"],  // Hospitalization rate
-        params["Hospitalization days"],
+        params["Hospitalization days"],  // Hospitalization duration
         params["Vaccination rate"],      // Vaccination rate
         params["Quarantine days"],       // Quarantine days for vaccinated
         params["Quarantine willingness"] // Quarantine success rate

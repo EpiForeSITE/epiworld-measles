@@ -39,7 +39,7 @@ The following is a raw list of the parameters included in the model:
 |:---|---:|:---|
 | Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
 | Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
-| Days undetected | -1.00 | Fixed value. |
+| Days undetected | 2.00 | Fixed value. |
 | Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
 | Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
 | Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmps8jrdb/filed6d07b19c3b3.yaml
+    Using file: /tmp/RtmpecVZ7C/filefceb6a517f94.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -67,15 +67,15 @@ case. The following is the output from the highschool model:
     SIMULATION STUDY
 
     Name of the model   : (none)
-    Population size     : 474
+    Population size     : 634
     Agents' data        : (none)
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 2.00ms
-    Total elapsed t     : 478.00ms (2000 runs)
-    Last run speed      : 12.62 million agents x day / second
-    Average run speed   : 118.97 million agents x day / second
+    Total elapsed t     : 632.00ms (2000 runs)
+    Last run speed      : 12.90 million agents x day / second
+    Average run speed   : 120.34 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -89,21 +89,21 @@ case. The following is the output from the highschool model:
 
     Model parameters:
      - Contact rate           : 2.3810
-     - Days undetected        : -1.0000
+     - Days undetected        : 2.0000
      - Hospitalization days   : 7.0000
      - Hospitalization rate   : 0.2000
      - Incubation period      : 12.0000
      - Prodromal period       : 3.0000
      - Quarantine days        : 21.0000
-     - Quarantine willingness : -1.0000
+     - Quarantine willingness : 1.0000
      - Rash days              : 4.0000
      - Transmission rate      : 0.9000
-     - Vaccination rate       : 0.7400
+     - Vaccination rate       : 0.9200
      - Vax efficacy           : 0.9900
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 473 -> 473
+      - ( 0) Susceptible             : 633 -> 631
       - ( 1) Exposed                 :   1 -> 0
       - ( 2) Prodromal               :   0 -> 0
       - ( 3) Rash                    :   0 -> 0
@@ -113,19 +113,19 @@ case. The following is the output from the highschool model:
       - ( 7) Quarantined Prodromal   :   0 -> 0
       - ( 8) Quarantined Recovered   :   0 -> 0
       - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 1
+      - (10) Recovered               :   0 -> 3
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.94  0.06  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
-     - Isolated                    -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized                -     -     -     -     -     -     -     -     -     -     -
+     - Exposed                  0.00  0.79  0.07  0.00  0.00  0.14  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.93  0.07  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Isolated                 0.00  0.00  0.00  0.00  0.25  0.00  0.00  0.00  0.25  0.50  0.00
+     - Quarantined Exposed      0.00  0.00  0.00  0.00  0.00  0.89  0.00  0.11  0.00  0.00  0.00
+     - Quarantined Susceptible  0.05  0.00  0.00  0.00  0.00  0.00  0.95  0.00  0.00  0.00  0.00
+     - Quarantined Prodromal    0.00  0.00  0.00  0.00  1.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Quarantined Recovered    0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.92  0.00  0.08
+     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.75  0.25
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
@@ -137,16 +137,41 @@ model:
 flowchart LR
     s0[Exposed]
     s1[Hospitalized]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Recovered]
-    s5[Susceptible]
-    s0 -->|0.083533| s2
-    s1 -->|0.144126| s4
-    s2 -->|0.331922| s3
-    s3 -->|0.157657| s1
-    s3 -->|0.631381| s4
-    s5 -->|0.001553| s0
+    s2[Isolated]
+    s3[Prodromal]
+    s4[Quarantined Exposed]
+    s5[Quarantined Prodromal]
+    s6[Quarantined Recovered]
+    s7[Quarantined Susceptible]
+    s8[Rash]
+    s9[Recovered]
+    s10[Susceptible]
+    s0 -->|0.080888| s3
+    s0 -->|0.021867| s4
+    s0 -->|0.001914| s5
+    s1 -->|0.155718| s9
+    s2 -->|0.160867| s1
+    s2 -->|0.609812| s6
+    s2 -->|0.004564| s8
+    s2 -->|0.010839| s9
+    s3 -->|0.005426| s2
+    s3 -->|0.010964| s5
+    s3 -->|0.331073| s8
+    s4 -->|0.014095| s0
+    s4 -->|0.001013| s3
+    s4 -->|0.080424| s5
+    s5 -->|0.658120| s2
+    s5 -->|0.006575| s3
+    s5 -->|0.013149| s8
+    s6 -->|0.052684| s9
+    s7 -->|0.044158| s10
+    s8 -->|0.166667| s1
+    s8 -->|0.102611| s2
+    s8 -->|0.314208| s6
+    s8 -->|0.310565| s9
+    s10 -->|0.000052| s0
+    s10 -->|0.000004| s4
+    s10 -->|0.001008| s7
 
 ```
 
@@ -154,14 +179,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|    Size | Probability    | Likely size (if \> Size) |
-|--------:|:---------------|:-------------------------|
-|  2.0000 | 0.83           | \[2.00, 116.00\]         |
-|  5.0000 | 0.75           | \[6.00, 116.00\]         |
-| 10.0000 | 0.70           | \[11.00, 117.00\]        |
-| 20.0000 | 0.61           | \[21.00, 118.00\]        |
-| 36.0000 | Median (50%\>) | \[38.00, 119.00\]        |
-| 43.5315 | Mean (average) | \[45.00, 119.12\]        |
+|   Size | Probability    | Likely size (if \> Size) |
+|-------:|:---------------|:-------------------------|
+|  2.000 | 0.49           | \[2.00, 8.00\]           |
+|  5.000 | 0.09           | \[5.00, 10.00\]          |
+| 10.000 | \< 0.01        | \[10.00, 12.60\]         |
+| 20.000 | \< 0.01        | \-                       |
+|  1.000 | Median (50%\>) | \[2.00, 8.00\]           |
+|  2.109 | Mean (average) | \[3.00, 8.70\]           |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -186,11 +211,11 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:2.4365
+    Mean Rt:0.774
 
-    Median Rt:2
+    Median Rt:0
 
-    95% CI Rt:0,8
+    95% CI Rt:0,3
 
 # References
 
