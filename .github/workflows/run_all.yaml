@@ -22,11 +22,11 @@ jobs:
       - name: Prepare scenarios
         run: |
           cd scenarios
-          // Replacing the numbre of threads
-          // with two
+          # Replacing the numbre of threads
+          # with two
           sed -i 's/^Threads:.*/Threads: 1/g' */params.yaml
 
-          // Replacing the number of runs
+          # Replacing the number of runs
           sed -i 's/^Replicates:.*/Replicates: 100/g' */params.yaml
       
       - name: Run scenarios
