@@ -9,7 +9,8 @@ jobs:
       
     container:
       image: ghcr.io/epiforesite/epiworld-measles:latest
-      
+      options: --user root
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
