@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
       
     container:
-      image: ghcr.io/epiforesite/epiworld-measles:latest
-      options: --user root
+      image: rocker/tidyverse:4.4.0 # ghcr.io/epiforesite/epiworld-measles:latest
+      # options: --user root
 
     steps:
       - name: Checkout repository
