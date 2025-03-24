@@ -9,7 +9,7 @@ jobs:
       
     container:
       image: rocker/tidyverse:4.4.0 # ghcr.io/epiforesite/epiworld-measles:latest
-      # options: --user root
+      options: --user root
 
     steps:
       - name: Checkout repository

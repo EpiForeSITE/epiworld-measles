@@ -17,7 +17,7 @@
             "version": "latest"
         }
     },
-    "remoteUser": "root",
+    // "remoteUser": "root",
     "mounts": [
         // Mount the .vscode configuration into the container
         "source=${localWorkspaceFolder}/.devcontainer/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
