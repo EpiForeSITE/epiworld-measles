@@ -1,6 +1,10 @@
 // #define EPI_DEBUG
-#include "school_quarantine.hpp"
+// #include "school_quarantine.hpp"
+#define epiworld_double double
+#include "epiworld.hpp"
 #include <iostream>
+
+using namespace epiworld;
 
 // Defining the 
 
@@ -21,7 +25,7 @@ int main(int argc, char *argv[]) {
     // Reading parameters from the model
     auto params = epiworld::read_yaml<epiworld_double>(fn);
 
-    ModelSchoolQuarantine<> model(
+    epimodels::MeaslesQuarantine<> model(
         (size_t) params["Population size"],                 
         (int) params["initial number of exposed"], 
         params["Contact rate"],          // Contact rate  
