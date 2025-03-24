@@ -1,4 +1,4 @@
-[![ForeSITE Group](https://github.com/EpiForeSITE/software/blob/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE)
+[![ForeSITE Group](https://raw.githubusercontent.com/EpiForeSITE/software/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE) [![Run all scenarios](https://github.com/EpiForeSITE/epiworld-measles/actions/workflows/run_all.yaml/badge.svg)](https://github.com/EpiForeSITE/epiworld-measles/actions/workflows/run_all.yaml)
 
 # Scenario modeling of measles using agent-based modeling
 
@@ -18,7 +18,7 @@ Both folders include a `Makefile` that provides a handful of targets users can c
 
 ## Development
 
-The development of the project has been carried out using a [Development Container](https://containers.dev). All the configuration is available under the [`.devcontainer` folder](./.devcontainer). 
+The development of the project has been carried out using a [Development Container](https://containers.dev). All the configuration is available under the [`.devcontainer` folder](./.devcontainer). The image is described in the file [`.devcontainer/ContainerFile`](./.devcontainer/ContainerFile). The image is available on GitHub under `ghcr.io/epiforesite/epiworld-measles:latest`.
 
 
 

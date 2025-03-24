@@ -12,7 +12,9 @@ ifndef ENGINE
 	ENGINE=podman
 endif
 
-IMAGE=quay.io/gvegayon/measles:latest
+ifndef IMAGE
+	IMAGE=quay.io/gvegayon/measles:latest
+endif
 
 help:
 	@echo ""
@@ -62,7 +64,11 @@ singularity_render_chpc:
 		--pwd=/measles/models measles.sif make README.md
 
 container_push: container_build
-	$(ENGINE) push quay.io/gvegayon/measles:latest
+	$(ENGINE) push $(IMAGE)
+
+container_push_gh:
+	$(MAKE) container_build IMAGE=ghcr.io/epiforesite/epiworld-measles:latest
+	$(MAKE) container_push IMAGE=ghcr.io/epiforesite/epiworld-measles:latest
 
 hpc_alloc:
 	@echo "Allocating resources..."
