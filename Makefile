@@ -1,45 +1,54 @@
+ifndef OMP
+	CXX_OMP=-fopenmp
+endif
+
+ifdef EPI_DEBUG
+	CXX_FLAGS=-O0 -g $(CXX_OMP) -DEPI_DEBUG
+else
+	CXX_FLAGS=-O3 $(CXX_OMP)
+endif
+
 ifndef ENGINE
 	ENGINE=podman
 endif
 
-ifdef OMP
-	CXX_FLAGS=CXX_FLAGS=-fopenmp
+ifndef IMAGE
+	IMAGE=quay.io/gvegayon/measles:latest
 endif
 
-IMAGE=quay.io/gvegayon/measles:latest
-
 help:
-	@echo "Available targets:"
-	@echo "  update_epiworld: Update epiworld model"
-	@echo "  container_build: Build container"
-	@echo "  container_run: Run container"
-	@echo "  container_build_mac: Build container for Mac"
-	@echo "  singularity: Build singularity image"
-	@echo "  singularity_mac: Build singularity image for Mac"
-	@echo "  container-push: Push container to quay.io"
+	@echo ""
+	@echo "SCHOOL QUARANTINE SIMULATION"
+	@echo ""
+	@echo "Usage: make [target]"
+	@echo ""
+	@echo "GENERAL TARGETS"
+	@echo "  help            : Display this help message"
+	@echo ""
+	@echo "CONTAINER TARGETS"
+	@echo "  container_build     : Build container"
+	@echo "  container_run       : Run container"
+	@echo "  container_build_mac : Build container for Mac"
+	@echo "  singularity         : Build singularity image"
+	@echo "  singularity_mac     : Build singularity image for Mac"
+	@echo "  container-push      : Push container to quay.io"
 
-update_epiworld:
-	@echo "Updating epiworld..."
-	rsync -avz ../epiworld/epiworld.hpp .
-
-models/README.md: models/README.qmd
-	cd models && \
-		$(CXX_FLAGS) $(MAKE) highschool.o && \
-		quarto render README.qmd
 
 container_build:
-	@echo "Building container..."
+	@echo "Building container..." && \
+	cd .devcontainer && \
 	$(ENGINE) build $(CONT_ARGS) -t epiworld-measles -f ContainerFile . && \
 	$(ENGINE) tag epiworld-measles $(IMAGE)
 
 container_run:
 	@echo "Running container..."
-	$(ENGINE) run -it --rm --mount \
+	$(ENGINE) run -it --rm  \
+		--userns=keep-id --mount \
 		type=bind,source=$(PWD),target=/measles \
 		--workdir /measles/ epiworld-measles bash
 
 container_build_mac:
-	CONT_ARGS=--platform=linux/amd64 $(MAKE) container_build
+	CONT_ARGS=--platform=linux/arm64 $(MAKE) container_build
 
 singularity:
 	$(ENGINE) run $(CONT_ARGS) -it --rm \
@@ -55,7 +64,11 @@ singularity_render_chpc:
 		--pwd=/measles/models measles.sif make README.md
 
 container_push: container_build
-	$(ENGINE) push quay.io/gvegayon/measles:latest
+	$(ENGINE) push $(IMAGE)
+
+container_push_gh:
+	$(MAKE) container_build IMAGE=ghcr.io/epiforesite/epiworld-measles:latest
+	$(MAKE) container_push IMAGE=ghcr.io/epiforesite/epiworld-measles:latest
 
 hpc_alloc:
 	@echo "Allocating resources..."
@@ -63,3 +76,4 @@ hpc_alloc:
 
 .PHONY: update_epiworld container_build container_run container_build_mac singularity singularity_mac container_push
 
+.PHONY: run all compress replace_html help

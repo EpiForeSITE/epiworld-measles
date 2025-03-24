@@ -1,32 +1,25 @@
-# epiworld-measles
-[![ForeSITE Group](https://github.com/EpiForeSITE/software/blob/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE)
+[![ForeSITE Group](https://raw.githubusercontent.com/EpiForeSITE/software/e82ed88f75e0fe5c0a1a3b38c2b94509f122019c/docs/assets/foresite-software-badge.svg)](https://github.com/EpiForeSITE) [![Run all scenarios](https://github.com/EpiForeSITE/epiworld-measles/actions/workflows/run_all.yaml/badge.svg)](https://github.com/EpiForeSITE/epiworld-measles/actions/workflows/run_all.yaml)
+
+# Scenario modeling of measles using agent-based modeling
 
 > [!CAUTION]
-> This project is a work in progress. Use it at your own risk.
-> **This model simulates a single school, so community transmission is not included**
+> This project is a work in progress. Use it at your own risk. **This model simulates a single school, so community transmission is not included**
 
-This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles.
+> [!CAUTION]
+> The code and model are still under development. We would love to hear your feedback and suggestions. Please open an issue in the [GitHub repository](https://github.com/EpiForeSITE/epiworld-measles) if you have any questions or suggestions.
 
-An ABM in which we pass the following inputs: 
-- School size 
-- If it is elementary/mid/high school (three different models) 
-- Seed cases 
-- Vaccination rate (which we would pull from DHHS) 
-- Population distribution (gender/age/etc) (we may need to do some lit review on this). 
-- Checklist on what interventions we would like to execute (TBD). 
+This project aims to generate an ABM using [epiworld](https://github.com/UofUEpiBio/epiworld) to do scenario modeling of measles. The contents of this project follow:
 
-As outputs (with/without the interventions) 
-- Number of cases as time series. 
-- Severity of the outbreak in terms of $$$ (Rich team will help). 
-- The impact in how much time kids are taken out of school. 
-- Generate some baseline figures of these statistics. 
+- **Model details**: A detailed description of the model, including the model's assumptions, implementation using epiworld, and detailed description can be found in the [**model**](./model/README.md) folder.
 
-# Data sources
+- **Scenarios**: A description of the different scenarios and their results can be found in the [**scenarios**](./scenarios/README.md) folder.
 
-- Immunization dashboard by Utah's DHHS: https://avrpublic.dhhs.utah.gov/imms_dashboard/
-- Measles disease plan by Utah's DHHS: https://epi.utah.gov/wp-content/uploads/Measles-disease-plan.pdf
+Both folders include a `Makefile` that provides a handful of targets users can call. Within the command line, users can type `make` inside each folder and get a description of the available targets.
 
-# Included models
+## Development
 
-- Contact tracing model ([contact_tracing](contact_tracing)): Contact tracing is performed and not all unvaccinated individuals are moved to quarantine.
-- School quarantine model ([school_quarantine](school_quarantine)): There is no contact tracing and all unvaccinated individuals are moved to quarantine.
+The development of the project has been carried out using a [Development Container](https://containers.dev). All the configuration is available under the [`.devcontainer` folder](./.devcontainer). The image is described in the file [`.devcontainer/ContainerFile`](./.devcontainer/ContainerFile). The image is available on GitHub under `ghcr.io/epiforesite/epiworld-measles:latest`.
+
+
+
+

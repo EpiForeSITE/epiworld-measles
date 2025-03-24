@@ -1,1 +1,0 @@
-This folder contains the shiny app file to be read by [epiworldRShiny](https://github.com/UofUEpiBio/epiworldRShiny). 

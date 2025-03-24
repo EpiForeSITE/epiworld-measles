@@ -1,0 +1,455 @@
+---
+format: gfm
+title: School quarantine model
+params:
+    params_fn: ""
+bibliography: ["../../model/references.bib"]
+---
+
+## School quarantine model for `r "output"`
+
+This model is a discrete-time Agent-Based Model [ABM] that includes the following features:
+
+**Disease progression:**
+
+- Susceptible individuals can aquire the virus from agents in the prodromal or rash state (as long as they are not isolated or quarantined).
+- Exposed individuals develop the disease to transition to the prodromal state.
+- Prodromal individuals develop the disease to transition to the rash state.
+- Rash individuals are isolated.
+
+**Quarantine process:**
+
+- Individuals developing rash trigger quarantining process.
+- Vaccinated individuals are skipped.
+- Unvaccinated individuals may reject moving to quarantine.
+- Individuals in quarantine who develop the disease trigger contact tracing as well.
+
+**Vaccination:**
+
+- Agents can be vaccinated at the beginning of the simulation.
+- Vaccinated agents are less susceptible to the disease.
+- Recovered agents are treated as immune.
+
+### Parameters
+
+The following is a raw list of the parameters included in the model:
+
+```{r}
+#| label: in-case-of-interactive
+#| echo: false
+if (interactive() && !exists("params")) {
+    params <- list(
+        params_fn = "new_bridge_88_params.yaml"
+    )
+}
+```
+
+```{r}
+#| label: update-params
+#| echo: false
+#| warning: false
+#| message: false
+library(data.table)
+ncores <- parallel::detectCores()
+if (all(sapply(params, length) == 0)) {
+    stop(
+        "No parameters found. ",
+        "please specify the parameters, including the params_fn"
+        )
+}
+
+# Ensuring not overstepping
+ncores <- Sys.getenv("SLURM_CPUS_PER_TASK", ncores) |> as.integer()
+ncores <- ncores - 1L
+
+temp_params <- yaml::read_yaml(params$params_fn)
+
+# Theoretical R0
+temp_params$R0 <- with(temp_params, {
+  `Contact rate` * `Transmission rate` * (
+    `Rash period` + `Prodromal period`
+  )
+})
+
+# temp_params$`Population size` <- 1500
+# temp_params$`Replicates` <- 500
+temp_params_fn <- tempfile(fileext = ".yaml")
+yaml::write_yaml(temp_params, temp_params_fn)
+```
+
+```{r}
+#| label: print-params
+#| echo: false
+#| warning: false
+model_params <- yaml::read_yaml(temp_params_fn)
+
+params_table <- data.table(
+    Parameter = names(model_params),
+    Value = unlist(model_params),
+    Reference = ""
+)
+
+params_table <- params_table[
+    Parameter %in% c(
+        "Contact rate",
+        "Incubation period",
+        "Days undetected",
+        "Prodromal period",
+        "Quarantine days",
+        "Rash period",
+        "Transmission rate",
+        "Vax improved recovery",
+        "Vax efficacy",
+        "R0"
+        )
+]
+
+params_table[
+    Parameter == "Contact rate",
+    Reference := "Negative binomial. Calibrated using R0=15 as a reference."
+]
+
+params_table[
+    Parameter == "Incubation period",
+    Reference := "Geometric + 1. Ref.: @jones2019measles"
+]
+
+params_table[
+    Parameter == "Days undetected",
+    Reference := "Fixed value."
+]
+
+params_table[
+    Parameter == "Prodromal period",
+    Reference := "Geometric + 1. Ref.: @jones2019measles"
+]
+
+params_table[
+    Parameter == "Quarantine days",
+    Reference := "Utah Measles Disease Plan [@MeaslesDiseasePlan2019]."
+]
+
+params_table[
+    Parameter == "Rash period",
+    Reference := "Geometric + 1. Ref.: @MeaslesDiseasePlan2019."
+]
+
+params_table[
+    Parameter == "Transmission rate",
+    Reference := "Prob. of transmission fixed. Calibrated using R0=15 as a reference."
+]
+
+params_table[
+    Parameter == "Vax improved recovery",
+    Reference := "Fixed value."
+]
+
+params_table[
+    Parameter == "Vax efficacy",
+    Reference := "Prob. efficacy fixed. Ref.: @liuRoleVaccinationCoverage2015."
+]
+
+params_table[
+    Parameter == "R0",
+    Reference := "Theoretical R0."
+]
+
+params_table |> knitr::kable(digits = 2)
+```
+
+Other parameters can be found the corresponding parameters document `r sprintf("[here](%s)", params$params_fn)`.
+
+### Run
+
+This model simulates the spread of measles in a highschool. The highschool has `r params$'Population size'` students, and the simulation runs for `r params$'N days'` days with one index case. The following is the output from the highschool model:
+
+```{r}
+#| echo: false
+#| label: run-model
+#| warning: false
+#| message: false
+unlink("./output", recursive = TRUE)
+dir.create("./output")
+
+# Size of the population
+n <- temp_params$`Population size`
+n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
+system2(
+    "../../model/./school_quarantine.o",
+    c(temp_params_fn, "output"),
+    wait = TRUE, stdout=TRUE
+    ) |>
+    cat(sep = "\n")
+```
+
+
+## Flowchart
+
+This diagram shows the possible transitions between the states in the model:
+
+```{r}
+#| label: print-diagram
+#| output: asis
+#| echo: false
+cat("```{mermaid}\n")
+readLines(file.path("output", "diagram.mmd")) |>
+    cat(sep = "\n")
+cat("\n```")
+```
+
+## Outbreak size
+
+```{r}
+#| label: reading-history
+#| echo: false
+#| warning: false
+library(data.table)
+histories <- parallel::mclapply(list.files(
+    "output", pattern="total_hist", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, data.table::fread(fn, nThread = 1L))
+   }, mc.cores = ncores) |> rbindlist()
+
+# Figuring out the outbreak size
+exposed <- c(
+  "Exposed",
+  "Prodromal",
+  "Rash",
+  "Isolated",
+  "Quarantined Exposed",
+  "Quarantined Prodromal",
+  "Quarantined Recovered",
+  "Hospitalized",
+  "Recovered"
+  )
+counts <- histories[(state %in% exposed) & (date == max(date))]
+counts <- counts[, .(Total = sum(counts)), by = "fn"]
+```
+
+Estimating the outbreak size:
+
+```{r}
+#| label: probability of outbreak sizes
+#| echo: false
+sizes <- c(2, 5, 10, 20)
+sizes <- data.table(
+  Size = sizes,
+  Probability = sapply(sizes, \(x) {
+    sum(counts$Total >= x)/nrow(counts)
+  }),
+  "Likely size (if > Size)" = sapply(sizes, \(s){
+    sprintf(
+      "[%.2f, %.2f]",
+      quantile(counts$Total[counts$Total >= s], .025),
+      quantile(counts$Total[counts$Total >= s], .975)
+    )})
+  )
+
+
+sizes[, Probability := fifelse(
+  Probability <= 0.01,
+  "< 0.01",
+  sprintf("%.2f", Probability)
+)]
+
+# Replaces NAs
+sizes[, `Likely size (if > Size)` := fifelse(
+  grepl("NA", `Likely size (if > Size)`),
+  "-",
+  `Likely size (if > Size)`
+  )]
+
+
+median_cases <- quantile(counts$Total, probs=.5)
+mean_cases <- mean(counts$Total, probs=.5)
+
+sizes <- rbind(
+  sizes,
+  data.table(
+    Size = median_cases,
+    Probability = "Median (50%>)",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
+      quantile(counts$Total[counts$Total > median_cases], probs=.025),
+      quantile(counts$Total[counts$Total > median_cases], probs=.975)
+    )
+  ),
+  data.table(
+    Size = mean_cases,
+    Probability = "Mean (average)",
+    "Likely size (if > Size)" = sprintf(
+      "[%.2f, %.2f]",
+      quantile(counts$Total[counts$Total > mean_cases], probs=.025),
+      quantile(counts$Total[counts$Total > mean_cases], probs=.975)
+    )
+  )
+)
+
+knitr::kable(
+    sizes,
+    caption = paste(
+        "Likely sizes of the outbreak based on",
+        temp_params$`Replicates`,
+        "simulations."
+    )
+)
+```
+
+```{r}
+#| label: print-histogram
+#| echo: false
+#| warning: false
+#| message: false
+library(ggplot2)
+
+quantile50 <- quantile(counts$Total, probs=.5)
+ggplot(counts, aes(x = Total)) +
+    geom_histogram(fill="lightgray") +
+    geom_vline(xintercept = quantile50, col = "red", lty = 2) +
+    geom_text(
+        aes(label = quantile50),
+        x = quantile50,
+        y = 0,
+        vjust = -1
+        ) 
+```
+
+Preparing the data for output
+
+```{r}
+#| label: preparing-output
+#| echo: false
+# Reshape the data to wide
+histories_wide <- dcast(
+    histories, fn + date ~ state, value.var = "counts")
+
+# Generating simulation ids
+histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+histories_wide[, fn := NULL]
+
+fwrite(
+  histories_wide,
+  file.path(
+    "output",
+    sprintf("%s_histories_n=%i_vax=%s.csv", "output", n, n_vax)
+  )
+)
+
+# Reading the 'transition.csv' files`
+transitions <- parallel::mclapply(
+    list.files("output", pattern="transition", full.names = TRUE),
+   \(fn) {
+      cbind(fn = fn, fread(fn, nThread = 1L))
+    }, mc.cores = ncores) |> rbindlist()
+
+# Detected cases
+detected <- transitions[
+    (counts > 0) & (from != to),
+    .(fn, from, to, date, counts)
+    ]
+detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
+detected[, fn := NULL]
+
+fwrite(
+  detected,
+  file.path(
+    "output",
+    sprintf("%s_transitions_n=%i_vax=%s.csv", "output", n, n_vax)
+  )
+)
+```
+
+The following figure shows the cummulative number of new cases (detected or not) over time. Cases can be identified with the following transitions:
+
+- Susceptible to Exposed.
+- Susceptible to Quarantined Exposed.
+
+```{r}
+#| label: contact-tracing
+#| echo: false
+detected_cum <- detected[
+  (from == "Susceptible" & to == "Exposed") |
+  (from == "Susceptible" & to == "Quarantined Exposed")
+  ]
+detected_cum <- detected_cum[, .(Total = sum(counts)), by = .(date, sim_num)] 
+detected_cum[, cumulative := cumsum(Total), by = sim_num]
+detected_cum[, min := quantile(cumulative, 0.025), by = date]
+detected_cum[, mean := mean(cumulative), by = date]
+detected_cum[, max := quantile(cumulative, 0.975), by = date]
+detected_cum |> 
+    ggplot(aes(x = date, y = cumulative)) +
+    geom_line(aes(x=date, y = mean)) +
+    geom_ribbon(
+        aes(ymin = min, ymax = max), fill = "grey", alpha = 0.5
+        ) +
+    # Legend about the ribbon and the mean
+    geom_line(aes(x=date, y = min), linetype = "dashed") +
+    geom_line(aes(x=date, y = max), linetype = "dashed") +
+    labs(
+        title = "Cumulative cases",
+        x = "Date",
+        y = "Cumulative cases",
+        caption = "The shaded area represents the 95% confidence interval"
+    )
+```
+
+### Reproductive number of the index case
+
+```{r}
+#| label: reproductive-number
+#| echo: false
+#| warning: false
+#| message: false
+repnums <- list.files("output", pattern = "reproduc", full.names = TRUE)
+sim_nums <- gsub(".+/([0-9]+)_.+", "\\1", repnums) |> as.integer()
+repnums <- parallel::mclapply(seq_along(repnums), \(i) {
+    fread(repnums[i])[, sim_num := sim_nums[i]]
+}, mc.cores = ncores) |> rbindlist()
+
+setnames(repnums, "source_exposure_date", "date")
+
+setorder(repnums, sim_num, date)
+repnums <- repnums[date == 0, .(Rt = rt, sim_num)]
+
+repnums <- repnums[, .(Rt = mean(Rt), n = .N), by = "sim_num"]
+
+# Complementing the list with zeros
+zeros <- setdiff(0:(temp_params$`Replicates` - 1), repnums$sim_num) 
+if (length(zeros) > 0) {
+  repnums <- rbindlist(
+    list(repnums, data.table(sim_num = zeros, Rt = 0, n = 0))
+  )
+}
+
+# In case we have multiple index cases
+repnums[, Rt := fifelse(
+    n < temp_params$`initial number of exposed`,
+    Rt * n/temp_params$`initial number of exposed`,
+    Rt
+    )]
+
+quantile50 <- quantile(repnums$Rt, probs=.5)
+ggplot(repnums, aes(x = Rt)) +
+    geom_histogram(fill="lightgray") +
+    geom_vline(xintercept = quantile50, col = "red", lty = 2) +
+    geom_text(
+        aes(label = quantile50),
+        x = quantile50,
+        y = 0,
+        vjust = -1
+        )
+```
+
+Althougth the model was calibrated with an R0 of 15, adding vaccination, a smaller population, and quarantine changes (lowers) the reproductive number:
+
+```{r}
+#| label: printing-Rt
+#| echo: false
+message("Mean Rt:", mean(repnums$Rt))
+message("Median Rt:", quantile(repnums$Rt, probs=.5))
+message("95% CI Rt:",
+    paste(quantile(repnums$Rt, probs=c(0.025, 0.975)), collapse = ",")
+    ) 
+```
+
+# References
