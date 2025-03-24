@@ -6,6 +6,8 @@ on:
 jobs:
   run_all:
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/gvegayon/measles:latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
