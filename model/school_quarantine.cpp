@@ -11,8 +11,8 @@ using namespace epiworld;
 int main(int argc, char *argv[]) {
 
     // Passing the single argument to this function
-    std::string fn      = "canyon_crest_74_params.yaml";
-    std::string out_dir = "canyon_crest_74";
+    std::string fn      = "example_params.yaml";
+    std::string out_dir = "example_out";
     if (argc != 3 && argc != 1) {
         std::cerr << "Usage: " << argv[0] << " <filename> <outdir>" << std::endl;
         return 1;
