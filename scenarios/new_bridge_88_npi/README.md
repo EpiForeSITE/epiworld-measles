@@ -1,7 +1,7 @@
 # School quarantine model
 
 
-## School quarantine model for output
+## School quarantine model for new_bridge_88_npi
 
 This model is a discrete-time Agent-Based Model \[ABM\] that includes
 the following features:
@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/Rtmpm3AJGJ/file9d8264ad015.yaml
+    Using file: /tmp/RtmpmLYrWI/file2f0268b95de2.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -72,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 3.00ms
-    Total elapsed t     : 593.00ms (2000 runs)
-    Last run speed      : 11.19 million agents x day / second
-    Average run speed   : 124.10 million agents x day / second
+    Last run elapsed t  : 2.00ms
+    Total elapsed t     : 626.00ms (2000 runs)
+    Last run speed      : 13.66 million agents x day / second
+    Average run speed   : 117.52 million agents x day / second
     Rewiring            : off
 
     Global events:

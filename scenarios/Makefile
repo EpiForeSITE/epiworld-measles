@@ -84,7 +84,7 @@ report.md: report.qmd
 
 compress:
 	rm -f simulation_results.zip && \
-		zip -9 simulation_results.zip */*.csv
+		zip -j -9 simulation_results.zip */*.csv
 
 replace_html:
 	sed -i 's/&gt;/>/g' *.md

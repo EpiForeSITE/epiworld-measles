@@ -6,7 +6,7 @@ params:
 bibliography: ["../../model/references.bib"]
 ---
 
-## School quarantine model for `r "output"`
+## School quarantine model for `r basename(getwd())`
 
 This model is a discrete-time Agent-Based Model [ABM] that includes the following features:
 
@@ -330,8 +330,8 @@ histories_wide[, fn := NULL]
 fwrite(
   histories_wide,
   file.path(
-    "output",
-    sprintf("%s_histories_n=%i_vax=%s.csv", "output", n, n_vax)
+    ".",
+    sprintf("%s_histories_n=%i_vax=%s.csv", basename(getwd()), n, n_vax)
   )
 )
 
@@ -353,8 +353,8 @@ detected[, fn := NULL]
 fwrite(
   detected,
   file.path(
-    "output",
-    sprintf("%s_transitions_n=%i_vax=%s.csv", "output", n, n_vax)
+    ".",
+    sprintf("%s_transitions_n=%i_vax=%s.csv", basename(getwd()), n, n_vax)
   )
 )
 ```
