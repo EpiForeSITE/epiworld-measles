@@ -125,7 +125,9 @@ flowchart LR
 
 ## Transition probabilities
 
-In the case of more than one possible transition, the model computes the conditional probability of moving to at most one state, for instance, individuals in the isolation state can either recover, become hospitalizad, or stay isolated, but not be recovered *and* hospitalized. Formally:
+In the case of individuals with rash (Rash and Isolated states), they may become hospitalized or recover, each with "Hospitalization rate" and "1/Rash period" respectively.
+
+In the case of the transmission process, the model computes the conditional probability of becoming infected from at most one other agent. For instance, an agent who contacts two other agents can either stay susceptible or become infected from either or the two, but it cannot become infected simulateneously from two different agents. Formally, the probability that agent $j$ transmits the disease to agent $i$ is given by:
 
 ```math
 P(i\to j | \text{at most one event}) = \frac{
@@ -134,7 +136,7 @@ P(i\to j | \text{at most one event}) = \frac{
     }
 ```
 
-Where $p_i$ is the unadjusted probability of moving to state $i$. This rationale applies also to cases in which agents may be exposed to more than one infectious peer, so agents can become infected by at most one peer.
+Where $p_i$ is the unadjusted probability of becoming infected.
 
 ## Update susceptibles
 

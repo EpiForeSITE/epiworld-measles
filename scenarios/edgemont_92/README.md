@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpCDxGbf/file5d3d2d524d24.yaml
+    Using file: /tmp/Rtmpru7CrA/filee75c73b258.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -72,10 +72,10 @@ case. The following is the output from the highschool model:
     Number of entities  : 0
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
-    Last run elapsed t  : 3.00ms
-    Total elapsed t     : 621.00ms (2000 runs)
-    Last run speed      : 12.03 million agents x day / second
-    Average run speed   : 122.45 million agents x day / second
+    Last run elapsed t  : 4.00ms
+    Total elapsed t     : 724.00ms (2000 runs)
+    Last run speed      : 9.49 million agents x day / second
+    Average run speed   : 105.05 million agents x day / second
     Rewiring            : off
 
     Global events:
@@ -103,29 +103,29 @@ case. The following is the output from the highschool model:
      - Vax improved recovery  : 0.5000
 
     Distribution of the population at time 60:
-      - ( 0) Susceptible             : 633 -> 621
+      - ( 0) Susceptible             : 633 -> 623
       - ( 1) Exposed                 :   1 -> 2
       - ( 2) Prodromal               :   0 -> 0
-      - ( 3) Rash                    :   0 -> 1
+      - ( 3) Rash                    :   0 -> 0
       - ( 4) Isolated                :   0 -> 0
       - ( 5) Quarantined Exposed     :   0 -> 0
       - ( 6) Quarantined Susceptible :   0 -> 0
       - ( 7) Quarantined Prodromal   :   0 -> 0
       - ( 8) Quarantined Recovered   :   0 -> 0
       - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 10
+      - (10) Recovered               :   0 -> 9
 
     Transition Probabilities:
      - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.88  0.12  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.74  0.26  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.17  0.00  0.00  0.00  0.00  0.00  0.17  0.67
+     - Exposed                  0.00  0.91  0.09  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Prodromal                0.00  0.00  0.76  0.24  0.00  0.00  0.00  0.00  0.00  0.00  0.00
+     - Rash                     0.00  0.00  0.00  0.25  0.00  0.00  0.00  0.00  0.00  0.25  0.50
      - Isolated                    -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
      - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.50  0.50
+     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.81  0.19
      - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
@@ -141,12 +141,12 @@ flowchart LR
     s3[Rash]
     s4[Recovered]
     s5[Susceptible]
-    s0 -->|0.083267| s2
-    s1 -->|0.141035| s4
-    s2 -->|0.341103| s3
-    s3 -->|0.154068| s1
-    s3 -->|0.636502| s4
-    s5 -->|0.000078| s0
+    s0 -->|0.081533| s2
+    s1 -->|0.146341| s4
+    s2 -->|0.334758| s3
+    s3 -->|0.203132| s1
+    s3 -->|0.546904| s4
+    s5 -->|0.000081| s0
 
 ```
 
@@ -154,14 +154,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|    Size | Probability    | Likely size (if \> Size) |
-|--------:|:---------------|:-------------------------|
-|  2.0000 | 0.51           | \[2.00, 15.00\]          |
-|  5.0000 | 0.19           | \[5.00, 17.00\]          |
-| 10.0000 | 0.06           | \[10.00, 19.00\]         |
-| 20.0000 | \< 0.01        | \[20.05, 27.65\]         |
-|  2.0000 | Median (50%\>) | \[3.00, 15.27\]          |
-|  2.9925 | Mean (average) | \[3.00, 15.27\]          |
+|   Size | Probability    | Likely size (if \> Size) |
+|-------:|:---------------|:-------------------------|
+|  2.000 | 0.51           | \[2.00, 16.00\]          |
+|  5.000 | 0.21           | \[5.00, 19.65\]          |
+| 10.000 | 0.07           | \[10.00, 22.55\]         |
+| 20.000 | \< 0.01        | \[20.00, 29.75\]         |
+|  2.000 | Median (50%\>) | \[3.00, 17.00\]          |
+|  3.104 | Mean (average) | \[4.00, 18.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -186,7 +186,7 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:0.795
+    Mean Rt:0.8185
 
     Median Rt:1
 
