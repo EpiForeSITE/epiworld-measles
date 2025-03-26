@@ -151,5 +151,7 @@
   },
   "[qmd]": {
       "editor.tabSize": 2
-    }
+    },
+    "r.alwaysUseActiveTerminal": true,
+    "r.plot.useHttpgd": true
 }

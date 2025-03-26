@@ -9,7 +9,9 @@
                 "quarto.quarto",
                 "ms-vscode.cpptools-extension-pack",
                 "bierner.markdown-mermaid",
-                "github.vscode-github-actions"
+                "github.vscode-github-actions",
+                "rdebugger.r-debugger",
+                "reditorsupport.r"
             ]
         }
     },
