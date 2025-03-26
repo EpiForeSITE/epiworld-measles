@@ -1,4 +1,5 @@
 {
+    "name": "epiworld-measles",
     "build": {
         "dockerfile": "Containerfile"
     },
@@ -12,12 +13,6 @@
             ]
         }
     },
-    "features": {
-        "ghcr.io/devcontainers/features/github-cli": {
-            "version": "latest"
-        }
-    },
-    // "remoteUser": "root",
     "mounts": [
         // Mount the .vscode configuration into the container
         "source=${localWorkspaceFolder}/.devcontainer/.vscode,target=/workspaces/${localWorkspaceFolderBasename}/.vscode,type=bind,consistency=cached"
