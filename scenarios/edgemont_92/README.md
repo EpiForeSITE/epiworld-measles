@@ -57,7 +57,7 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpBiun70/file3748192dc65c.yaml
+    Using file: /tmp/RtmpT59ZJM/file1ee85ac9e3bc.yaml
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
@@ -73,9 +73,9 @@ case. The following is the output from the highschool model:
     Days (duration)     : 60 (of 60)
     Number of viruses   : 1
     Last run elapsed t  : 2.00ms
-    Total elapsed t     : 605.00ms (2000 runs)
-    Last run speed      : 13.13 million agents x day / second
-    Average run speed   : 125.70 million agents x day / second
+    Total elapsed t     : 642.00ms (2000 runs)
+    Last run speed      : 13.49 million agents x day / second
+    Average run speed   : 118.44 million agents x day / second
     Rewiring            : off
 
     Global events:
