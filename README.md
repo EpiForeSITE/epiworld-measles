@@ -16,6 +16,40 @@ This project aims to generate an ABM using [epiworld](https://github.com/UofUEpi
 
 Both folders include a `Makefile` that provides a handful of targets users can call. Within the command line, users can type `make` inside each folder and get a description of the available targets.
 
+
+## Overview of the model
+
+This agent-based model [ABM] has the following states:
+
+``` mermaid
+flowchart LR
+  Susceptible --> Exposed
+  Exposed --> Prodromal
+  Prodromal --> Rash
+  Rash --> Hospitalized
+  Rash --> Recovered
+  Hospitalized --> Recovered
+```
+
+The model includes a quarantine process that is triggered when an agent develops a rash. The quarantine process includes the following steps:
+
+```mermaid
+flowchart LR
+    Start((Start)) --> infected{"Already<br>quarantined<br>or isolated?"}
+    infected -->|Yes|End((End))
+    infected -->|No|Rash{"Rash?"}
+    Rash -->|Yes|Isolate((Isolate))
+    Rash -->|No|vax
+    vax{"Vaccinated?"}
+    vax -->|Yes|End
+    vax -->|No|WillQuarantine
+    WillQuarantine{"Willing to<br>Quarantine?"} -->|No|End
+    WillQuarantine -->|Yes|Quarantine((Quarantine))
+```
+
+More details can be found in the [**model details**](./model/README.md) folder.
+
+
 ## Development
 
 The development of the project has been carried out using a [Development Container](https://containers.dev). All the configuration is available under the [`.devcontainer` folder](./.devcontainer). The image is described in the file [`.devcontainer/ContainerFile`](./.devcontainer/ContainerFile). The image is available on GitHub under `ghcr.io/epiforesite/epiworld-measles:latest`.
