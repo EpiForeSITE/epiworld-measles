@@ -16,7 +16,7 @@ This model implements a time-discrete Agent-Based Model [ABM] with perfect mixin
 - **Quarantine days**: Quarantine days for vaccinated.
 - **Quarantine willingness**: Quarantine success rate.
 
-As implemented in the `school_quarantine.cpp` file, the model takes two arguments: (a) A filepath to the model parameters in `yaml` and (b) a filepath to the output directory. The program runs multiple replicates of the model and saves them in the output directory. An example of model parameters in included in the [example_params.yaml](./example_params.yaml) file. 
+The model was implemented in the [epiworld C++ library](https://github.com/UofUEpiBio/epiworld) and the R wrapper, [epiworldR](https://github.com/EpiForeSITE/epiworldR).
 
 ## States
 

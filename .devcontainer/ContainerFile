@@ -18,4 +18,17 @@ RUN apt-get install -y --no-install-recommends libfontconfig1-dev libtiff-dev &&
 RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.42/quarto-1.6.42-linux-$(dpkg --print-architecture).deb && \
     dpkg -i quarto-1.6.42*
 
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+        software-properties-common \
+        dirmngr \
+        liblapack-dev \
+        libblas-dev \
+        gfortran 
+
+RUN git clone https://github.com/UofUEpiBio/epiworldR && \
+    cd epiworldR && \
+    git checkout measlesquarantine && \
+    R CMD INSTALL .
+
 CMD ["bash"]

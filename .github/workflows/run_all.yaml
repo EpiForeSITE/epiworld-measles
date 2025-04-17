@@ -14,11 +14,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile the program
-        run: |
-          cd model
-          make school_quarantine.o -B
-
       - name: Prepare scenarios
         run: |
           cd scenarios

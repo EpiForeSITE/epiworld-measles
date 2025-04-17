@@ -19,7 +19,6 @@ help:
 	@echo "  compress            : Compress the simulation results"
 	@echo "  all                 : Generate all reports"
 	@echo "  replace_html        : Replace '&gt;' with '>' in all .md files"
-	@echo "  school_quarantine.o : Compile the school quarantine model"
 	@echo ""
 	@echo "SCHOOL-SPECIFIC REPORTS"
 	@echo "  canyon_grove_58.md     : Canyon Grove 58% vaccination"
@@ -31,9 +30,6 @@ help:
 	@echo "  edgemont_92.md         : Edgemont 92% vaccination"
 	@echo "  edgemont_92_npi.md     : Edgemont 92% vaccination with NPI"
 
-school_quarantine.o: ../model/school_quarantine.cpp ../model/school_quarantine.hpp
-	cd ../model && \
-	g++ -std=c++14 $(CXX_FLAGS) school_quarantine.cpp -o school_quarantine.o
 
 all: \
 	canyon_grove_58.md canyon_grove_58_npi.md \
