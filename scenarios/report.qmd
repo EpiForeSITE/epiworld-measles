@@ -186,7 +186,7 @@ abm <- with(temp_params, {
     vax_efficacy = `Vax efficacy`,
     vax_improved_recovery = `Vax improved recovery`,
     prop_vaccinated = `Vaccination rate`,
-    quarantine_willigness = `Quarantine willingness`
+    quarantine_willingness = `Quarantine willingness`
   )
 })
 
