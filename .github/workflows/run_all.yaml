@@ -16,7 +16,7 @@ jobs:
 
       - name: Install epiworldR
         run: |
-          installGithub.r UofUEpiBio/epiworldR@measlesquarantine
+          installGithub.r UofUEpiBio/epiworldR@v0.8.1.0
 
       - name: Prepare scenarios
         run: |
