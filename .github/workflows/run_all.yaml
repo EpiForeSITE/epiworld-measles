@@ -10,14 +10,16 @@ jobs:
     container:
       image: rocker/tidyverse:4.4.0
 
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile the program
+      - name: Install epiworldR
         run: |
-          cd model
-          make school_quarantine.o -B
+          installGithub.r UofUEpiBio/epiworldR@v0.8.1.0
 
       - name: Prepare scenarios
         run: |

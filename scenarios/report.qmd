@@ -39,7 +39,7 @@ The following is a raw list of the parameters included in the model:
 #| echo: false
 if (interactive() && !exists("params")) {
     params <- list(
-        params_fn = "new_bridge_88_params.yaml"
+        params_fn = "params.yaml"
     )
 }
 ```
@@ -75,6 +75,11 @@ temp_params$R0 <- with(temp_params, {
 # temp_params$`Replicates` <- 500
 temp_params_fn <- tempfile(fileext = ".yaml")
 yaml::write_yaml(temp_params, temp_params_fn)
+
+unlink("./output", recursive = TRUE)
+dir.create("./output")
+n <- temp_params$`Population size`
+n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
 ```
 
 ```{r}
@@ -164,22 +169,37 @@ Other parameters can be found the corresponding parameters document `r sprintf("
 This model simulates the spread of measles in a highschool. The highschool has `r params$'Population size'` students, and the simulation runs for `r params$'N days'` days with one index case. The following is the output from the highschool model:
 
 ```{r}
-#| echo: false
-#| label: run-model
-#| warning: false
-#| message: false
-unlink("./output", recursive = TRUE)
-dir.create("./output")
+#| label: run-model-in-r
+library(epiworldR)
 
-# Size of the population
-n <- temp_params$`Population size`
-n_vax <- sprintf("%.2f", temp_params$`Vaccination rate`)
-system2(
-    "../../model/./school_quarantine.o",
-    c(temp_params_fn, "output"),
-    wait = TRUE, stdout=TRUE
-    ) |>
-    cat(sep = "\n")
+abm <- with(temp_params, {
+  ModelMeaslesQuarantine(
+    n = `Population size`,
+    prevalence = 1,
+    contact_rate = `Contact rate`,
+    transmission_rate = `Transmission rate`,
+    incubation_period = `Incubation period`,
+    prodromal_period = `Prodromal period`,
+    rash_period = `Rash period`,
+    days_undetected = `Days undetected`,
+    quarantine_days = `Quarantine days`,
+    vax_efficacy = `Vax efficacy`,
+    vax_improved_recovery = `Vax improved recovery`,
+    prop_vaccinated = `Vaccination rate`,
+    quarantine_willingness = `Quarantine willingness`
+  )
+})
+
+
+saver <- make_saver("total_hist", "transition", "reproductive", "transition")
+
+set.seed(3312)
+run_multiple(
+  abm, ndays = temp_params$`N days`,
+  nthreads = temp_params$Threads,
+  nsims = temp_params$`Replicates`,
+  saver = saver
+  )
 ```
 
 
@@ -191,9 +211,14 @@ This diagram shows the possible transitions between the states in the model:
 #| label: print-diagram
 #| output: asis
 #| echo: false
+fns <- list.files(
+  dirname(saver$fn),
+  pattern = "transition",
+  full.names = TRUE
+  )
 cat("```{mermaid}\n")
-readLines(file.path("output", "diagram.mmd")) |>
-    cat(sep = "\n")
+draw_mermaid_from_files(fns) |>
+  cat()
 cat("\n```")
 ```
 
@@ -204,11 +229,11 @@ cat("\n```")
 #| echo: false
 #| warning: false
 library(data.table)
-histories <- parallel::mclapply(list.files(
-    "output", pattern="total_hist", full.names = TRUE),
-   \(fn) {
-      cbind(fn = fn, data.table::fread(fn, nThread = 1L))
-   }, mc.cores = ncores) |> rbindlist()
+
+res <- run_multiple_get_results(abm)
+
+histories <- res$total_hist |>
+  as.data.table()
 
 # Figuring out the outbreak size
 exposed <- c(
@@ -223,7 +248,7 @@ exposed <- c(
   "Recovered"
   )
 counts <- histories[(state %in% exposed) & (date == max(date))]
-counts <- counts[, .(Total = sum(counts)), by = "fn"]
+counts <- counts[, .(Total = sum(counts)), by = "sim_num"]
 ```
 
 Estimating the outbreak size:
@@ -321,11 +346,7 @@ Preparing the data for output
 #| echo: false
 # Reshape the data to wide
 histories_wide <- dcast(
-    histories, fn + date ~ state, value.var = "counts")
-
-# Generating simulation ids
-histories_wide[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
-histories_wide[, fn := NULL]
+    histories, sim_num + date ~ state, value.var = "counts")
 
 fwrite(
   histories_wide,
@@ -336,19 +357,14 @@ fwrite(
 )
 
 # Reading the 'transition.csv' files`
-transitions <- parallel::mclapply(
-    list.files("output", pattern="transition", full.names = TRUE),
-   \(fn) {
-      cbind(fn = fn, fread(fn, nThread = 1L))
-    }, mc.cores = ncores) |> rbindlist()
+transitions <- res$transition |>
+  as.data.table()
 
 # Detected cases
 detected <- transitions[
-    (counts > 0) & (from != to),
-    .(fn, from, to, date, counts)
-    ]
-detected[, sim_num := as.integer(gsub(".+/([0-9]+)_.+", "\\1", fn))]
-detected[, fn := NULL]
+  (counts > 0) & (from != to),
+  .(sim_num, from, to, date, counts)
+  ]
 
 fwrite(
   detected,
@@ -400,11 +416,8 @@ detected_cum |>
 #| echo: false
 #| warning: false
 #| message: false
-repnums <- list.files("output", pattern = "reproduc", full.names = TRUE)
-sim_nums <- gsub(".+/([0-9]+)_.+", "\\1", repnums) |> as.integer()
-repnums <- parallel::mclapply(seq_along(repnums), \(i) {
-    fread(repnums[i])[, sim_num := sim_nums[i]]
-}, mc.cores = ncores) |> rbindlist()
+repnums <- res$reproductive |>
+  as.data.table()
 
 setnames(repnums, "source_exposure_date", "date")
 

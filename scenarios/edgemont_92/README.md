@@ -57,76 +57,43 @@ This model simulates the spread of measles in a highschool. The
 highschool has students, and the simulation runs for days with one index
 case. The following is the output from the highschool model:
 
-    Using file: /tmp/RtmpT59ZJM/file1ee85ac9e3bc.yaml
+``` r
+library(epiworldR)
+
+abm <- with(temp_params, {
+  ModelMeaslesQuarantine(
+    n = `Population size`,
+    prevalence = 1,
+    contact_rate = `Contact rate`,
+    transmission_rate = `Transmission rate`,
+    incubation_period = `Incubation period`,
+    prodromal_period = `Prodromal period`,
+    rash_period = `Rash period`,
+    days_undetected = `Days undetected`,
+    quarantine_days = `Quarantine days`,
+    vax_efficacy = `Vax efficacy`,
+    vax_improved_recovery = `Vax improved recovery`,
+    prop_vaccinated = `Vaccination rate`,
+    quarantine_willigness = `Quarantine willingness`
+  )
+})
+
+
+saver <- make_saver("total_hist", "transition", "reproductive", "transition")
+
+set.seed(3312)
+run_multiple(
+  abm, ndays = temp_params$`N days`,
+  nthreads = temp_params$Threads,
+  nsims = temp_params$`Replicates`,
+  saver = saver
+  )
+```
+
     Starting multiple runs (2000) using 10 thread(s)
     _________________________________________________________________________
     _________________________________________________________________________
     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| done.
-    ________________________________________________________________________________
-    ________________________________________________________________________________
-    SIMULATION STUDY
-
-    Name of the model   : (none)
-    Population size     : 634
-    Agents' data        : (none)
-    Number of entities  : 0
-    Days (duration)     : 60 (of 60)
-    Number of viruses   : 1
-    Last run elapsed t  : 2.00ms
-    Total elapsed t     : 642.00ms (2000 runs)
-    Last run speed      : 13.49 million agents x day / second
-    Average run speed   : 118.44 million agents x day / second
-    Rewiring            : off
-
-    Global events:
-     - Update model (runs daily)
-
-    Virus(es):
-     - Measles
-
-    Tool(s):
-     - Vaccine
-
-    Model parameters:
-     - Contact rate           : 2.3810
-     - Days undetected        : -1.0000
-     - Hospitalization days   : 7.0000
-     - Hospitalization rate   : 0.2000
-     - Incubation period      : 12.0000
-     - Prodromal period       : 3.0000
-     - Quarantine days        : 21.0000
-     - Quarantine willingness : -1.0000
-     - Rash days              : 4.0000
-     - Transmission rate      : 0.9000
-     - Vaccination rate       : 0.9200
-     - Vax efficacy           : 0.9900
-     - Vax improved recovery  : 0.5000
-
-    Distribution of the population at time 60:
-      - ( 0) Susceptible             : 633 -> 623
-      - ( 1) Exposed                 :   1 -> 2
-      - ( 2) Prodromal               :   0 -> 0
-      - ( 3) Rash                    :   0 -> 0
-      - ( 4) Isolated                :   0 -> 0
-      - ( 5) Quarantined Exposed     :   0 -> 0
-      - ( 6) Quarantined Susceptible :   0 -> 0
-      - ( 7) Quarantined Prodromal   :   0 -> 0
-      - ( 8) Quarantined Recovered   :   0 -> 0
-      - ( 9) Hospitalized            :   0 -> 0
-      - (10) Recovered               :   0 -> 9
-
-    Transition Probabilities:
-     - Susceptible              1.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Exposed                  0.00  0.91  0.09  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Prodromal                0.00  0.00  0.76  0.24  0.00  0.00  0.00  0.00  0.00  0.00  0.00
-     - Rash                     0.00  0.00  0.00  0.25  0.00  0.00  0.00  0.00  0.00  0.25  0.50
-     - Isolated                    -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Exposed         -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Susceptible     -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Prodromal       -     -     -     -     -     -     -     -     -     -     -
-     - Quarantined Recovered       -     -     -     -     -     -     -     -     -     -     -
-     - Hospitalized             0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.81  0.19
-     - Recovered                0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  0.00  1.00
 
 ## Flowchart
 
@@ -141,11 +108,11 @@ flowchart LR
     s3[Rash]
     s4[Recovered]
     s5[Susceptible]
-    s0 -->|0.081533| s2
-    s1 -->|0.146341| s4
-    s2 -->|0.334758| s3
-    s3 -->|0.203132| s1
-    s3 -->|0.546904| s4
+    s0 -->|0.083872| s2
+    s1 -->|0.142889| s4
+    s2 -->|0.335597| s3
+    s3 -->|0.192528| s1
+    s3 -->|0.553883| s4
     s5 -->|0.000081| s0
 
 ```
@@ -154,14 +121,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|   Size | Probability    | Likely size (if \> Size) |
-|-------:|:---------------|:-------------------------|
-|  2.000 | 0.51           | \[2.00, 16.00\]          |
-|  5.000 | 0.21           | \[5.00, 19.65\]          |
-| 10.000 | 0.07           | \[10.00, 22.55\]         |
-| 20.000 | \< 0.01        | \[20.00, 29.75\]         |
-|  2.000 | Median (50%\>) | \[3.00, 17.00\]          |
-|  3.104 | Mean (average) | \[4.00, 18.00\]          |
+|    Size | Probability    | Likely size (if \> Size) |
+|--------:|:---------------|:-------------------------|
+|  2.0000 | 0.53           | \[2.00, 16.00\]          |
+|  5.0000 | 0.21           | \[5.00, 18.00\]          |
+| 10.0000 | 0.06           | \[10.00, 20.00\]         |
+| 20.0000 | \< 0.01        | \[20.00, 25.38\]         |
+|  2.0000 | Median (50%\>) | \[3.00, 17.00\]          |
+|  3.1265 | Mean (average) | \[4.00, 18.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -186,7 +153,7 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:0.8185
+    Mean Rt:0.819090454772614
 
     Median Rt:1
 
