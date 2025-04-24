@@ -1,20 +1,10 @@
+# Mixing example
 
 
-The theorerical R0 for the mixing model is given by the following:
-
-``` math
-\mathcal{R}_0 = (\vec{n}/n)^{\text{t}}\times\left\{\frac{M_{\cdot i}\times \vec{n}\times p_t}{p_r}\right\}_i
-```
-
-``` r
-r0_mixing <- function(contact_mat, n_vec, p_t, p_r, crate) {
-  
-  n <- sum(n_vec)
-  (rbind(n_vec) / n) %*%
-    (contact_mat %*% (cbind(n_vec) * 0 + crate) * p_t / p_r)
-
-}
-```
+In the mixing model, the contact rate is hold constant, so, although we
+do have the mixing between groups at different rates, the average number
+of contacts is kept constant. This facilitates calibration as the basic
+reproductive number is not affected by the mixing matrix.
 
 ``` r
 library(epiworldR)
@@ -77,20 +67,20 @@ dat <- run_multiple_get_results(mixing_model) |>
 ``` r
 r0 <- dat$reproductive[source_exposure_date == 0 & source != -1, ]
 
-R0_naive <- get_param(mixing_model, "Contact rate") * 
+R0_expected <- get_param(mixing_model, "Contact rate") * 
   get_param(mixing_model, "Prob. Transmission") /
   get_param(mixing_model, "Prob. Recovery")
 
 sprintf(
-  "Mean R0: %.2f [%.2f, %.2f] (naive: %.2f)",
+  "Mean R0: %.2f [%.2f, %.2f] (expected: %.2f)",
   mean(r0$rt),
   quantile(r0$rt, 0.025),
   quantile(r0$rt, 0.975),
-  R0_naive
+  R0_expected
 )
 ```
 
-    [1] "Mean R0: 1.76 [0.00, 7.00] (naive: 1.75)"
+    [1] "Mean R0: 1.76 [0.00, 7.00] (expected: 1.75)"
 
 ``` r
 ggplot(r0, aes(x = rt)) +
@@ -104,16 +94,3 @@ ggplot(r0, aes(x = rt)) +
 ```
 
 ![](mixing_files/figure-commonmark/Computing%20R0-1.png)
-
-``` r
-r0_mixing(
-  contact_mat = cmatrix, #* 0 + 1/3,
-  n_vec = sizes,
-  p_t = get_param(mixing_model, "Prob. Transmission"),
-  p_r = get_param(mixing_model, "Prob. Recovery"),
-  crate = get_param(mixing_model, "Contact rate")
-)
-```
-
-          n_vec
-    n_vec  1.75
