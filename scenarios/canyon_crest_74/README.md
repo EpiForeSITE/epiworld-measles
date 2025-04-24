@@ -39,9 +39,9 @@ The following is a raw list of the parameters included in the model:
 |:---|---:|:---|
 | Contact rate | 2.38 | Negative binomial. Calibrated using R0=15 as a reference. |
 | Incubation period | 12.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
-| Days undetected | -1.00 | Fixed value. |
+| Days undetected | 2.00 | Fixed value. |
 | Prodromal period | 3.00 | Geometric + 1. Ref.: Jones and Baranowski (2019) |
-| Quarantine days | 21.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
+| Quarantine days | -1.00 | Utah Measles Disease Plan (“Measles Disease Plan” 2019). |
 | Rash period | 4.00 | Geometric + 1. Ref.: “Measles Disease Plan” (2019). |
 | Transmission rate | 0.90 | Prob. of transmission fixed. Calibrated using R0=15 as a reference. |
 | Vax improved recovery | 0.50 | Fixed value. |
@@ -64,17 +64,18 @@ abm <- with(temp_params, {
   ModelMeaslesQuarantine(
     n = `Population size`,
     prevalence = 1,
-    contact_rate = `Contact rate`,
+    # contact_rate = `Contact rate`,
     transmission_rate = `Transmission rate`,
     incubation_period = `Incubation period`,
     prodromal_period = `Prodromal period`,
     rash_period = `Rash period`,
     days_undetected = `Days undetected`,
-    quarantine_days = `Quarantine days`,
+    quarantine_period = `Quarantine days`,
     vax_efficacy = `Vax efficacy`,
     vax_improved_recovery = `Vax improved recovery`,
     prop_vaccinated = `Vaccination rate`,
-    quarantine_willigness = `Quarantine willingness`
+    quarantine_willingness = `Quarantine willingness`,
+    isolation_period = `Isolation period`
   )
 })
 
@@ -108,12 +109,12 @@ flowchart LR
     s3[Rash]
     s4[Recovered]
     s5[Susceptible]
-    s0 -->|0.083272| s2
-    s1 -->|0.141631| s4
-    s2 -->|0.334440| s3
-    s3 -->|0.201164| s1
-    s3 -->|0.549618| s4
-    s5 -->|0.001605| s0
+    s0 -->|0.083513| s2
+    s1 -->|0.141782| s4
+    s2 -->|0.332501| s3
+    s3 -->|0.199908| s1
+    s3 -->|0.549590| s4
+    s5 -->|0.003541| s0
 
 ```
 
@@ -123,12 +124,12 @@ Estimating the outbreak size:
 
 |    Size | Probability    | Likely size (if \> Size) |
 |--------:|:---------------|:-------------------------|
-|  2.0000 | 0.85           | \[2.00, 117.00\]         |
-|  5.0000 | 0.76           | \[6.00, 117.80\]         |
-| 10.0000 | 0.71           | \[12.00, 118.00\]        |
-| 20.0000 | 0.63           | \[21.00, 119.00\]        |
-| 38.0000 | Median (50%\>) | \[40.00, 121.00\]        |
-| 44.9495 | Mean (average) | \[46.00, 121.00\]        |
+|   2.000 | 0.87           | \[2.00, 146.00\]         |
+|   5.000 | 0.82           | \[11.00, 146.00\]        |
+|  10.000 | 0.81           | \[21.00, 146.00\]        |
+|  20.000 | 0.79           | \[33.00, 146.00\]        |
+| 125.000 | Median (50%\>) | \[126.00, 147.00\]       |
+|  94.363 | Mean (average) | \[101.00, 147.00\]       |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -153,11 +154,11 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:2.4687656171914
+    Mean Rt:2.42653673163418
 
     Median Rt:2
 
-    95% CI Rt:0,8
+    95% CI Rt:0.5,7
 
 # References
 

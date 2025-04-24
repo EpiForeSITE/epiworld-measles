@@ -176,17 +176,18 @@ abm <- with(temp_params, {
   ModelMeaslesQuarantine(
     n = `Population size`,
     prevalence = 1,
-    contact_rate = `Contact rate`,
+    # contact_rate = `Contact rate`,
     transmission_rate = `Transmission rate`,
     incubation_period = `Incubation period`,
     prodromal_period = `Prodromal period`,
     rash_period = `Rash period`,
     days_undetected = `Days undetected`,
-    quarantine_days = `Quarantine days`,
+    quarantine_period = `Quarantine days`,
     vax_efficacy = `Vax efficacy`,
     vax_improved_recovery = `Vax improved recovery`,
     prop_vaccinated = `Vaccination rate`,
-    quarantine_willingness = `Quarantine willingness`
+    quarantine_willingness = `Quarantine willingness`,
+    isolation_period = `Isolation period`
   )
 })
 
@@ -230,7 +231,7 @@ cat("\n```")
 #| warning: false
 library(data.table)
 
-res <- run_multiple_get_results(abm)
+res <- run_multiple_get_results(abm, nthreads = ncores)
 
 histories <- res$total_hist |>
   as.data.table()
@@ -241,6 +242,7 @@ exposed <- c(
   "Prodromal",
   "Rash",
   "Isolated",
+  "Isolated Recovered",
   "Quarantined Exposed",
   "Quarantined Prodromal",
   "Quarantined Recovered",

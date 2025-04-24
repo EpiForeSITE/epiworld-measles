@@ -26,9 +26,9 @@ RUN apt-get update -qq && \
         libblas-dev \
         gfortran 
 
-RUN git clone https://github.com/UofUEpiBio/epiworldR && \
-    cd epiworldR && \
-    git checkout fix-mixing && \
+# Add a build argument
+RUN git clone https://github.com/UofUEpiBio/epiworldR &&   \
+    cd epiworldR && git checkout fix-mixing && \
     R CMD INSTALL .
 
 CMD ["bash"]
