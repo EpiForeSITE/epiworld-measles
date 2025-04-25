@@ -4,11 +4,11 @@
 # And so far, the total outbreak size is about 60.
 Population size: 614
 Contact rate: 2.380952
-Quarantine willingness: -1.0
+Quarantine willingness: 1
 Incubation period: 12.0000
-Days undetected: -1
+Days undetected: 2
 Prodromal period: 3.0000
-Quarantine days: 21.0000
+Quarantine days: -1
 Rash period: 4.0000
 Transmission rate: 0.9
 Hospitalization rate: 0.2
@@ -22,3 +22,4 @@ Seed: 2231
 N days: 60
 Replicates: 2000
 Threads: 10
+Isolation period: -1

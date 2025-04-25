@@ -64,17 +64,18 @@ abm <- with(temp_params, {
   ModelMeaslesQuarantine(
     n = `Population size`,
     prevalence = 1,
-    contact_rate = `Contact rate`,
+    # contact_rate = `Contact rate`,
     transmission_rate = `Transmission rate`,
     incubation_period = `Incubation period`,
     prodromal_period = `Prodromal period`,
     rash_period = `Rash period`,
     days_undetected = `Days undetected`,
-    quarantine_days = `Quarantine days`,
+    quarantine_period = `Quarantine days`,
     vax_efficacy = `Vax efficacy`,
     vax_improved_recovery = `Vax improved recovery`,
     prop_vaccinated = `Vaccination rate`,
-    quarantine_willigness = `Quarantine willingness`
+    quarantine_willingness = `Quarantine willingness`,
+    isolation_period = `Isolation period`
   )
 })
 
@@ -105,40 +106,39 @@ flowchart LR
     s0[Exposed]
     s1[Hospitalized]
     s2[Isolated]
-    s3[Prodromal]
-    s4[Quarantined Exposed]
-    s5[Quarantined Prodromal]
-    s6[Quarantined Recovered]
+    s3[Isolated Recovered]
+    s4[Prodromal]
+    s5[Quarantined Exposed]
+    s6[Quarantined Prodromal]
     s7[Quarantined Susceptible]
     s8[Rash]
     s9[Recovered]
     s10[Susceptible]
-    s0 -->|0.071958| s3
-    s0 -->|0.121486| s4
-    s0 -->|0.010618| s5
-    s1 -->|0.141629| s9
-    s2 -->|0.199662| s1
-    s2 -->|0.541366| s6
-    s2 -->|0.004262| s8
-    s2 -->|0.009087| s9
-    s3 -->|0.034101| s2
-    s3 -->|0.068245| s5
-    s3 -->|0.299527| s8
-    s4 -->|0.015104| s0
-    s4 -->|0.001305| s3
-    s4 -->|0.082472| s5
-    s5 -->|0.651754| s2
-    s5 -->|0.005193| s3
-    s5 -->|0.010119| s8
-    s6 -->|0.069003| s9
-    s7 -->|0.045746| s10
-    s8 -->|0.199268| s1
-    s8 -->|0.135837| s2
-    s8 -->|0.273801| s6
-    s8 -->|0.276400| s9
-    s10 -->|0.000172| s0
-    s10 -->|0.000044| s4
-    s10 -->|0.007399| s7
+    s0 -->|0.066205| s4
+    s0 -->|0.191409| s5
+    s0 -->|0.017437| s6
+    s1 -->|0.140693| s9
+    s2 -->|0.199649| s1
+    s2 -->|0.540652| s3
+    s2 -->|0.003681| s8
+    s2 -->|0.007882| s9
+    s3 -->|0.368919| s9
+    s4 -->|0.056461| s2
+    s4 -->|0.109162| s6
+    s4 -->|0.276228| s8
+    s5 -->|0.014836| s0
+    s5 -->|0.001409| s4
+    s5 -->|0.081575| s6
+    s6 -->|0.667024| s2
+    s6 -->|0.005627| s4
+    s7 -->|0.045111| s10
+    s8 -->|0.203448| s1
+    s8 -->|0.145977| s2
+    s8 -->|0.276601| s3
+    s8 -->|0.272250| s9
+    s10 -->|0.000464| s0
+    s10 -->|0.000093| s5
+    s10 -->|0.009193| s7
 
 ```
 
@@ -148,12 +148,12 @@ Estimating the outbreak size:
 
 |    Size | Probability    | Likely size (if \> Size) |
 |--------:|:---------------|:-------------------------|
-|  2.0000 | 0.94           | \[2.00, 49.00\]          |
-|  5.0000 | 0.72           | \[5.00, 51.00\]          |
-| 10.0000 | 0.52           | \[10.00, 54.00\]         |
-| 20.0000 | 0.29           | \[20.00, 62.00\]         |
-| 10.0000 | Median (50%\>) | \[11.00, 54.73\]         |
-| 14.5365 | Mean (average) | \[15.00, 57.57\]         |
+|  2.0000 | 0.96           | \[2.00, 109.83\]         |
+|  5.0000 | 0.82           | \[5.00, 113.17\]         |
+| 10.0000 | 0.70           | \[11.00, 115.00\]        |
+| 20.0000 | 0.59           | \[21.00, 119.00\]        |
+| 28.0000 | Median (50%\>) | \[30.00, 124.00\]        |
+| 35.7505 | Mean (average) | \[37.00, 125.00\]        |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -178,11 +178,11 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:3.72363818090955
+    Mean Rt:3.54272863568216
 
     Median Rt:3
 
-    95% CI Rt:0,11
+    95% CI Rt:0.5,9.5
 
 # References
 
