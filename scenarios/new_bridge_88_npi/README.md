@@ -103,42 +103,44 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Exposed]
-    s1[Hospitalized]
-    s2[Isolated]
-    s3[Isolated Recovered]
-    s4[Prodromal]
-    s5[Quarantined Exposed]
-    s6[Quarantined Prodromal]
-    s7[Quarantined Susceptible]
-    s8[Rash]
-    s9[Recovered]
-    s10[Susceptible]
-    s0 -->|0.075995| s4
-    s0 -->|0.065798| s5
-    s0 -->|0.006449| s6
-    s1 -->|0.146533| s9
-    s2 -->|0.202840| s1
-    s2 -->|0.535185| s3
-    s2 -->|0.004525| s8
-    s2 -->|0.009986| s9
-    s3 -->|0.371813| s9
-    s4 -->|0.019623| s2
-    s4 -->|0.031350| s6
-    s4 -->|0.311156| s8
-    s5 -->|0.013310| s0
-    s5 -->|0.001171| s4
-    s5 -->|0.080197| s6
-    s6 -->|0.664865| s2
-    s6 -->|0.004750| s4
-    s7 -->|0.042872| s10
-    s8 -->|0.190172| s1
-    s8 -->|0.125386| s2
-    s8 -->|0.287351| s3
-    s8 -->|0.273468| s9
-    s10 -->|0.000124| s0
-    s10 -->|0.000005| s5
-    s10 -->|0.001968| s7
+    s0[Detected Hospitalized]
+    s1[Exposed]
+    s2[Hospitalized]
+    s3[Isolated]
+    s4[Isolated Recovered]
+    s5[Prodromal]
+    s6[Quarantined Exposed]
+    s7[Quarantined Prodromal]
+    s8[Quarantined Susceptible]
+    s9[Rash]
+    s10[Recovered]
+    s11[Susceptible]
+    s0 -->|0.134195| s10
+    s1 -->|0.078802| s5
+    s1 -->|0.068780| s6
+    s1 -->|0.006564| s7
+    s2 -->|0.142244| s10
+    s3 -->|0.195073| s2
+    s3 -->|0.547344| s4
+    s3 -->|0.003687| s9
+    s3 -->|0.011564| s10
+    s4 -->|0.371393| s10
+    s5 -->|0.031396| s7
+    s5 -->|0.333768| s9
+    s6 -->|0.013433| s1
+    s6 -->|0.001011| s5
+    s6 -->|0.083293| s7
+    s7 -->|0.332780| s3
+    s7 -->|0.010874| s5
+    s8 -->|0.042478| s11
+    s9 -->|0.101121| s0
+    s9 -->|0.104525| s2
+    s9 -->|0.121346| s3
+    s9 -->|0.262115| s4
+    s9 -->|0.278734| s10
+    s11 -->|0.000126| s1
+    s11 -->|0.000006| s6
+    s11 -->|0.001968| s8
 
 ```
 
@@ -148,12 +150,12 @@ Estimating the outbreak size:
 
 |   Size | Probability    | Likely size (if \> Size) |
 |-------:|:---------------|:-------------------------|
-|  2.000 | 0.74           | \[2.00, 18.12\]          |
-|  5.000 | 0.35           | \[5.00, 22.00\]          |
-| 10.000 | 0.12           | \[10.00, 25.00\]         |
-| 20.000 | 0.02           | \[20.00, 28.75\]         |
-|  3.000 | Median (50%\>) | \[4.00, 21.00\]          |
-|  4.617 | Mean (average) | \[5.00, 22.00\]          |
+|  2.000 | 0.74           | \[2.00, 18.00\]          |
+|  5.000 | 0.37           | \[5.00, 21.00\]          |
+| 10.000 | 0.13           | \[10.00, 25.75\]         |
+| 20.000 | 0.01           | \[20.00, 30.32\]         |
+|  3.000 | Median (50%\>) | \[4.00, 20.00\]          |
+|  4.704 | Mean (average) | \[5.00, 21.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -178,7 +180,7 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:1.46151924037981
+    Mean Rt:1.4400299850075
 
     Median Rt:1
 

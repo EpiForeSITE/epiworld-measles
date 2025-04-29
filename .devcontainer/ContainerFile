@@ -27,8 +27,8 @@ RUN apt-get update -qq && \
         gfortran 
 
 # Add a build argument
-RUN git clone https://github.com/UofUEpiBio/epiworldR &&   \
-    cd epiworldR && git checkout fix-mixing && \
+RUN git clone https://github.com/UofUEpiBio/epiworldR && \
+    cd epiworldR && git checkout fix-mixing &&  \
     R CMD INSTALL .
 
 CMD ["bash"]

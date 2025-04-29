@@ -103,18 +103,30 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Exposed]
-    s1[Hospitalized]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Recovered]
-    s5[Susceptible]
-    s0 -->|0.083298| s2
-    s1 -->|0.142956| s4
-    s2 -->|0.332738| s3
-    s3 -->|0.200221| s1
-    s3 -->|0.549283| s4
-    s5 -->|0.008176| s0
+    s0[Detected Hospitalized]
+    s1[Exposed]
+    s2[Hospitalized]
+    s3[Isolated]
+    s4[Isolated Recovered]
+    s5[Prodromal]
+    s6[Rash]
+    s7[Recovered]
+    s8[Susceptible]
+    s0 -->|0.143692| s7
+    s1 -->|0.083384| s5
+    s2 -->|0.142725| s7
+    s3 -->|0.198018| s2
+    s3 -->|0.506170| s4
+    s3 -->|0.018097| s6
+    s3 -->|0.042049| s7
+    s4 -->|0.377209| s7
+    s5 -->|0.333462| s6
+    s6 -->|0.099309| s0
+    s6 -->|0.100641| s2
+    s6 -->|0.124941| s3
+    s6 -->|0.275695| s4
+    s6 -->|0.274709| s7
+    s8 -->|0.007912| s1
 
 ```
 
@@ -124,12 +136,12 @@ Estimating the outbreak size:
 
 |     Size | Probability    | Likely size (if \> Size) |
 |---------:|:---------------|:-------------------------|
-|   2.0000 | 0.96           | \[20.98, 313.00\]        |
-|   5.0000 | 0.95           | \[48.00, 313.00\]        |
-|  10.0000 | 0.94           | \[67.75, 313.00\]        |
-|  20.0000 | 0.94           | \[88.00, 313.00\]        |
-| 297.0000 | Median (50%\>) | \[298.00, 315.00\]       |
-| 265.9975 | Mean (average) | \[274.00, 314.00\]       |
+|   2.0000 | 0.95           | \[16.00, 311.00\]        |
+|   5.0000 | 0.94           | \[37.80, 311.00\]        |
+|  10.0000 | 0.93           | \[45.50, 311.00\]        |
+|  20.0000 | 0.92           | \[69.00, 311.00\]        |
+| 291.0000 | Median (50%\>) | \[292.00, 313.00\]       |
+| 255.1155 | Mean (average) | \[266.00, 311.00\]       |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -154,11 +166,11 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:3.66741629185407
+    Mean Rt:3.56196901549225
 
     Median Rt:3
 
-    95% CI Rt:0.5,11
+    95% CI Rt:0.5,10.5
 
 # References
 

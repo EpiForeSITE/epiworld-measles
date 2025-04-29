@@ -103,18 +103,30 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Exposed]
-    s1[Hospitalized]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Recovered]
-    s5[Susceptible]
-    s0 -->|0.082368| s2
-    s1 -->|0.140928| s4
-    s2 -->|0.330473| s3
-    s3 -->|0.204925| s1
-    s3 -->|0.544479| s4
-    s5 -->|0.000186| s0
+    s0[Detected Hospitalized]
+    s1[Exposed]
+    s2[Hospitalized]
+    s3[Isolated]
+    s4[Isolated Recovered]
+    s5[Prodromal]
+    s6[Rash]
+    s7[Recovered]
+    s8[Susceptible]
+    s0 -->|0.141179| s7
+    s1 -->|0.082340| s5
+    s2 -->|0.137621| s7
+    s3 -->|0.203883| s2
+    s3 -->|0.496117| s4
+    s3 -->|0.020388| s6
+    s3 -->|0.039806| s7
+    s4 -->|0.379373| s7
+    s5 -->|0.332569| s6
+    s6 -->|0.104469| s0
+    s6 -->|0.104627| s2
+    s6 -->|0.127211| s3
+    s6 -->|0.268004| s4
+    s6 -->|0.270531| s7
+    s8 -->|0.000192| s1
 
 ```
 
@@ -122,14 +134,14 @@ flowchart LR
 
 Estimating the outbreak size:
 
-|    Size | Probability    | Likely size (if \> Size) |
-|--------:|:---------------|:-------------------------|
-|  2.0000 | 0.61           | \[2.00, 36.00\]          |
-|  5.0000 | 0.39           | \[5.00, 38.00\]          |
-| 10.0000 | 0.25           | \[10.00, 41.00\]         |
-| 20.0000 | 0.11           | \[20.00, 45.00\]         |
-|  2.0000 | Median (50%\>) | \[3.00, 37.00\]          |
-|  7.1645 | Mean (average) | \[8.00, 39.80\]          |
+|   Size | Probability    | Likely size (if \> Size) |
+|-------:|:---------------|:-------------------------|
+|  2.000 | 0.63           | \[2.00, 36.00\]          |
+|  5.000 | 0.41           | \[5.00, 39.75\]          |
+| 10.000 | 0.27           | \[10.00, 42.00\]         |
+| 20.000 | 0.12           | \[20.00, 45.00\]         |
+|  3.000 | Median (50%\>) | \[4.00, 39.00\]          |
+|  7.284 | Mean (average) | \[8.00, 41.00\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -154,11 +166,11 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:1.14542728635682
+    Mean Rt:1.15792103948026
 
     Median Rt:1
 
-    95% CI Rt:0.5,3.5
+    95% CI Rt:0.5,3
 
 # References
 

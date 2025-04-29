@@ -103,18 +103,30 @@ model:
 
 ``` mermaid
 flowchart LR
-    s0[Exposed]
-    s1[Hospitalized]
-    s2[Prodromal]
-    s3[Rash]
-    s4[Recovered]
-    s5[Susceptible]
-    s0 -->|0.083513| s2
-    s1 -->|0.141782| s4
-    s2 -->|0.332501| s3
-    s3 -->|0.199908| s1
-    s3 -->|0.549590| s4
-    s5 -->|0.003541| s0
+    s0[Detected Hospitalized]
+    s1[Exposed]
+    s2[Hospitalized]
+    s3[Isolated]
+    s4[Isolated Recovered]
+    s5[Prodromal]
+    s6[Rash]
+    s7[Recovered]
+    s8[Susceptible]
+    s0 -->|0.142128| s7
+    s1 -->|0.083404| s5
+    s2 -->|0.144723| s7
+    s3 -->|0.200885| s2
+    s3 -->|0.512346| s4
+    s3 -->|0.017521| s6
+    s3 -->|0.041053| s7
+    s4 -->|0.374368| s7
+    s5 -->|0.333271| s6
+    s6 -->|0.098789| s0
+    s6 -->|0.100765| s2
+    s6 -->|0.125068| s3
+    s6 -->|0.273666| s4
+    s6 -->|0.275936| s7
+    s8 -->|0.003579| s1
 
 ```
 
@@ -124,12 +136,12 @@ Estimating the outbreak size:
 
 |    Size | Probability    | Likely size (if \> Size) |
 |--------:|:---------------|:-------------------------|
-|   2.000 | 0.87           | \[2.00, 146.00\]         |
-|   5.000 | 0.82           | \[11.00, 146.00\]        |
-|  10.000 | 0.81           | \[21.00, 146.00\]        |
-|  20.000 | 0.79           | \[33.00, 146.00\]        |
-| 125.000 | Median (50%\>) | \[126.00, 147.00\]       |
-|  94.363 | Mean (average) | \[101.00, 147.00\]       |
+|   2.000 | 0.89           | \[2.00, 144.00\]         |
+|   5.000 | 0.85           | \[12.00, 144.00\]        |
+|  10.000 | 0.83           | \[19.00, 144.00\]        |
+|  20.000 | 0.81           | \[30.00, 144.00\]        |
+| 122.000 | Median (50%\>) | \[123.00, 145.00\]       |
+|  93.796 | Mean (average) | \[98.08, 144.00\]        |
 
 Likely sizes of the outbreak based on 2000 simulations.
 
@@ -154,7 +166,7 @@ Althougth the model was calibrated with an R0 of 15, adding vaccination,
 a smaller population, and quarantine changes (lowers) the reproductive
 number:
 
-    Mean Rt:2.42653673163418
+    Mean Rt:2.39730134932534
 
     Median Rt:2
 
