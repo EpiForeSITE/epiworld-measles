@@ -27,7 +27,6 @@ flowchart LR
   Exposed --> Prodromal
   Prodromal --> Rash
   Rash --> Isolated
-  Isolated --> Hospitalized
   Isolated --> Recovered
   Rash --> Hospitalized
   Rash --> Recovered
