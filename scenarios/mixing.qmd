@@ -49,9 +49,14 @@ mixing_model |>
   add_entity(rest)
 ```
 
+We now create how we save the data
+
 ```{r}
 #| label: Running-multiple
-saver <- make_saver("total_hist", "reproductive")
+saver <- make_saver("total_hist", "reproductive", "transition")
+```
+
+```{r}
 set.seed(3312)
 run_multiple(
   mixing_model, ndays = 60, nsims = 1000, saver = saver,
@@ -89,3 +94,29 @@ ggplot(r0, aes(x = rt)) +
   theme_minimal()
 ```
 
+```{r}
+#| label: figure
+#| output: asis
+#| echo: false
+transitions <- dat$transition
+
+states <- transitions[, c(from, to)] |> unique()
+n_states <- length(states)
+
+tmat_dat <- transitions[, sum(counts), by = .(from, to)]
+tmat <- matrix(0, nrow = n_states, ncol = n_states)
+for (i in seq_len(n_states)) {
+  for (j in seq_len(n_states)) {
+    tmat[i, j] <- tmat_dat[from == states[i] & to == states[j], V1]
+  }
+}
+
+# Row-stochastic matrix
+tmat <- tmat / rowSums(tmat)
+dimnames(tmat) <- list(states, states)
+
+cat("```{mermaid}\n")
+draw_mermaid_from_matrix(tmat) |> 
+  cat()
+cat("```")
+```

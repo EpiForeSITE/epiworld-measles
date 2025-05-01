@@ -237,19 +237,12 @@ histories <- res$total_hist |>
   as.data.table()
 
 # Figuring out the outbreak size
-exposed <- c(
-  "Exposed",
-  "Prodromal",
-  "Rash",
-  "Isolated",
-  "Isolated Recovered",
-  "Quarantined Exposed",
-  "Quarantined Prodromal",
-  "Quarantined Recovered",
-  "Hospitalized",
-  "Recovered"
-  )
-counts <- histories[(state %in% exposed) & (date == max(date))]
+not_exposed <- c(
+  "Susceptible",
+  "Quarantined Susceptible"
+)
+
+counts <- histories[(state %notin% not_exposed) & (date == max(date))]
 counts <- counts[, .(Total = sum(counts)), by = "sim_num"]
 ```
 

@@ -155,7 +155,7 @@ Estimating the outbreak size:
 | 10.0000 | 0.04           | \[10.00, 17.00\]         |
 | 20.0000 | \< 0.01        | \[20.00, 20.00\]         |
 |  2.0000 | Median (50%\>) | \[3.00, 13.00\]          |
-|  3.2065 | Mean (average) | \[4.00, 13.98\]          |
+|  3.2195 | Mean (average) | \[4.00, 14.95\]          |
 
 Likely sizes of the outbreak based on 2000 simulations.
 

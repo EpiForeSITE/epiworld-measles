@@ -45,8 +45,13 @@ mixing_model |>
   add_entity(rest)
 ```
 
+We now create how we save the data
+
 ``` r
-saver <- make_saver("total_hist", "reproductive")
+saver <- make_saver("total_hist", "reproductive", "transition")
+```
+
+``` r
 set.seed(3312)
 run_multiple(
   mixing_model, ndays = 60, nsims = 1000, saver = saver,
@@ -94,3 +99,14 @@ ggplot(r0, aes(x = rt)) +
 ```
 
 ![](mixing_files/figure-commonmark/Computing%20R0-1.png)
+
+``` mermaid
+flowchart LR
+    s0[Exposed]
+    s1[Infected]
+    s2[Recovered]
+    s3[Susceptible]
+    s0 -->|0.071849| s1
+    s1 -->|0.143934| s2
+    s3 -->|0.000034| s0
+```
