@@ -19,13 +19,15 @@ Both folders include a `Makefile` that provides a handful of targets users can c
 
 ## Overview of the model
 
-This agent-based model [ABM] has the following states:
+This agent-based model [ABM] has the following (simplified) states:
 
 ``` mermaid
 flowchart LR
   Susceptible --> Exposed
   Exposed --> Prodromal
   Prodromal --> Rash
+  Rash --> Isolated
+  Isolated --> Recovered
   Rash --> Hospitalized
   Rash --> Recovered
   Hospitalized --> Recovered
